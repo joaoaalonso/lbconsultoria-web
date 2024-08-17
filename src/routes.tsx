@@ -9,6 +9,11 @@ import ClientFormScreen from './screens/clients/Form'
 
 import RanchFormScreen from './screens/ranches/Form'
 
+import SlaugtherhouseListScreen from './screens/slaughterhouse/List'
+import SlaugtherhouseFormScreen from './screens/slaughterhouse/Form'
+import SlaugtherhouseDetailsScreen from './screens/slaughterhouse/Details'
+import SlaughterhouseUnitFormScreen from './screens/slaughterhouse/UnitForm'
+
 import { getToken } from './services/auth'
 
 const Routes = () => {
@@ -32,6 +37,14 @@ const Routes = () => {
 
                     <Route path='/clientes/:userId/propriedades' element={<RanchFormScreen />} />
                     <Route path='/clientes/:userId/propriedades/:ranchId' element={<RanchFormScreen />} />
+
+                    <Route path='/abatedouros' element={<SlaugtherhouseListScreen />} />
+                    <Route path='/abatedouros/adicionar' element={<SlaugtherhouseFormScreen />} />
+                    <Route path='/abatedouros/:slaughterhouseId' element={<SlaugtherhouseDetailsScreen />} />
+                    <Route path='/abatedouros/:slaughterhouseId/editar' element={<SlaugtherhouseFormScreen />} />
+
+                    <Route path='/abatedouros/:slaughterhouseId/unidades/adicionar' element={<SlaughterhouseUnitFormScreen />} />
+                    <Route path='/abatedouros/:slaughterhouseId/unidades/:slaughterhouseUnitId/editar' element={<SlaughterhouseUnitFormScreen />} />
 
                     <Route path='*' element={<Navigate to='/clientes' />} />
                 </>
