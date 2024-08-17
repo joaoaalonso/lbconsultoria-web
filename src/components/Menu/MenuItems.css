@@ -1,0 +1,31 @@
+.menu-items {
+  width: 100%;
+  
+  a {
+    width: 100%;
+    display: flex;
+    font-size: 14px;
+    color: black;
+    transition: 0.3s;
+    padding: 10px 25px;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #ff19d5;
+  }
+
+  .active {
+    color: white;
+    background: #ff19d5;
+  }
+  
+  .active:hover {
+    color: white;
+  }
+  
+  span {
+    margin-left: 5px;
+  }  
+}

@@ -1,0 +1,45 @@
+.mobile-menu {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.mobile-menu-close {
+    right: 100%;
+}
+
+.mobile-menu-content {
+    width: 75%;
+    height: 100%;
+    position: relative;
+    background-color: white;
+    border-right: 1px solid black;
+
+    a {
+        justify-content: center;
+    }
+
+    .close {
+        padding: 16px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .logout {
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        cursor: pointer;
+        position: absolute;
+        justify-content: center;
+
+        span {
+            margin-left: 5px;
+        }
+    }
+}

@@ -4,7 +4,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { BiChevronLeft } from 'react-icons/bi'
 
-import SideMenu from '../SideMenu'
+import Header from '../Header'
+import SideMenu from '../Menu/SideMenu'
 
 interface ScreenTemplateProps {
     title?: string
@@ -19,6 +20,7 @@ const ScreenTemplate = ({ title, children, backLink, noBackground, rightComponen
         <>
             <SideMenu />
             <div className='main-content'>
+            <Header />
                 <div className='top-bar'>
                     <>
                         {!!backLink && (

@@ -1,27 +1,17 @@
 .side-menu {
   width: 200px;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   transition: 0.3s;
   position: relative;
   align-items: center;
   flex-direction: column;
-  background-color: #45454f;
-}
+  background-color: white;
+  border-right: 1px solid #b3b3b3;
 
-.side-menu > a {
-  width: 100%;
-  display: flex;
-  font-size: 14px;
-  color: #a2a8af;
-  transition: 0.3s;
-  padding: 10px 25px;
-  align-items: center;
-  text-decoration: none;
-}
-
-.side-menu > a:hover {
-  color: white;
+  @media (max-width: 762px) {
+    display: none;
+  }
 }
 
 .side-menu > .logo {
@@ -37,13 +27,12 @@
 }
 
 .side-menu > .active {
-  color: #45454f;
-  background: #e9dec2;
-  background: linear-gradient(to right, #e9dec2 0%, #d6ccb1 100%);
+  color: white;
+  background: #ff19d5;
 }
 
 .side-menu > .active:hover {
-  color: #45454f;
+  color: white;
 }
 
 .side-menu span {
@@ -67,11 +56,12 @@
   width: 100%;
   display: flex;
   padding: 10px;
-  color: #a2a8af;
+  color: black;
   cursor: pointer;
   position: absolute;
   font-size: 12px;
   align-items: center;
   justify-content: center;
-  background-color: #313138;
+  background-color: white;
+  border-top: 1px solid #b3b3b3;
 }

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 
-import logo from '../../images/logo.png'
+import logo from '../../images/logo.jpeg'
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
 

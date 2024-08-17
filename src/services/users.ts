@@ -17,7 +17,8 @@ export interface User {
 
 export enum USER_TYPES {
     Client = 1,
-    Employee = 2
+    Employee = 2,
+    Admin = 3
 }
 
 const getEndpointByType = (type: USER_TYPES): string => {
