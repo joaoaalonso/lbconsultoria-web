@@ -4,7 +4,6 @@ import React from 'react'
 import { IoClose } from "react-icons/io5"
 import { RiLogoutBoxRLine } from "react-icons/ri"
 
-
 import MenuItems from './MenuItems'
 import { logoutWithConfirmation } from '../../services/auth';
 

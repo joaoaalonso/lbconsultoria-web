@@ -51,6 +51,23 @@
   display: none;
 }
 
+.side-menu > .logout {
+  bottom: 50px;
+  width: 100%;
+  display: flex;
+  cursor: pointer;
+  font-size: 14px;
+  color: black;
+  position: absolute;
+  padding: 10px 25px;
+  align-items: center;
+  text-decoration: none;
+
+  &:hover {
+    color: #ff19d5;
+  }
+}
+
 .side-menu > .side-menu-minimize {
   bottom: 0;
   width: 100%;

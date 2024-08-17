@@ -1,10 +1,12 @@
 import './SideMenu.css'
 
 import React, { useState } from 'react'
+import { RiLogoutBoxRLine } from "react-icons/ri"
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi'
 
-import logo from '../../images/logo.jpeg'
 import MenuItems from './MenuItems'
+import logo from '../../images/logo.jpeg'
+import { logoutWithConfirmation } from '../../services/auth'
 
 const SideMenu = () => {
     const ICON_SIZE = 20
@@ -17,6 +19,10 @@ const SideMenu = () => {
                 <img src={logo} alt="LB Consultoria" />
             </div>
             <MenuItems />
+            <a className="logout" onClick={logoutWithConfirmation}>
+                <RiLogoutBoxRLine size={25} />
+                <span>Sair</span>
+            </a>
             <div 
                 className='side-menu-minimize' 
                 onClick={() => { setMenuIsClosed(!menuIsClosed) }}
