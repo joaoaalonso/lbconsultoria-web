@@ -1,0 +1,42 @@
+
+.main-content {
+    flex: 1;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.main-content > .top-bar {
+    height: 65px;
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.05);
+}
+
+.main-content > .top-bar a {
+    transition: 0.3s;
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+}
+
+.main-content > .top-bar a:hover {
+    color: #d6cbaf;
+}
+
+.main-content > .content-wrapper {
+    padding: 16px;
+    height: calc(100% - 65px);
+}
+
+.content {
+    min-height: 100%;
+}
+
+.content-bg {
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.05);
+}
