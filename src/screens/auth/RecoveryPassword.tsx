@@ -3,16 +3,17 @@ import './Login.css'
 import React, { useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import logo from '../../images/logo.jpeg'
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
 
-import { login } from '../../services/auth'
-import { Link } from 'react-router-dom'
+import { recoveryPassword } from '../../services/auth'
 
-const LoginScreen = ({ onLogin }) => {
+const RecoveryPasswordScreen = () => {
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const {
         register,
@@ -23,12 +24,14 @@ const LoginScreen = ({ onLogin }) => {
 
     const onSubmit = (data: any) => {
         setLoading(true)
-        const {email, password} = data
-        login(email, password)
-            .then(onLogin)
+        const { email } = data
+
+        recoveryPassword(email)
+            .then(() => swal('', 'Enviamos um e-mail com as instruções para alterar sua senha.', 'success'))
+            .then(() => navigate('/login'))
             .catch(() => { 
                 setLoading(false)
-                swal('', 'E-mail e/ou senha incorreto', 'error') 
+                swal('', 'Não foi possível recuperar sua senha no momento.', 'error') 
             })
     }
 
@@ -45,26 +48,17 @@ const LoginScreen = ({ onLogin }) => {
                     errors={errors}
                     disabled={loading}
                 />
-                <TextField
-                    name="password"
-                    label="Senha"
-                    type='password' 
-                    register={register}
-                    control={control}
-                    errors={errors}
-                    disabled={loading}
-                />
                 <Button
                     type="submit"
                     variant='secondary'
-                    text={loading ? "Carregando" : "Entrar"}
+                    text={loading ? "Carregando" : "Continuar"}
                 />
                 <div className="bottom-link">
-                    <Link to="/recuperar-senha">Esqueci minha senha</Link>
+                    <Link to="/login">Voltar</Link>
                 </div>
             </form>
         </div>
     )
 }
 
-export default LoginScreen
+export default RecoveryPasswordScreen

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Routes as ReactRoutes, Route, Navigate, useNavigate } from 'react-router-dom'
 
 import LoginScreen from './screens/auth/Login'
+import UpdatePasswordScreen from './screens/auth/UpdatePassword'
+import RecoveryPasswordScreen from './screens/auth/RecoveryPassword'
 
 import EmployeeListScreen from './screens/employee/List'
 import EmployeeFormScreen from './screens/employee/Form'
@@ -31,6 +33,9 @@ const Routes = () => {
 
     return (
         <ReactRoutes>
+            <Route path='/alterar-senha' element={<UpdatePasswordScreen onLogin={onLogin} />} />
+            <Route path='/recuperar-senha' element={<RecoveryPasswordScreen />} />
+
             {!!isLoggedIn && (
                 <>
                     <Route path='/funcionarios' element={<EmployeeListScreen />} />

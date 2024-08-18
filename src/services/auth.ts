@@ -5,6 +5,10 @@ import { USER_TYPES } from "./users"
 
 const AUTH_KEY = 'authToken'
 
+const saveToken = (token: string) => {
+    localStorage.setItem(AUTH_KEY, token)   
+}
+
 export const login = async (email: string, password: string): Promise<void> => {
     return axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
         email,
@@ -14,13 +18,33 @@ export const login = async (email: string, password: string): Promise<void> => {
             if (!response?.data?.token) {
                 throw Error("E-mail e/ou senha incorreto.")
             }
-            localStorage.setItem(AUTH_KEY, response.data.token)
+            saveToken(response.data.token)
         })
 }
 
 export const logout = async () => {
     localStorage.removeItem(AUTH_KEY)
     window.location.href = '/login'
+}
+
+export const updatePassword = async (token: string, email: string, password: string): Promise<void> => {
+    return axios.post(`${process.env.REACT_APP_API_URL}/auth/update-password`, {
+        token,
+        email,
+        password
+    })
+        .then(response => {
+            if (!response?.data?.token) {
+                throw Error("E-mail e/ou senha incorreto.")
+            }
+            saveToken(response.data.token)
+        })
+}
+
+export const recoveryPassword = async (email: string): Promise<void> => {
+    return axios.post(`${process.env.REACT_APP_API_URL}/auth/recovery-password`, {
+        email,
+    })
 }
 
 export const getToken = (): string | null => {

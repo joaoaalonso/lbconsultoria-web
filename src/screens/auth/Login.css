@@ -14,7 +14,19 @@
     flex-direction: column;
     background-color: white;
 
+    .text-field-container {
+        width: 100%;
+    }
+
     img {
         max-width: 120px;
+    }
+
+    .bottom-link {
+        padding: 12px;
+
+        a {
+            color: #ff19d5;
+        }
     }
 }
