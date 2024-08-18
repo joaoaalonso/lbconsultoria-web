@@ -29,7 +29,7 @@ a {
 }
 
 .svg-button:hover {
-  color: #e9dec2;
+  color: #ff19d5;
 }
 
 .swal-modal {
@@ -39,11 +39,11 @@ a {
 .swal-button {
   transition: .3s all;
   border-radius: none;
-  background-color: #45454f; 
+  background-color: #ff19d5; 
 }
 
 .swal-button:not([disabled]):hover {
-  background-color: #e9dec2; 
+  background-color: #d415b1; 
 }
 
 .swal-button--cancel {

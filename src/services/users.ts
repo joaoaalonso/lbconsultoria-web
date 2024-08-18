@@ -98,3 +98,22 @@ export const deleteClient = async (id: string): Promise<Boolean> => {
 }
 
 // EMPLOYEES
+export const getEmployees = async (): Promise<User[]> => {
+    return getUsers(USER_TYPES.Employee)
+}
+
+export const getEmployee = async (id: string): Promise<User> => {
+    return getUser(id, USER_TYPES.Employee)
+}
+
+export const createEmployee = async (user: Omit<User, 'id'>): Promise<User> => {
+    return createUser(user, USER_TYPES.Employee)
+}
+
+export const editEmployee = async (user: User): Promise<User> => {
+    return editUser(user, USER_TYPES.Employee)
+}
+
+export const deleteEmployee = async (id: string): Promise<Boolean> => {
+    return deleteUser(id, USER_TYPES.Employee)
+}

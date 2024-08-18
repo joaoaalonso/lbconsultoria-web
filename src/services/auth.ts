@@ -46,6 +46,11 @@ export const isEmployee = (): Boolean => {
     return [USER_TYPES.Employee, USER_TYPES.Admin].includes(userType)
 }
 
+export const isAdmin = (): Boolean => {
+    const userType = getUserType()
+    return userType === USER_TYPES.Admin
+}
+
 export const logoutWithConfirmation = () => {
     swal({
         text: 'Deseja realmente sair?',

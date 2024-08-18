@@ -7,7 +7,7 @@ interface CardProps {
     text: string
 }
 
-function Card({ text }: CardProps) {
+const Card = ({ text }: CardProps) => {
     return (
         <div className='generic-card'>
             <span>{text}</span>

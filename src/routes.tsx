@@ -3,6 +3,9 @@ import { Routes as ReactRoutes, Route, Navigate, useNavigate } from 'react-route
 
 import LoginScreen from './screens/auth/Login'
 
+import EmployeeListScreen from './screens/employee/List'
+import EmployeeFormScreen from './screens/employee/Form'
+
 import ClientListScreen from './screens/clients/List'
 import ClientDetailsScreen from './screens/clients/Details'
 import ClientFormScreen from './screens/clients/Form'
@@ -30,6 +33,10 @@ const Routes = () => {
         <ReactRoutes>
             {!!isLoggedIn && (
                 <>
+                    <Route path='/funcionarios' element={<EmployeeListScreen />} />
+                    <Route path='/funcionarios/adicionar' element={<EmployeeFormScreen />} />
+                    <Route path='/funcionarios/:userId' element={<EmployeeFormScreen />} />
+
                     <Route path='/clientes' element={<ClientListScreen />} />
                     <Route path='/clientes/adicionar' element={<ClientFormScreen />} />
                     <Route path='/clientes/:userId' element={<ClientDetailsScreen />} />
