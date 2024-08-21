@@ -9,12 +9,14 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { getReports, Report } from '../../services/report'
 
 const ReportListScreen = () => {
+    const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [reports, setReports] = useState<Report[]>([])
 
     useEffect(() => {
         getReports()
             .then(setReports)
+            .finally(() => setLoading(false))
     }, [])
 
 
@@ -41,7 +43,7 @@ const ReportListScreen = () => {
             )}
         >
             <>
-            <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
+                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredReports().map(report => (
                     <Link key={report.id} to={`/relatorios/${report.id}`} state={report}>
@@ -49,7 +51,8 @@ const ReportListScreen = () => {
                     </Link>
                 ))}
                 
-                {!reports.length && <p>Nenhum relatório cadastrado</p>}
+                {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}
+                {!!loading && <p>Carregando relatórios...</p>}
                 {!!reports.length && !getFilteredReports().length && <p>Nenhum relatório encontrado</p>}
             </>
         </ScreenTemplate>

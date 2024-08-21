@@ -12,6 +12,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { getSlaughterhouses, Slaughterhouse } from '../../services/slaughterhouse'
 
 const SlaugtherhouseListScreen = () => {
+    const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [slaughterhouses, setSlaughterhouses] = useState<Slaughterhouse[]>([])
 
@@ -21,10 +22,8 @@ const SlaugtherhouseListScreen = () => {
         getSlaughterhouses()
             .then(setSlaughterhouses)
             .catch(swal)
+            .finally(() => setLoading(false))
     }, [])
-
-    function fetch() {
-    }
 
     function getFilteredSlaughterhouses() {
         return slaughterhouses.filter(slaughterhouse => {
@@ -40,7 +39,7 @@ const SlaugtherhouseListScreen = () => {
             rightComponent={<BiPlus size={25} onClick={() => navigate('/abatedouros/adicionar')} className='svg-button' />}
         >
             <>
-                <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
+                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
 
                 {getFilteredSlaughterhouses().map(slaughterhouse => (
                     <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`} state={slaughterhouse}>
@@ -48,7 +47,8 @@ const SlaugtherhouseListScreen = () => {
                     </Link>
                 ))}
 
-                {!slaughterhouses.length && <p>Nenhum abatedouro cadastrado</p>}
+                {!!loading && <p>Carregando abatedouros...</p>}
+                {!loading && !slaughterhouses.length && <p>Nenhum abatedouro cadastrado</p>}
                 {!!slaughterhouses.length && !getFilteredSlaughterhouses().length && <p>Nenhum abatedouro encontrado</p>}
 
                 {/* <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>

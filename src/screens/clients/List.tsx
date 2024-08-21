@@ -12,6 +12,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { getClients, User } from '../../services/users'
 
 const ClientListScreen = () => {
+    const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [clients, setClients] = useState<User[]>([])
 
@@ -21,6 +22,7 @@ const ClientListScreen = () => {
         getClients()
             .then(setClients)
             .catch(e => swal('', e.message, 'error'))
+            .finally(() => setLoading(false))
     }, [])
 
     const getFilteredClients = () => {
@@ -36,7 +38,7 @@ const ClientListScreen = () => {
             rightComponent={<BiPlus onClick={() => navigate('/clientes/adicionar')} size={25} className='svg-button' />}
         >
             <>
-                <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
+                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredClients().map(client => (
                     <Link key={client.id} to={`/clientes/${client.id}`} state={client}>
@@ -44,7 +46,8 @@ const ClientListScreen = () => {
                     </Link>
                 ))}
                 
-                {!clients.length && <p>Nenhum cliente cadastrado</p>}
+                {!!loading && <p>Carregando lista de clientes...</p>}
+                {!loading && !clients.length && <p>Nenhum cliente cadastrado</p>}
                 {!!clients.length && !getFilteredClients().length && <p>Nenhum cliente encontrado</p>}
             </>
         </ScreenTemplate>

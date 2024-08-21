@@ -12,6 +12,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { getEmployees, User } from '../../services/users'
 
 const EmployeeListScreen = () => {
+    const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [employees, setEmployees] = useState<User[]>([])
 
@@ -21,6 +22,7 @@ const EmployeeListScreen = () => {
         getEmployees()
             .then(setEmployees)
             .catch(e => swal('', e.message, 'error'))
+            .finally(() => setLoading(false))
     }, [])
 
     const getFilteredEmployees = () => {
@@ -42,7 +44,7 @@ const EmployeeListScreen = () => {
             }
         >
             <>
-                <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
+                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredEmployees().map(employee => (
                     <Link key={employee.id} to={`/funcionarios/${employee.id}`} state={employee}>
@@ -50,7 +52,8 @@ const EmployeeListScreen = () => {
                     </Link>
                 ))}
                 
-                {!employees.length && <p>Nenhum funcionário cadastrado</p>}
+                {!!loading && <p>Carregando lista de funcionários...</p>}
+                {!loading && !employees.length && <p>Nenhum funcionário cadastrado</p>}
                 {!!employees.length && !getFilteredEmployees().length && <p>Nenhum funcionário encontrado</p>}
             </>
         </ScreenTemplate>

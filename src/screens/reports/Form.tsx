@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 // import formatDate from 'date-fns/format'
 // import ptBr from 'date-fns/locale/pt-BR'
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BiDownload, BiPlus, BiTrash } from 'react-icons/bi'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 import Button from '../../components/Button'
@@ -16,10 +16,9 @@ import TextField from '../../components/TextField'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-// import { getSettings } from '../../services/settings'
 // import generateReport from '../../services/generateReport'
+import { User, getClients } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
-import { USER_TYPES, User, getClients } from '../../services/users'
 import { 
     Slaughterhouse,
     getSlaughterhouses,
@@ -28,20 +27,10 @@ import {
 } from '../../services/slaughterhouse'
 import { 
     Report,
-    // getDif, 
-    // getFetus, 
-    // getBruises, 
-    // getMaturity, 
-    // createReport, 
-    // getFinishing, 
-    // getReportById, 
-    // getRumenScore,
-    ObjectTypeValue,
-    ObjectSeqTypeValue,
     getReport,
-    // getPhotos,
-    // updateReport,
-    // deleteReport
+    createReport,
+    editReport,
+    deleteReport
 } from '../../services/report'
 import { getAvailableSex, getSexLabel } from '../../services/sex'
 
@@ -49,7 +38,8 @@ import { getAvailableSex, getSexLabel } from '../../services/sex'
 function ReportForm() {
     const { state } = useLocation()
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
     const [isFemale, setIsFemale] = useState(true)
 
     const [users, setUsers] = useState<User[]>([])
@@ -57,40 +47,65 @@ function ReportForm() {
     const [slaughterhouses, setSlaughterhouses] = useState<Slaughterhouse[]>([])
     const [slaughterhouseUnits, setSlaughterhouseUnits] = useState<SlaughterhouseUnit[]>([])
 
-    const [maturity, setMaturity] = useState<ObjectTypeValue[]>(state?.maturity ?? [
+    const [maturity, setMaturity] = useState(state?.maturity ?? [
         { type: '0', value: '0' },
         { type: '2', value: '0' },
         { type: '4', value: '0' },
         { type: '6', value: '0' },
         { type: '8', value: '0' },
     ])
-    const [finishing, setFinishing] = useState<ObjectTypeValue[]>(state?.finishing ?? [
+    const [finishing, setFinishing] = useState(state?.finishing ?? [
         { type: '1', value: '0' },
         { type: '2', value: '0' },
         { type: '3', value: '0' },
         { type: '4', value: '0' },
         { type: '5', value: '0' },
     ])
-    const [rumenScore, setRumenScore] = useState<ObjectTypeValue[]>(state?.rumenScore ?? [
+    const [rumenScore, setRumenScore] = useState(state?.rumenScore ?? [
         { type: '1', value: '0' },
         { type: '2', value: '0' },
         { type: '3', value: '0' },
         { type: '4', value: '0' },
         { type: '5', value: '0' },
     ])
-    const [fetus, setFetus] = useState<ObjectTypeValue[]>(state?.fetus ?? [
+    const [fetus, setFetus] = useState(state?.fetus ?? [
         { type: 'P', value: '0' },
         { type: 'M', value: '0' },
         { type: 'G', value: '0' },
     ])
     
-    const [dif, setDif] = useState<ObjectSeqTypeValue[]>(state?.dif ?? [{ seq: '', type: '', value: '' }])
-    const [bruises, setBruises] = useState<ObjectSeqTypeValue[]>(state?.bruises ?? [{ seq: '', type: '', value: '' }])
+    const [dif, setDif] = useState(state?.dif ?? [{ seq: '', type: '', value: '' }])
+    const [bruises, setBruises] = useState(state?.bruises ?? [{ seq: '', type: '', value: '' }])
     
     const [photos, setPhotos] = useState<string[]>(state?.photos ?? [])
     
     const { reportId } = useParams()
     const navigate = useNavigate()
+
+    const getFormattedReport = useCallback((report: Omit<Report, "user" | "ranch" | "slaughterhouse" | "slaughterhouseUnit">) => {
+        if (!report) return
+
+        return {
+            date: report.date,
+            slaughterhouseId: `${report.slaughterhouseId}`,
+            slaughterhouseUnitId: `${report.slaughterhouseUnitId}`,
+            userId: `${report.userId}`,
+            ranchId: `${report.ranchId}`,
+            ranchCity: ranches.find(r => r.id === report.ranchId)?.city || '',
+            numberOfAnimals: `${report.numberOfAnimals}`,
+            sex: report.sex,
+            batch: report.batch,
+            breed: report.breed,
+            cattleShed: report.cattleShed,
+            sequential: report.sequential,
+            arroba: report.arroba ? (report.arroba / 100).toFixed(2).replace('.', ',') : '',
+            vaccineWeight: (report.vaccineWeight / 100).toFixed(2).replace('.', ','),
+            pv: (report.pv / 100).toFixed(2).replace('.', ','),
+            pc: (report.pc / 100).toFixed(2).replace('.', ','),
+            corralEvaluation: report.corralEvaluation,
+            comments: report.comments || ''
+        }
+    }, [ranches])
 
     const {
         register,
@@ -102,7 +117,7 @@ function ReportForm() {
         control,
         formState: { errors }
     } = useForm({
-        defaultValues: state ?? {
+        defaultValues: {
             date: new Date(),
             slaughterhouseId: '',
             slaughterhouseUnitId: '',
@@ -117,47 +132,35 @@ function ReportForm() {
             sequential: '',
             arroba: '',
             vaccineWeight: '',
-            PV: '',
-            PC: '',
+            pv: '',
+            pc: '',
             corralEvaluation: '',
             comments: ''
         }
     })
 
+    const setReport = useCallback(report => {
+        reset(getFormattedReport(report))
+        if (report.maturity) setMaturity(report.maturity)
+        if (report.finishing) setFinishing(report.finishing)
+        if (report.rumenScore) setRumenScore(report.rumenScore)
+        if (report.fetus) setFetus(report.fetus)
+        if (report.dif) setDif(report.dif)
+        if (report.bruises) setBruises(report.bruises)
+        if (report.photos) setPhotos(report.photos)
+        setLoading(false)
+    }, [reset, getFormattedReport])
+
     useEffect(() => {
-        if (!state && reportId) {
+        if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
+        
+        if (!state) {
             getReport(reportId)
-                .then(report => {
-                    reset({
-                        date: new Date(),
-                        slaughterhouseId: `${report.slaughterhouseId}`,
-                        slaughterhouseUnitId: `${report.slaughterhouseUnitId}`,
-                        userId: `${report.userId}`,
-                        ranchId: `${report.ranchId}`,
-                        ranchCity: ranches.find(r => r.id === report.ranchId)?.city || '',
-                        numberOfAnimals: `${report.numberOfAnimals}`,
-                        sex: report.sex,
-                        batch: report.batch,
-                        breed: report.breed,
-                        cattleShed: report.cattleShed,
-                        sequential: report.sequential,
-                        arroba: report.arroba ? (report.arroba / 100).toString().replace('.', ',') : '',
-                        vaccineWeight: (report.vaccineWeight / 100).toString().replace('.', ','),
-                        PV: (report.PV / 100).toString().replace('.', ','),
-                        PC: (report.PC / 100).toString().replace('.', ','),
-                        corralEvaluation: report.corralEvaluation,
-                        comments: report.comments || ''
-                    })
-                    if (report.maturity) setMaturity(report.maturity)
-                    if (report.finishing) setFinishing(report.finishing)
-                    if (report.rumenScore) setRumenScore(report.rumenScore)
-                    if (report.fetus) setFetus(report.fetus)
-                    if (report.dif) setDif(report.dif)
-                    if (report.bruises) setBruises(report.bruises)
-                    if (report.photos) setPhotos(report.photos)
-                })
+                .then(setReport)
+        } else {
+            setReport(state)
         }
-    }, [reportId, ranches, reset])
+    }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, state, setReport])
 
     useEffect(() => {
         getClients()
@@ -239,8 +242,8 @@ function ReportForm() {
             sequential: data.sequential,
             arroba: data.arroba ? parseNumber(data.arroba) : undefined,
             vaccineWeight: parseNumber(data.vaccineWeight),
-            PV: parseNumber(data.PV),
-            PC: parseNumber(data.PC),
+            pv: parseNumber(data.pv),
+            pc: parseNumber(data.pc),
             corralEvaluation: data.corralEvaluation,
             comments: data.comments,
             penalties: data.penalties,
@@ -270,23 +273,22 @@ function ReportForm() {
         })
         .then(confirm => {
             if (confirm) {
-                // if (reportId) {
-                //     updateReport(parseInt(id), input)
-                //         .then(() => {
-                //             swal('', 'Relatório atualizado com sucesso!', 'success')
-                //             navigate(`/reports/${id}`)
-                //         })
-                //         .catch(e => { swal('', e, 'error') })
-                //         .finally(() => { setLoading(false) })
-                // } else {
-                //     createReport(input)
-                //         .then(reportId => {
-                //             swal('', 'Relatório gerado com sucesso!', 'success')
-                //             navigate(`/reports/${reportId}`)
-                //         })
-                //         .catch(e => { swal('', e, 'error') })
-                //         .finally(() => { setLoading(false) })
-                // }
+                if (reportId) {
+                    editReport({id: reportId, ...input})
+                        .then(() => {
+                            swal('', 'Relatório atualizado com sucesso!', 'success')
+                        })
+                        .catch(e => { swal('', e, 'error') })
+                        .finally(() => { setSaving(false) })
+                } else {
+                    createReport(input)
+                        .then(report => {
+                            swal('', 'Relatório gerado com sucesso!', 'success')
+                            navigate(`/relatorios/${report.id}`)
+                        })
+                        .catch(e => { swal('', e, 'error') })
+                        .finally(() => { setSaving(false) })
+                }
             }
         })
     }
@@ -310,10 +312,10 @@ function ReportForm() {
         })
         .then(confirm => {
             if (confirm) {
-                // deleteReport(parseInt(id))
-                //     .then(() => { swal('', 'Relatório deletado com sucesso!', 'success') })
-                //     .then(() => navigate('/reports'))
-                //     .catch(swal)
+                deleteReport(reportId)
+                    .then(() => { swal('', 'Relatório deletado com sucesso!', 'success') })
+                    .then(() => navigate('/relatorios'))
+                    .catch(swal)
             }
         })
     }
@@ -400,7 +402,8 @@ function ReportForm() {
             rightComponent={renderTopBarButtons()}
         >
             <>
-                <Loading loading={loading} text='Gerando relatório...' />
+                <Loading loading={loading} text='Carregando relatório...' />
+                <Loading loading={saving} text='Gerando relatório...' />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
                         <div className='column'>
@@ -464,10 +467,10 @@ function ReportForm() {
                             <TextField label='Peso da vacina' name='vaccineWeight' type='decimal' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField label='PV' name='PV' type='decimal' register={register} errors={errors} required />
+                            <TextField label='PV' name='pv' type='decimal' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField label='PC' name='PC' type='decimal' register={register} errors={errors} required />
+                            <TextField label='PC' name='pc' type='decimal' register={register} errors={errors} required />
                         </div>
                     </div>
 

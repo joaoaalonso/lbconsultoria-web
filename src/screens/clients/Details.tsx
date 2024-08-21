@@ -6,10 +6,10 @@ import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
-// import ReportCard from '../../components/ReportCard'
+import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-// import { getReportsBy, ReportItem } from '../../services/report'
+import { getReportsByUser, Report } from '../../services/report'
 import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
 
@@ -17,7 +17,7 @@ const ClientDetailsScreen = () => {
     const { state } = useLocation()
     const [client, setClient] = useState<User>(state)
     const [ranches, setRanches] = useState<Ranch[]>([])
-    // const [reports, setReports] = useState<ReportItem[]>([])
+    const [reports, setReports] = useState<Report[]>([])
 
     const { userId } = useParams()
     const navigate = useNavigate()
@@ -31,9 +31,10 @@ const ClientDetailsScreen = () => {
 
     useEffect(() => {
         fetch()
-        // if (id) {
-        //     getReportsBy('clientId', parseInt(id)).then(setReports)
-        // }
+        if (userId) {
+            getReportsByUser(userId)
+                .then(setReports)
+        }
     }, [userId, fetch])
 
     const removeClient = () => {
@@ -172,13 +173,13 @@ const ClientDetailsScreen = () => {
                     </>
                 </Table>
 
-                {/* <p>Relatórios</p>
+                <p>Relatórios</p>
                 {reports.map(report => (
-                    <Link key={report.id} to={`/reports/${report.id}`}>
+                    <Link key={report.id} to={`/relatorios/${report.id}`} state={report}>
                         <ReportCard report={report} />
                     </Link>
                 ))}
-                {!reports.length && <p>Nenhum relatório cadastrado</p>} */}
+                {!reports.length && <p>Nenhum relatório cadastrado</p>}
             </>
         </ScreenTemplate>
     )
