@@ -33,13 +33,19 @@ const EmployeeListScreen = () => {
         <ScreenTemplate
             title='Funcionários'
             noBackground
-            rightComponent={<BiPlus onClick={() => navigate('/funcionarios/adicionar')} size={25} className='svg-button' />}
+            rightComponent={
+                <BiPlus
+                    size={25}
+                    className='svg-button'
+                    onClick={() => navigate('/funcionarios/adicionar')}
+                />
+            }
         >
             <>
                 <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
                 
                 {getFilteredEmployees().map(employee => (
-                    <Link key={employee.id} to={`/funcionarios/${employee.id}`}>
+                    <Link key={employee.id} to={`/funcionarios/${employee.id}`} state={employee}>
                         <Card text={employee.name} />
                     </Link>
                 ))}

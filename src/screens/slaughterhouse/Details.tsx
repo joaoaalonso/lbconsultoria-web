@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import swal from 'sweetalert'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 // import ReportCard from '../../components/ReportCard'
@@ -18,11 +18,12 @@ import {
 // import { getReportsBy, ReportItem } from '../../services/report'
 
 const SlaughterhouseDetailsScreen = () => {
+    const { state } = useLocation()
     // const [modalIsOpen, setModalIsOpen] = useState(false)
     // const [unitModalIsOpen, setUnitModalIsOpen] = useState(false)
     
     const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
-    const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>()
+    const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>(state)
     // const [reports, setReports] = useState<ReportItem[]>([])
 
     // const [selectedUnit, setSelectedUnit] = useState<SlaughterhouseUnit>()
@@ -40,7 +41,7 @@ const SlaughterhouseDetailsScreen = () => {
 
     function fetch() {
         if (slaughterhouseId) {
-            getSlaughterhouse(slaughterhouseId).then(setSlaughterhouse)
+            if (!state) getSlaughterhouse(slaughterhouseId).then(setSlaughterhouse)
             getSlaughterhouseUnits(slaughterhouseId).then(setUnits)
         }
     }
@@ -66,7 +67,7 @@ const SlaughterhouseDetailsScreen = () => {
             if (confirm) {
                 deleteSlaughterhouse(slaughterhouseId)
                     .then(() => { swal('', 'Abatedouro removido com sucesso!', 'success') })
-                    .then(() => navigate('/slaughterhouses'))
+                    .then(() => navigate('/abatedouros'))
                     .catch(swal)
             }
         })
@@ -75,7 +76,11 @@ const SlaughterhouseDetailsScreen = () => {
     function renderTopBarButtons() {
         return (
             <div className="column">
-                <BiEdit onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`)} size={25} className='svg-button' />
+                <BiEdit
+                    size={25}
+                    className='svg-button'
+                    onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`, { state: slaughterhouse })}
+                />
                 <BiTrash onClick={removeSlaughterhouse} size={25} className='svg-button' />
             </div>
         )
@@ -133,7 +138,13 @@ const SlaughterhouseDetailsScreen = () => {
                 <p>Nome: {slaughterhouse?.name}</p>
                 <Table
                     title='Unidades abatedoura'
-                    righComponent={<BiPlus size={25} className='svg-button' onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/adicionar`)} />}
+                    righComponent={
+                        <BiPlus
+                            size={25}
+                            className='svg-button'
+                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/adicionar`)}
+                        />
+                    }
                 >
                     <>
                         <thead>
@@ -147,7 +158,12 @@ const SlaughterhouseDetailsScreen = () => {
                                 <tr key={unit.id}>
                                     <td>{unit.city}</td>
                                     <td>{unit.state}</td>
-                                    <td><BiEdit size={15} onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`)} /></td>
+                                    <td>
+                                        <BiEdit
+                                            size={15}
+                                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`, { state: unit })}
+                                        />
+                                    </td>
                                     <td><BiTrash size={15} onClick={() => deleteUnit(unit)} /></td>
                                 </tr>
                             ))}

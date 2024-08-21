@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
@@ -10,6 +10,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { createSlaughterhouse, editSlaughterhouse, getSlaughterhouse, Slaughterhouse } from '../../services/slaughterhouse'
 
 const SlaughterhouseFormScreen = () => {
+    const { state } = useLocation()
     const { slaughterhouseId } = useParams()
 
     const navigate = useNavigate()
@@ -19,14 +20,16 @@ const SlaughterhouseFormScreen = () => {
         handleSubmit,
         reset,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: state
+    })
 
     useEffect(() => {
-        if (slaughterhouseId) {
+        if (!state && slaughterhouseId) {
             getSlaughterhouse(slaughterhouseId)
                 .then(reset)
         }
-    }, [slaughterhouseId])
+    }, [slaughterhouseId, state, reset])
 
     function onSubmit(data: any) {
         let handler: any = createSlaughterhouse

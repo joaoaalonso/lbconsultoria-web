@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import swal from 'sweetalert'
 import { BiTrash } from 'react-icons/bi'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
@@ -11,6 +11,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { createEmployee, editEmployee, getEmployee } from '../../services/users'
 
 const EmployeeFormScreen = () => {
+    const { state } = useLocation()
     const { userId } = useParams()
 
     const navigate = useNavigate()
@@ -20,15 +21,17 @@ const EmployeeFormScreen = () => {
         handleSubmit,
         reset,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: state
+    })
 
     useEffect(() => {
-        if (userId) {
+        if (!state && userId) {
             getEmployee(userId)
                 .then(reset)
                 .catch(e => swal('', e.message, 'error'))
         }
-    }, [userId, reset])
+    }, [userId, state, reset])
 
     function onSubmit(data: any) {
         let handler: any = createEmployee

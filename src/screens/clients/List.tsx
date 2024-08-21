@@ -39,7 +39,7 @@ const ClientListScreen = () => {
                 <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
                 
                 {getFilteredClients().map(client => (
-                    <Link key={client.id} to={`/clientes/${client.id}`}>
+                    <Link key={client.id} to={`/clientes/${client.id}`} state={client}>
                         <Card text={client.name} />
                     </Link>
                 ))}

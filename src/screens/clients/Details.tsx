@@ -3,7 +3,7 @@ import 'react-responsive-modal/styles.css';
 import React, { useState, useEffect, useCallback } from 'react'
 import swal from 'sweetalert'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 // import ReportCard from '../../components/ReportCard'
@@ -14,7 +14,8 @@ import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
 
 const ClientDetailsScreen = () => {
-    const [client, setClient] = useState<User>()
+    const { state } = useLocation()
+    const [client, setClient] = useState<User>(state)
     const [ranches, setRanches] = useState<Ranch[]>([])
     // const [reports, setReports] = useState<ReportItem[]>([])
 
@@ -22,11 +23,11 @@ const ClientDetailsScreen = () => {
     const navigate = useNavigate()
 
     const fetch = useCallback(() => {
-        if (userId) {
+        if (!state && userId) {
             getClient(userId).then(setClient)
             getRanches(userId).then(setRanches)
         }
-    }, [userId])
+    }, [state, userId])
 
     useEffect(() => {
         fetch()
@@ -65,7 +66,11 @@ const ClientDetailsScreen = () => {
     const renderTopBarButtons = () => {
         return (
             <div className="column">
-                <BiEdit onClick={() => navigate(`/clientes/${userId}/editar`)} size={25} className='svg-button' />
+                <BiEdit 
+                    size={25} 
+                    className='svg-button' 
+                    onClick={() => navigate(`/clientes/${userId}/editar`, { state: client })} 
+                    />
                 <BiTrash onClick={removeClient} size={25} className='svg-button' />
             </div>
         )
@@ -125,7 +130,13 @@ const ClientDetailsScreen = () => {
                 <p>Telefone: {client?.phone || '-'}</p>
                 <Table 
                     title='Propriedades'
-                    righComponent={<BiPlus size={25} className='svg-button' onClick={() => navigate(`/clientes/${userId}/propriedades`)} />}
+                    righComponent={
+                        <BiPlus
+                            size={25}
+                            className='svg-button'
+                            onClick={() => navigate(`/clientes/${userId}/propriedades`)}
+                        />
+                    }
                 >
                     <>
                         <thead>
@@ -147,7 +158,12 @@ const ClientDetailsScreen = () => {
                                     <td>{ranch.state}</td>
                                     <td>{ranch.ie}</td>
                                     <td>{ranch.comments}</td>
-                                    <td><BiEdit size={15} onClick={() => navigate(`/clientes/${userId}/propriedades/${ranch.id}`)} /></td>
+                                    <td>
+                                        <BiEdit
+                                            size={15}
+                                            onClick={() => navigate(`/clientes/${userId}/propriedades/${ranch.id}`, { state: ranch })}
+                                        />
+                                    </td>
                                     <td><BiTrash size={15} onClick={() => removeRanch(ranch)} /></td>
                                 </tr>
                             ))}

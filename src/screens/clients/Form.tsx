@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
@@ -11,6 +11,7 @@ import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
 
 const ClientFormScreen = () => {
+    const { state } = useLocation()
     const { userId } = useParams()
 
     const {
@@ -21,13 +22,16 @@ const ClientFormScreen = () => {
         control,
         reset,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: state
+    })
 
     useEffect(() => {
-        if (userId) {
-            getClient(userId).then(reset)
+        if (!state && userId) {
+            getClient(userId)
+                .then(reset)
         }
-    }, [userId, reset])
+    }, [userId, state, reset])
 
     const watchPostalCode = watch('postalCode')
 

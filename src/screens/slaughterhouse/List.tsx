@@ -43,7 +43,7 @@ const SlaugtherhouseListScreen = () => {
                 <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
 
                 {getFilteredSlaughterhouses().map(slaughterhouse => (
-                    <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`}>
+                    <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`} state={slaughterhouse}>
                         <Card text={slaughterhouse.name} />
                     </Link>
                 ))}

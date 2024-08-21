@@ -19,7 +19,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 // import { getSettings } from '../../services/settings'
 // import generateReport from '../../services/generateReport'
 import { getRanches, Ranch } from '../../services/ranches'
-import { USER_TYPES, User, getUsers } from '../../services/users'
+import { USER_TYPES, User, getClients } from '../../services/users'
 import { 
     Slaughterhouse,
     getSlaughterhouses,
@@ -160,7 +160,7 @@ function ReportForm() {
     }, [reportId, ranches, reset])
 
     useEffect(() => {
-        getUsers(USER_TYPES.Client)
+        getClients()
             .then(u => {
                 if (u.length) {
                     setUsers(u)
