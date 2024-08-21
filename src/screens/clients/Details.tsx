@@ -23,8 +23,8 @@ const ClientDetailsScreen = () => {
     const navigate = useNavigate()
 
     const fetch = useCallback(() => {
-        if (!state && userId) {
-            getClient(userId).then(setClient)
+        if (userId) {
+            if (!state) getClient(userId).then(setClient)
             getRanches(userId).then(setRanches)
         }
     }, [state, userId])
