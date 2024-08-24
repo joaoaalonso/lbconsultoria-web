@@ -77,6 +77,14 @@ export const getReportsByUser = async (userId: string): Promise<Report[]> => {
         })
 }
 
+export const getReportsBySlaughterhouse = async (slaughterhouseId: string): Promise<Report[]> => {
+    return apiClient().get<Report[]>(`/slaughterhouses/${slaughterhouseId}/reports`)
+        .then(response => response.data)
+        .catch(err => {
+            throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
+        })
+}
+
 export const createReport = async (report: Omit<Report, "id" | "user" | "ranch" | "slaughterhouse" | "slaughterhouseUnit">): Promise<Report> => {
     return apiClient().post<Report>(`/reports`, report)
         .then(response => response.data)

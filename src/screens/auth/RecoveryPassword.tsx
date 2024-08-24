@@ -3,10 +3,11 @@ import './Login.css'
 import React, { useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import logo from '../../images/logo.jpeg'
 import Button from '../../components/Button'
+import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 
 import { recoveryPassword } from '../../services/auth'
@@ -36,28 +37,31 @@ const RecoveryPasswordScreen = () => {
     }
 
     return (
-        <div className="login-screen">
-            <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
-                <img src={logo} alt="LB Consultoria" />
-                <TextField 
-                    name="email"
-                    label="E-mail"
-                    type="email"
-                    register={register}
-                    control={control}
-                    errors={errors}
-                    disabled={loading}
-                />
-                <Button
-                    type="submit"
-                    variant='secondary'
-                    text={loading ? "Carregando" : "Continuar"}
-                />
-                <div className="bottom-link">
-                    <Link to="/login">Voltar</Link>
-                </div>
-            </form>
-        </div>
+        <>
+            <Loading loading={loading} />
+            <div className="login-screen">
+                <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
+                    <img src={logo} alt="LB Consultoria" />
+                    <TextField 
+                        name="email"
+                        label="E-mail"
+                        type="email"
+                        register={register}
+                        control={control}
+                        errors={errors}
+                        disabled={loading}
+                    />
+                    <Button
+                        type="submit"
+                        variant='secondary'
+                        text="Continuar"
+                    />
+                    <div className="bottom-link">
+                        <Link to="/login">Voltar</Link>
+                    </div>
+                </form>
+            </div>
+        </>
     )
 }
 

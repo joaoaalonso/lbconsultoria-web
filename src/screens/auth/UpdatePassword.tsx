@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import logo from '../../images/logo.jpeg'
 import Button from '../../components/Button'
+import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 
 import { updatePassword } from '../../services/auth'
@@ -41,48 +42,51 @@ const UpdatePasswordScreen = ({ onLogin }) => {
     }
 
     return (
-        <div className="login-screen">
-            <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
-                <img src={logo} alt="LB Consultoria" />
-                {!!token && (
-                    <>
-                        <TextField 
-                            name="email"
-                            label="E-mail"
-                            type="email"
-                            register={register}
-                            control={control}
-                            errors={errors}
-                            disabled={loading}
-                        />
-                      <TextField
-                            name="password"
-                            label="Nova senha"
-                            type='password' 
-                            register={register}
-                            control={control}
-                            errors={errors}
-                            disabled={loading}
-                        />
-                        <Button
-                            type="submit"
-                            variant='secondary'
-                            text={loading ? "Carregando" : "Salvar"}
-                        />
-                    </>
-                )}
-                {!token && (
-                    <>
-                        <h3>Link inválido ou expirado.</h3>
-                        <Button
-                            variant='secondary'
-                            text='Voltar'
-                            onClick={() => navigate('/login')}
-                        />
-                    </>
-                )}
-            </form>
-        </div>
+        <>
+            <Loading loading={loading} />
+            <div className="login-screen">
+                <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
+                    <img src={logo} alt="LB Consultoria" />
+                    {!!token && (
+                        <>
+                            <TextField 
+                                name="email"
+                                label="E-mail"
+                                type="email"
+                                register={register}
+                                control={control}
+                                errors={errors}
+                                disabled={loading}
+                            />
+                        <TextField
+                                name="password"
+                                label="Nova senha"
+                                type='password' 
+                                register={register}
+                                control={control}
+                                errors={errors}
+                                disabled={loading}
+                            />
+                            <Button
+                                type="submit"
+                                variant='secondary'
+                                text="Salvar"
+                            />
+                        </>
+                    )}
+                    {!token && (
+                        <>
+                            <h3>Link inválido ou expirado.</h3>
+                            <Button
+                                variant='secondary'
+                                text='Voltar'
+                                onClick={() => navigate('/login')}
+                            />
+                        </>
+                    )}
+                </form>
+            </div>
+        </>
     )
 }
 

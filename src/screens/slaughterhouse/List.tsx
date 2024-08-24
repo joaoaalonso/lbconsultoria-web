@@ -1,5 +1,3 @@
-// import 'react-responsive-modal/styles.css'
-
 import React, { useState, useEffect } from 'react'
 import swal from 'sweetalert'
 import { BiPlus } from 'react-icons/bi'
@@ -42,7 +40,7 @@ const SlaugtherhouseListScreen = () => {
                 {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
 
                 {getFilteredSlaughterhouses().map(slaughterhouse => (
-                    <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`} state={slaughterhouse}>
+                    <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`}>
                         <Card text={slaughterhouse.name} />
                     </Link>
                 ))}
@@ -50,12 +48,6 @@ const SlaugtherhouseListScreen = () => {
                 {!!loading && <p>Carregando abatedouros...</p>}
                 {!loading && !slaughterhouses.length && <p>Nenhum abatedouro cadastrado</p>}
                 {!!slaughterhouses.length && !getFilteredSlaughterhouses().length && <p>Nenhum abatedouro encontrado</p>}
-
-                {/* <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-                    <div style={{ width: 400, padding: 24, paddingTop: 36 }}>
-                        <SlaughterhouseForm onSave={handleOnSave} />
-                    </div>
-                </Modal> */}
             </>
         </ScreenTemplate>
     )

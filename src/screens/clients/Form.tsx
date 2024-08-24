@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
 import TextField from '../../components/TextField'
@@ -9,10 +9,12 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
+import Loading from '../../components/Loading'
 
 const ClientFormScreen = () => {
-    const { state } = useLocation()
     const { userId } = useParams()
+    const [loading, setLoading] = useState(!!userId)
+    const [saving, setSaving] = useState(false)
 
     const {
         register,
@@ -22,16 +24,16 @@ const ClientFormScreen = () => {
         control,
         reset,
         formState: { errors }
-    } = useForm({
-        defaultValues: state
-    })
+    } = useForm()
 
     useEffect(() => {
-        if (!state && userId) {
+        if (userId) {
             getClient(userId)
                 .then(reset)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoading(false))
         }
-    }, [userId, state, reset])
+    }, [userId, reset])
 
     const watchPostalCode = watch('postalCode')
 
@@ -54,6 +56,8 @@ const ClientFormScreen = () => {
     }, [watchPostalCode, handlePostalCodeChange])
 
     function onSubmit(data: any) {
+        setSaving(true)
+        
         let handler: any = createClient
         let params = data
         let message = 'Cliente cadastrado com sucesso!'
@@ -68,6 +72,7 @@ const ClientFormScreen = () => {
         handler(params)
             .then(() => swal('', message, 'success'))
             .catch(e => swal('', e.message, 'error'))
+            .finally(() => setSaving(false))
     }
 
     return (
@@ -76,64 +81,69 @@ const ClientFormScreen = () => {
             title={userId ? 'Editar cliente' : 'Adicionar cliente'}
             noBackground
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='name' label='Nome' register={register} errors={errors} required />
-                    </div>
-                    <div className='column'>
-                        <TextField name='postalCode' label='CEP' mask="11111-111" control={control} register={register} errors={errors} required />
-                    </div>
-                </div>
+            <>
+                <Loading loading={loading} />
+                <Loading loading={saving} text="Salvando..." />
 
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='streetName' label='Endereço' register={register} errors={errors} />
-                    </div>
-                    <div className='column'>
-                        <TextField name='streetNumber' label='Número' register={register} errors={errors} />
-                    </div>
-                </div>
-
-
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='neighborhood' label='Bairro' register={register} errors={errors} />
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='name' label='Nome' register={register} errors={errors} required />
+                        </div>
+                        <div className='column'>
+                            <TextField name='postalCode' label='CEP' mask="11111-111" control={control} register={register} errors={errors} required />
+                        </div>
                     </div>
 
-                    <div className='column'>
-                        <TextField name='addressComplement' label='Complemento' register={register} errors={errors} />
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='streetName' label='Endereço' register={register} errors={errors} />
+                        </div>
+                        <div className='column'>
+                            <TextField name='streetNumber' label='Número' register={register} errors={errors} />
+                        </div>
                     </div>
-                </div>
 
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='city' label='Cidade' register={register} errors={errors} required />
-                    </div>
-                    <div className='column'>
-                        <TextField name='state' label='Estado' register={register} errors={errors} required />
-                    </div>
-                </div>
 
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='document' label='CPF/CNPJ' register={register} errors={errors} />
-                    </div>
-                    <div className='column'>
-                        <TextField name='phone' label='Telefone' register={register} errors={errors} />
-                    </div>
-                </div>
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='neighborhood' label='Bairro' register={register} errors={errors} />
+                        </div>
 
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='email' label='Email' register={register} errors={errors} />
+                        <div className='column'>
+                            <TextField name='addressComplement' label='Complemento' register={register} errors={errors} />
+                        </div>
                     </div>
-                </div>
 
-                <div className='row'>
-                    <Button type='submit' variant='secondary' text={userId ? 'Salvar alterações' : 'Cadastrar cliente'} />
-                </div>
-            </form>
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='city' label='Cidade' register={register} errors={errors} required />
+                        </div>
+                        <div className='column'>
+                            <TextField name='state' label='Estado' register={register} errors={errors} required />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='document' label='CPF/CNPJ' register={register} errors={errors} />
+                        </div>
+                        <div className='column'>
+                            <TextField name='phone' label='Telefone' register={register} errors={errors} />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='email' label='Email' register={register} errors={errors} />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <Button type='submit' variant='secondary' text={userId ? 'Salvar alterações' : 'Cadastrar cliente'} />
+                    </div>
+                </form>
+            </>
         </ScreenTemplate>
     )
 }

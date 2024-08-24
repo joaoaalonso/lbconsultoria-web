@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import swal from 'sweetalert'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
-// import ReportCard from '../../components/ReportCard'
+import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { 
@@ -15,36 +15,40 @@ import {
     Slaughterhouse, 
     SlaughterhouseUnit
 } from '../../services/slaughterhouse'
-// import { getReportsBy, ReportItem } from '../../services/report'
+import { getReportsBySlaughterhouse, Report } from '../../services/report'
+import Loading from '../../components/Loading'
 
 const SlaughterhouseDetailsScreen = () => {
-    const { state } = useLocation()
-    // const [modalIsOpen, setModalIsOpen] = useState(false)
-    // const [unitModalIsOpen, setUnitModalIsOpen] = useState(false)
-    
     const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
-    const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>(state)
-    // const [reports, setReports] = useState<ReportItem[]>([])
+    const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>()
+    const [reports, setReports] = useState<Report[]>([])
+    const [loading, setLoading] = useState(true)
+    const [loadingReports, setLoadingReports] = useState(true)
 
-    // const [selectedUnit, setSelectedUnit] = useState<SlaughterhouseUnit>()
-    
     const { slaughterhouseId } = useParams()
     
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetch()
-        // if(slaughterhouseId) {
-        //     getReportsBy('slaughterhouseId', parseInt(id)).then(setReports)
-        // }
+    const fetch = useCallback(() => {
+        if (slaughterhouseId) {
+            getSlaughterhouse(slaughterhouseId)
+                .then(setSlaughterhouse)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoading(false))
+            getSlaughterhouseUnits(slaughterhouseId)
+                .then(setUnits)
+        }
     }, [slaughterhouseId])
 
-    function fetch() {
-        if (slaughterhouseId) {
-            if (!state) getSlaughterhouse(slaughterhouseId).then(setSlaughterhouse)
-            getSlaughterhouseUnits(slaughterhouseId).then(setUnits)
+    useEffect(() => {
+        fetch()
+        if(slaughterhouseId) {
+            getReportsBySlaughterhouse(slaughterhouseId)
+                .then(setReports)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoadingReports(false))
         }
-    }
+    }, [slaughterhouseId, fetch])
 
     function removeSlaughterhouse() {
         if (!slaughterhouseId) return
@@ -79,27 +83,11 @@ const SlaughterhouseDetailsScreen = () => {
                 <BiEdit
                     size={25}
                     className='svg-button'
-                    onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`, { state: slaughterhouse })}
+                    onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`)}
                 />
                 <BiTrash onClick={removeSlaughterhouse} size={25} className='svg-button' />
             </div>
         )
-    }
-
-    function handleOnSave() {
-        fetch()
-        // resetModal()
-    }
-
-    function resetModal() {
-        // setModalIsOpen(false)
-        // setUnitModalIsOpen(false)
-        // setSelectedUnit(undefined)
-    }
-
-    function editUnit(unit: SlaughterhouseUnit) {
-        // setSelectedUnit(unit)
-        // setUnitModalIsOpen(true)
     }
 
     function deleteUnit(unit: SlaughterhouseUnit) {
@@ -135,6 +123,9 @@ const SlaughterhouseDetailsScreen = () => {
             rightComponent={renderTopBarButtons()}
         >
             <>
+
+                <Loading loading={loading} />
+
                 <p>Nome: {slaughterhouse?.name}</p>
                 <Table
                     title='Unidades abatedoura'
@@ -161,7 +152,7 @@ const SlaughterhouseDetailsScreen = () => {
                                     <td>
                                         <BiEdit
                                             size={15}
-                                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`, { state: unit })}
+                                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`)}
                                         />
                                     </td>
                                     <td><BiTrash size={15} onClick={() => deleteUnit(unit)} /></td>
@@ -173,32 +164,13 @@ const SlaughterhouseDetailsScreen = () => {
                 </Table>
                 
                 <p>Relatórios</p>
-                {/* {reports.map(report => (
+                {reports.map(report => (
                     <Link key={report.id} to={`/reports/${report.id}`}>
                         <ReportCard report={report} />
                     </Link>
                 ))}
-                {!reports.length && <p>Nenhum relatório cadastrado</p>} */}
-
-                {/* <Modal open={modalIsOpen} onClose={resetModal}>
-                    <div style={{ width: 400, padding: 24, paddingTop: 36 }}>
-                        <SlaughterhouseForm
-                            onSave={handleOnSave}
-                            slaughterhouse={slaughterhouse}
-                        />
-                    </div>
-                </Modal>
-                {!!slaughterhouse &&
-                    <Modal open={unitModalIsOpen} onClose={resetModal}>
-                        <div style={{ width: 400, padding: 24, paddingTop: 36 }}>
-                            <SlaughterhouseUnitForm
-                                onSave={handleOnSave}
-                                slaughterhouseId={slaughterhouse.id}
-                                slaughterhouseUnit={selectedUnit}
-                            />
-                        </div>
-                    </Modal>
-                } */}
+                {!!loadingReports && <p>Carregando relatórios...</p>}
+                {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}
             </>
         </ScreenTemplate>
     )

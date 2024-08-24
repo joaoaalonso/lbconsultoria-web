@@ -3,9 +3,10 @@ import 'react-responsive-modal/styles.css';
 import React, { useState, useEffect, useCallback } from 'react'
 import swal from 'sweetalert'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
+import Loading from '../../components/Loading';
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
@@ -14,8 +15,9 @@ import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
 
 const ClientDetailsScreen = () => {
-    const { state } = useLocation()
-    const [client, setClient] = useState<User>(state)
+    const [loading, setLoading] = useState(true)
+    const [loadingReports, setLoadingReports] = useState(true)
+    const [client, setClient] = useState<User>()
     const [ranches, setRanches] = useState<Ranch[]>([])
     const [reports, setReports] = useState<Report[]>([])
 
@@ -24,16 +26,22 @@ const ClientDetailsScreen = () => {
 
     const fetch = useCallback(() => {
         if (userId) {
-            if (!state) getClient(userId).then(setClient)
-            getRanches(userId).then(setRanches)
+            getClient(userId)
+                .then(setClient)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoading(false))
+            getRanches(userId)
+                .then(setRanches)
         }
-    }, [state, userId])
+    }, [userId])
 
     useEffect(() => {
         fetch()
         if (userId) {
             getReportsByUser(userId)
                 .then(setReports)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoadingReports(false))
         }
     }, [userId, fetch])
 
@@ -70,7 +78,7 @@ const ClientDetailsScreen = () => {
                 <BiEdit 
                     size={25} 
                     className='svg-button' 
-                    onClick={() => navigate(`/clientes/${userId}/editar`, { state: client })} 
+                    onClick={() => navigate(`/clientes/${userId}/editar`)} 
                     />
                 <BiTrash onClick={removeClient} size={25} className='svg-button' />
             </div>
@@ -124,6 +132,8 @@ const ClientDetailsScreen = () => {
             rightComponent={renderTopBarButtons()}
         >
             <>
+                <Loading loading={loading} />
+
                 <p>Nome: {client?.name || '-'}</p>
                 <p>Endereço: {renderAddress()}</p>
                 <p>CPF/CNPJ: {client?.document || '-'}</p>
@@ -162,7 +172,7 @@ const ClientDetailsScreen = () => {
                                     <td>
                                         <BiEdit
                                             size={15}
-                                            onClick={() => navigate(`/clientes/${userId}/propriedades/${ranch.id}`, { state: ranch })}
+                                            onClick={() => navigate(`/clientes/${userId}/propriedades/${ranch.id}`)}
                                         />
                                     </td>
                                     <td><BiTrash size={15} onClick={() => removeRanch(ranch)} /></td>
@@ -175,11 +185,12 @@ const ClientDetailsScreen = () => {
 
                 <p>Relatórios</p>
                 {reports.map(report => (
-                    <Link key={report.id} to={`/relatorios/${report.id}`} state={report}>
+                    <Link key={report.id} to={`/relatorios/${report.id}`}>
                         <ReportCard report={report} />
                     </Link>
                 ))}
-                {!reports.length && <p>Nenhum relatório cadastrado</p>}
+                {!!loadingReports && <p>Carregando relatórios...</p>}
+                {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}
             </>
         </ScreenTemplate>
     )

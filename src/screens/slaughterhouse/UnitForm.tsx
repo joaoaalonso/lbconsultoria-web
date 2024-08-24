@@ -1,37 +1,41 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
+import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { createSlaughterhouseUnit, editSlaughterhouseUnit, getSlaughterhouseUnit } from '../../services/slaughterhouse'
 
 const SlaughterhouseUnitFormScreen = () => {
-    const { state } = useLocation()
     const navigate = useNavigate()
 
     const { slaughterhouseId, slaughterhouseUnitId } = useParams()
+    const [loading, setLoading] = useState(!!slaughterhouseUnitId)
+    const [saving, setSaving] = useState(false)
 
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors }
-    } = useForm({
-        defaultValues: state
-    })
+    } = useForm()
 
     useEffect(() => {
-        if (!state && slaughterhouseId && slaughterhouseUnitId) {
+        if (slaughterhouseId && slaughterhouseUnitId) {
             getSlaughterhouseUnit(slaughterhouseId, slaughterhouseUnitId)
                 .then(reset)
+                .catch(e => swal('', e.message, 'error'))
+                .finally(() => setLoading(false))
         }
-    }, [state, slaughterhouseId, slaughterhouseUnitId, reset])
+    }, [slaughterhouseId, slaughterhouseUnitId, reset])
 
     function onSubmit(data: any) {
+        setSaving(true)
+
         let handler: any = createSlaughterhouseUnit
         let params = { slaughterhouseId, ...data }
         let message = 'Unidade abatedoura cadastrado com sucesso!'
@@ -46,6 +50,7 @@ const SlaughterhouseUnitFormScreen = () => {
             .then(() => swal('', message, 'success'))
             .then(() => navigate(`/abatedouros/${slaughterhouseId}`))
             .catch(e => swal('', e.message, 'error'))
+            .finally(() => setSaving(false))
     }
 
     return (
@@ -54,23 +59,28 @@ const SlaughterhouseUnitFormScreen = () => {
             title={slaughterhouseUnitId ? 'Editar unidade abatedoura' : 'Adicionar unidade abatedoura'}
             noBackground
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='city' label='Cidade' register={register} errors={errors} required />
-                    </div>
-                </div>
+            <>
+                <Loading loading={loading} />
+                <Loading loading={saving} text="Salvando..." />
 
-                <div className='row'>
-                    <div className='column'>
-                        <TextField name='state' label='Estado' register={register} errors={errors} required />
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='city' label='Cidade' register={register} errors={errors} required />
+                        </div>
                     </div>
-                </div>
 
-                <div className='row'>
-                    <Button type='submit' variant='secondary' text={slaughterhouseUnitId ? 'Salvar alterações' : 'Cadastrar abatedouro'} />
-                </div>
-            </form>
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='state' label='Estado' register={register} errors={errors} required />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <Button type='submit' variant='secondary' text={slaughterhouseUnitId ? 'Salvar alterações' : 'Cadastrar abatedouro'} />
+                    </div>
+                </form>
+            </>
         </ScreenTemplate>
     )
 }

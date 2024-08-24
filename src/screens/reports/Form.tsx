@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 // import ptBr from 'date-fns/locale/pt-BR'
 import { useState, useEffect } from 'react'
 import { BiDownload, BiPlus, BiTrash } from 'react-icons/bi'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 import Button from '../../components/Button'
@@ -36,8 +36,6 @@ import { getAvailableSex, getSexLabel } from '../../services/sex'
 
 
 function ReportForm() {
-    const { state } = useLocation()
-
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [isFemale, setIsFemale] = useState(true)
@@ -47,37 +45,37 @@ function ReportForm() {
     const [slaughterhouses, setSlaughterhouses] = useState<Slaughterhouse[]>([])
     const [slaughterhouseUnits, setSlaughterhouseUnits] = useState<SlaughterhouseUnit[]>([])
 
-    const [maturity, setMaturity] = useState(state?.maturity ?? [
+    const [maturity, setMaturity] = useState([
         { type: '0', value: '0' },
         { type: '2', value: '0' },
         { type: '4', value: '0' },
         { type: '6', value: '0' },
         { type: '8', value: '0' },
     ])
-    const [finishing, setFinishing] = useState(state?.finishing ?? [
+    const [finishing, setFinishing] = useState([
         { type: '1', value: '0' },
         { type: '2', value: '0' },
         { type: '3', value: '0' },
         { type: '4', value: '0' },
         { type: '5', value: '0' },
     ])
-    const [rumenScore, setRumenScore] = useState(state?.rumenScore ?? [
+    const [rumenScore, setRumenScore] = useState([
         { type: '1', value: '0' },
         { type: '2', value: '0' },
         { type: '3', value: '0' },
         { type: '4', value: '0' },
         { type: '5', value: '0' },
     ])
-    const [fetus, setFetus] = useState(state?.fetus ?? [
+    const [fetus, setFetus] = useState([
         { type: 'P', value: '0' },
         { type: 'M', value: '0' },
         { type: 'G', value: '0' },
     ])
     
-    const [dif, setDif] = useState(state?.dif ?? [{ seq: '', type: '', value: '' }])
-    const [bruises, setBruises] = useState(state?.bruises ?? [{ seq: '', type: '', value: '' }])
+    const [dif, setDif] = useState([{ seq: '', type: '', value: '' }])
+    const [bruises, setBruises] = useState([{ seq: '', type: '', value: '' }])
     
-    const [photos, setPhotos] = useState<string[]>(state?.photos ?? [])
+    const [photos, setPhotos] = useState<string[]>([])
     
     const { reportId } = useParams()
     const navigate = useNavigate()
@@ -138,29 +136,22 @@ function ReportForm() {
             comments: ''
         }
     })
-
-    const setReport = useCallback(report => {
-        reset(getFormattedReport(report))
-        if (report.maturity) setMaturity(report.maturity)
-        if (report.finishing) setFinishing(report.finishing)
-        if (report.rumenScore) setRumenScore(report.rumenScore)
-        if (report.fetus) setFetus(report.fetus)
-        if (report.dif) setDif(report.dif)
-        if (report.bruises) setBruises(report.bruises)
-        if (report.photos) setPhotos(report.photos)
-        setLoading(false)
-    }, [reset, getFormattedReport])
-
+    
     useEffect(() => {
         if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
-        
-        if (!state) {
             getReport(reportId)
-                .then(setReport)
-        } else {
-            setReport(state)
-        }
-    }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, state, setReport])
+                .then(report => {
+                    reset(getFormattedReport(report))
+                    if (report.maturity) setMaturity(report.maturity)
+                    if (report.finishing) setFinishing(report.finishing)
+                    if (report.rumenScore) setRumenScore(report.rumenScore)
+                    if (report.fetus) setFetus(report.fetus)
+                    if (report.dif) setDif(report.dif)
+                    if (report.bruises) setBruises(report.bruises)
+                    if (report.photos) setPhotos(report.photos)
+                    setLoading(false)
+                })
+    }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, reset, getFormattedReport])
 
     useEffect(() => {
         getClients()
@@ -402,8 +393,8 @@ function ReportForm() {
             rightComponent={renderTopBarButtons()}
         >
             <>
-                <Loading loading={loading} text='Carregando relatório...' />
-                <Loading loading={saving} text='Gerando relatório...' />
+                <Loading loading={loading} />
+                <Loading loading={saving} text='Salvando relatório...' />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
                         <div className='column'>
@@ -496,7 +487,7 @@ function ReportForm() {
                                     {maturity.map((elem, index) => {
                                         return (
                                             <tr key={`maturity-${index}`}>
-                                                <td>{elem.type}</td>
+                                                <td>{elem.type}D</td>
                                                 <td><TextField onChange={(value) => updateTableRow(maturity, setMaturity, index, 'value', value)} value={elem.value} /></td>
                                             </tr>
                                         )

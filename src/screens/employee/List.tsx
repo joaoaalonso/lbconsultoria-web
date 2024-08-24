@@ -47,7 +47,7 @@ const EmployeeListScreen = () => {
                 {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredEmployees().map(employee => (
-                    <Link key={employee.id} to={`/funcionarios/${employee.id}`} state={employee}>
+                    <Link key={employee.id} to={`/funcionarios/${employee.id}`}>
                         <Card text={employee.name} />
                     </Link>
                 ))}
