@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import swal from 'sweetalert'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 import ReportCard from '../../components/ReportCard'
@@ -165,9 +165,7 @@ const SlaughterhouseDetailsScreen = () => {
                 
                 <p>Relatórios</p>
                 {reports.map(report => (
-                    <Link key={report.id} to={`/reports/${report.id}`}>
-                        <ReportCard report={report} />
-                    </Link>
+                    <ReportCard key={report.id} report={report} />
                 ))}
                 {!!loadingReports && <p>Carregando relatórios...</p>}
                 {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}

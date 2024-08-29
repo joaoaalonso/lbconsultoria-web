@@ -1,26 +1,57 @@
 import './styles.css'
 
 import React from 'react'
-// import formatDate from 'date-fns/format'
-// import ptBr from 'date-fns/locale/pt-BR'
-import { BiChevronRight } from 'react-icons/bi'
+
+import { FaEye } from 'react-icons/fa'
+import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
 import { Report } from '../../services/report'
 import { getSexLabel } from '../../services/sex'
+import { Link } from 'react-router-dom'
+import { isEmployee } from '../../services/auth'
 
 interface ReportCardProps {
     report: Report
 }
 
 function ReportCard({ report }: ReportCardProps) {
+    const date = new Date(report.date)
+    const day = date.getDate()
+    const month = date.toLocaleString('default', { month: 'short' }).replace('.', '')
+
     return (
         <div className='report-card'>
-            <span>{report.user.name}</span>
-            <span>{report.slaughterhouse.name}</span>
-            <span>{report.ranch.name}</span>
-            <span>{getSexLabel(report.sex)}</span>
-            {/* <span>{formatDate(new Date(report.date), 'dd/MM/yyyy', { locale: ptBr })}</span> */}
-            <BiChevronRight />
+            <div className='date'>
+                <span className='day'>{day}</span>
+                <span className='month'>{month}</span>
+            </div>
+            <div className='content'>
+                <div className='title'>
+                    <span>{report.ranch.name}</span>
+                </div>
+                <div className='subtitle'>
+                    <span>{report.slaughterhouse.name}</span>
+                </div>
+                <div>
+                    <span>{getSexLabel(report.sex)}</span>
+                </div>
+            </div>
+            <div className='buttons'>
+                {isEmployee() ? (
+                    <>
+                        <Link to={`/relatorio/${report.id}`} target="_blank" rel="noopener noreferrer">
+                            <FaEye size={25} />
+                        </Link>
+                        <Link to={`/relatorios/${report.id}`}>
+                            <BiEdit size={25} />
+                        </Link>
+                    </>
+                ) : (
+                    <Link to={`/relatorios/${report.id}`}>
+                        <BiChevronRight size={25} />
+                    </Link>
+                )}
+            </div>
         </div>
     )
 }

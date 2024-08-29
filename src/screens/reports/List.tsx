@@ -46,9 +46,7 @@ const ReportListScreen = () => {
                 {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredReports().map(report => (
-                    <Link key={report.id} to={`/relatorios/${report.id}`}>
-                        <ReportCard report={report} />
-                    </Link>
+                    <ReportCard key={report.id} report={report} />
                 ))}
                 
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}

@@ -21,6 +21,7 @@ import SlaughterhouseUnitFormScreen from './screens/slaughterhouse/UnitForm'
 
 import ReportListScreen from './screens/reports/List'
 import ReportFormScreen from './screens/reports/Form'
+import ReportViewScreen from './screens/reports/View'
 
 import { getToken } from './services/auth'
 
@@ -64,6 +65,8 @@ const Routes = () => {
                     <Route path='/relatorios' element={<ReportListScreen />} />
                     <Route path='/relatorios/adicionar' element={<ReportFormScreen />} />
                     <Route path='/relatorios/:reportId' element={<ReportFormScreen />} />
+
+                    <Route path='/relatorio/:reportId' element={<ReportViewScreen />} />
 
                     <Route path='*' element={<Navigate to='/relatorios' />} />
                 </>

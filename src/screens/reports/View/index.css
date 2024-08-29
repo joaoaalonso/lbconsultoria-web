@@ -1,0 +1,93 @@
+.report-view {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+
+    p {
+        margin: 4px;
+    }
+
+    .report-header {
+        display: flex;
+        padding: 16px;
+        font-size: 24px;
+        font-weight: bold;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+
+        img {
+            width: 120px;
+        }
+
+        .buttons {
+            top: 24px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            position: absolute;
+            justify-content: flex-end;
+            
+            button {
+                border: 0;
+                cursor: pointer;
+                -webkit-appearance: none;
+                background-color: transparent;
+            }
+        }
+    
+        @media print {
+            .buttons {
+                display: none;
+            }
+        }
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        
+        .section-title {
+            color: white;
+            padding: 6px 8px;
+            font-weight: bold;
+            background-color: #ff19d5;
+        }
+
+        .section-content {
+            padding: 8px;
+            display: flex;
+            flex-direction: row;
+            padding-bottom: 16px;
+            
+            @media screen and (max-width: 800px) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    .row {
+        flex-direction: row;
+    }
+
+    .column {
+        flex-direction: column;
+    }
+}
+
+@media print {
+    /* @page {
+        size: 841px; 
+    } */
+
+    body,
+    html {
+        width: 841px;
+    }
+}
+
+.print {
+    padding: 0 12px;
+    max-width: 816px;
+}

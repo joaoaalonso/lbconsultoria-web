@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-// import formatDate from 'date-fns/format'
-// import ptBr from 'date-fns/locale/pt-BR'
 import { useState, useEffect } from 'react'
 import { BiDownload, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
