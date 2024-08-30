@@ -2,10 +2,7 @@ import './index.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import React from 'react'
-// import ptBr from 'date-fns/locale/pt-BR'
-// import MaskedInput from 'react-maskedinput'
 import { Controller } from 'react-hook-form'
-// import ReactDatePicker, {registerLocale} from 'react-datepicker'
 import ReactDatePicker from 'react-datepicker'
 
 
@@ -19,7 +16,6 @@ interface DatePickerProps {
 }
 
 function DatePicker({ label, name, errors, control, required = false }: DatePickerProps) {
-    // registerLocale('pt-BR', ptBr)
     
     const hasError = errors && name && !!errors[name]
 
@@ -41,9 +37,6 @@ function DatePicker({ label, name, errors, control, required = false }: DatePick
                         selected={value ? new Date(value) : null}
                         locale='pt-BR'
                         dateFormat='dd/MM/yyyy'
-                        // customInput={
-                        //     <MaskedInput mask='11/11/1111' />
-                        // }
                     />
                 )}
             />

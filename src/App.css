@@ -50,10 +50,6 @@ a {
   background-color: #f1f2f5;
 }
 
-.react-datepicker__day--selected {
-  background-color: #45454f !important;
-}
-
 @media screen and (max-width: 800px) {
   .row {
     flex-direction: column;

@@ -27,11 +27,12 @@ export const logout = async () => {
     window.location.href = '/login'
 }
 
-export const updatePassword = async (token: string, email: string, password: string): Promise<void> => {
+export const updatePassword = async (token: string, email: string, password: string, confirmPassword: string): Promise<void> => {
     return axios.post(`${process.env.REACT_APP_API_URL}/auth/update-password`, {
         token,
         email,
-        password
+        password,
+        confirmPassword
     })
         .then(response => {
             if (!response?.data?.token) {

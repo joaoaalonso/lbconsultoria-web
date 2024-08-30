@@ -18,26 +18,31 @@ const UpdatePasswordScreen = ({ onLogin }) => {
     const navigate = useNavigate()
 
     const token = searchParams.get('token')
+    const email = searchParams.get('email')
 
     const {
         register,
         handleSubmit,
         control,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: {
+            email
+        }
+    })
 
     const onSubmit = (data: any) => {
         if (!token) return
 
         setLoading(true)
-        const { email, password } = data
+        const { email, password, confirmPassword } = data
 
-        updatePassword(token, email, password)
+        updatePassword(token, email, password, confirmPassword)
             .then(() => swal('', 'Senha atualizada com sucesso.', 'success'))
             .then(onLogin)
-            .catch(() => { 
+            .catch(err => { 
                 setLoading(false)
-                swal('', 'Link inválido ou expirado.', 'error') 
+                swal('', err?.response?.data ?? 'Link inválido ou expirado.', 'error') 
             })
     }
 
@@ -58,9 +63,18 @@ const UpdatePasswordScreen = ({ onLogin }) => {
                                 errors={errors}
                                 disabled={loading}
                             />
-                        <TextField
+                            <TextField
                                 name="password"
                                 label="Nova senha"
+                                type='password' 
+                                register={register}
+                                control={control}
+                                errors={errors}
+                                disabled={loading}
+                            />
+                            <TextField
+                                name="confirmPassword"
+                                label="Repita a senha"
                                 type='password' 
                                 register={register}
                                 control={control}

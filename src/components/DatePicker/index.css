@@ -1,3 +1,7 @@
+.react-datepicker-wrapper {
+    width: 100%
+}
+
 .react-datepicker__input-container > input {
     width: 100%;
     padding: 8px;
@@ -13,7 +17,11 @@
 
 .react-datepicker__input-container > input:focus {
     outline: none;
-    border-color: #e9dec2;
+    border-color: #ff19d5;
+}
+
+.react-datepicker__day--selected {
+    background-color: #ff19d5 !important;
 }
 
 .react-datepicker__input-container > .error {

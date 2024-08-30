@@ -22,9 +22,9 @@ const Select = ({ name, label, errors, options, control, onChange, required = fa
 
     const getOptionBackgroundColor = (state: any) => {
         if (state.isSelected) {
-            return '#45454f'
+            return '#ff19d5'
         }
-        return state.isFocused ? '#e5e5e6' : 'white'
+        return state.isFocused ? '#ffd3f7' : 'white'
     }
 
     const customStyles = {
