@@ -66,7 +66,7 @@ const Routes = () => {
                     <Route path='/relatorios/adicionar' element={<ReportFormScreen />} />
                     <Route path='/relatorios/:reportId' element={<ReportFormScreen />} />
 
-                    <Route path='/relatorio/:reportId' element={<ReportViewScreen />} />
+                    <Route path='/relatorio/:slug' element={<ReportViewScreen />} />
 
                     <Route path='*' element={<Navigate to='/relatorios' />} />
                 </>

@@ -39,7 +39,7 @@ function ReportCard({ report }: ReportCardProps) {
             <div className='buttons'>
                 {isEmployee() ? (
                     <>
-                        <Link to={`/relatorio/${report.id}`} target="_blank" rel="noopener noreferrer">
+                        <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer">
                             <FaEye size={25} />
                         </Link>
                         <Link to={`/relatorios/${report.id}`}>
@@ -47,7 +47,7 @@ function ReportCard({ report }: ReportCardProps) {
                         </Link>
                     </>
                 ) : (
-                    <Link to={`/relatorios/${report.id}`}>
+                    <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer">
                         <BiChevronRight size={25} />
                     </Link>
                 )}

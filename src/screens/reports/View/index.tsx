@@ -10,22 +10,22 @@ import ReportEvaluation from './Evaluation'
 import ReportInformation from './Informations'
 import ReportCorralEvaluation from './CorralEvaluation'
 
-import { getReport, Report } from '../../../services/report'
+import { getReportBySlug, Report } from '../../../services/report'
 
 const ReportViewScreen = () => {
     const [loading, setLoading] = useState(true)
     const [report, setReport] = useState<Report>()
 
-    const { reportId } = useParams()
+    const { slug } = useParams()
 
     useEffect(() => {
-        if (reportId) {
-            getReport(reportId)
+        if (slug) {
+            getReportBySlug(slug)
                 .then(setReport)
                 .catch(e => swal('', e.message, 'error'))
                 .finally(() => setLoading(false))
         }
-    }, [reportId])
+    }, [slug])
 
     if (!report) {
         return (
