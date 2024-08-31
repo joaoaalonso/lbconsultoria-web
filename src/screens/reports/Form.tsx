@@ -1,9 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useState, useEffect } from 'react'
-import { BiDownload, BiPlus, BiTrash } from 'react-icons/bi'
-import { useNavigate, useParams } from 'react-router-dom'
+import { BiPlus, BiTrash } from 'react-icons/bi'
 
 import Table from '../../components/Table'
 import Button from '../../components/Button'
@@ -14,7 +12,6 @@ import TextField from '../../components/TextField'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-// import generateReport from '../../services/generateReport'
 import { User, getClients } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
 import { 
@@ -30,10 +27,11 @@ import {
     editReport,
     deleteReport
 } from '../../services/report'
-import { getAvailableSex, getSexLabel } from '../../services/sex'
+import { getAvailableSex } from '../../services/sex'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
-function ReportForm() {
+const ReportFormScreen = () => {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [isFemale, setIsFemale] = useState(true)
@@ -134,15 +132,26 @@ function ReportForm() {
             comments: ''
         }
     })
+
+    const sortByType = (array: any) => array.sort(({type:a}, {type:b}) => parseInt(a)-parseInt(b))
     
     useEffect(() => {
         if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
             getReport(reportId)
                 .then(report => {
                     reset(getFormattedReport(report))
-                    if (report.maturity) setMaturity(report.maturity)
-                    if (report.finishing) setFinishing(report.finishing)
-                    if (report.rumenScore) setRumenScore(report.rumenScore)
+                    if (report.maturity) {
+                        sortByType(report.maturity)
+                        setMaturity(report.maturity)
+                    }
+                    if (report.finishing) {
+                        sortByType(report.finishing)
+                        setFinishing(report.finishing)
+                    }
+                    if (report.rumenScore) {
+                        sortByType(report.rumenScore)
+                        setRumenScore(report.rumenScore)
+                    }
                     if (report.fetus) setFetus(report.fetus)
                     if (report.dif) setDif(report.dif)
                     if (report.bruises) setBruises(report.bruises)
@@ -212,11 +221,11 @@ function ReportForm() {
         }
     }, [watchSlaughterhouse, setValue])
 
-    function parseNumber(number: string) {
+    const parseNumber = (number: string) => {
         return Math.floor(parseFloat(number.replace(',', '.')) * 100)
     }
 
-    function onSubmit(data: any) {
+    const onSubmit = (data: any) => {
         const input: Omit<Report, "user" | "slug" | "ranch" | "slaughterhouse" | "slaughterhouseUnit"> = {
             date: data.date,
             slaughterhouseId: data.slaughterhouseId,
@@ -282,7 +291,7 @@ function ReportForm() {
         })
     }
 
-    function removeReport() {
+    const removeReport = () => {
         if (!reportId) return
 
         swal({
@@ -309,34 +318,7 @@ function ReportForm() {
         })
     }
 
-    function downloadReport() {
-        // const [ranchId, selectSex, date] = getValues(['ranchId', 'sex', 'date'])
-        // const ranch = ranches.find(ranch => ranch.id == ranchId)
-        // const formattedDate = formatDate(new Date(date), 'dd-MM-yyyy', { locale: ptBr })
-        // const sex = getSexLabel(selectSex)
-        // const defaultPath = `${ranch?.name} ${formattedDate} ${sex}.pdf`
-        // save({
-        //     title: 'Onde deseja salvar o relatório?',
-        //     defaultPath: defaultPath,
-        //     filters: [{name: 'PDF', extensions: ['pdf']}]
-        // })
-        // .then(path => {
-        //     if (!path) return false
-        //     setLoading(true)
-        //     return generateReport(parseInt(id || '0'), path)
-        // })
-        // .then(success => {
-        //     success && swal('', 'Relatório salvo com sucesso!', 'success')
-        // })
-        // .catch(e => {
-        //     swal('', e.message, 'error')
-        // })
-        // .finally(() => {
-        //     setLoading(false)
-        // })
-    }
-
-    function resetForm() {
+    const resetForm = () => {
         setIsFemale(true)
         setMaturity([{ type: '', value: '' }])
         setFinishing([{ type: '', value: '' }])
@@ -347,7 +329,7 @@ function ReportForm() {
         setPhotos([])
     }
 
-    function addTableRow(table: any[], setTable: any, threeColumns: boolean = false) {
+    const addTableRow = (table: any[], setTable: any, threeColumns: boolean = false) => {
         if (threeColumns) {
             setTable([...table, { seq: '', type: '', value: '' }])
         } else {
@@ -355,7 +337,7 @@ function ReportForm() {
         }
     }
 
-    function removeTableRow(table: any[], setTable: any, index: number, threeColumns: boolean = false) {
+    const removeTableRow = (table: any[], setTable: any, index: number, threeColumns: boolean = false) => {
         let newTable = table.filter((_, i) => i !== index)
         if (!newTable.length) {
             if (threeColumns) {
@@ -367,18 +349,17 @@ function ReportForm() {
         setTable(newTable)
     }
 
-    function updateTableRow(table: any[], setTable: any, index: number, field: string, value: string) {
+    const updateTableRow = (table: any[], setTable: any, index: number, field: string, value: string) => {
         const newTable = JSON.parse(JSON.stringify(table))
         newTable[index][field] = value
         setTable(newTable)
     }
 
-    function renderTopBarButtons() {
+    const renderTopBarButtons = () => {
         if (!reportId) return <></>
 
         return (
             <div className="column">
-                <BiDownload onClick={downloadReport} size={25} className='svg-button' />
                 {<BiTrash onClick={removeReport} size={25} className='svg-button' />}
             </div>
         )
@@ -624,4 +605,4 @@ function ReportForm() {
     )
 }
 
-export default ReportForm
+export default ReportFormScreen

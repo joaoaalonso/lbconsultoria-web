@@ -35,7 +35,6 @@ function DatePicker({ label, name, errors, control, required = false }: DatePick
                         className={hasError ? 'error' : ''}
                         onChange={onChange}
                         selected={value ? new Date(value) : null}
-                        locale='pt-BR'
                         dateFormat='dd/MM/yyyy'
                     />
                 )}

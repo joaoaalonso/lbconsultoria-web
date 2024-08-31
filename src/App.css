@@ -6,7 +6,6 @@
 .app {
   display: flex;
   height: 100dvh;
-  background-color: #f1f2f5;
 }
 
 .row {

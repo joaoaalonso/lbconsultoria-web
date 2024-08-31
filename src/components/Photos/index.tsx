@@ -1,38 +1,42 @@
 import './index.css'
 
-import React from 'react';
+import React from 'react'
 import Compress from 'compress.js'
 import { BiPlus, BiX } from 'react-icons/bi'
 
 interface PhotosProps {
-    photos: string[];
-    setPhotos: (photos: string[]) => void;
+    photos: string[]
+    setPhotos: (photos: string[]) => void
 }
 
-function Photos({ photos, setPhotos }: PhotosProps) {
-    async function addPhoto(e: React.ChangeEvent<HTMLInputElement>) {
-        
-        const compress = new Compress()
+const Photos = ({ photos, setPhotos }: PhotosProps) => {
+    const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e?.target?.files) {
-            compress.compress([...e.target.files], {
-                quality: 0.7,
-                maxWidth: 1200,
-                maxHeight: 1200,
-            })
-            .then(results => {
-                setPhotos([...photos, ...results.map(result => `${result.prefix}${result.data}`)])
-            })
+            const newPhotos: string[] = []
+            const compressor = new Compress()
+
+            for (const file of e.target.files) {
+                const result = await compressor.compress(file, {
+                    quality: 0.7,
+                    maxWidth: 1200,
+                    maxHeight: 1200,
+                })
+                newPhotos.push(URL.createObjectURL(result))
+            }
+
+            setPhotos([...photos, ...newPhotos])
         }
+
         const inputElem: any = document?.getElementById('add-photo')
         if (inputElem) {
             inputElem.value = ''
         }
     }
 
-    function removePhoto(index: number) {
-        const newPhotos = [...photos];
-        newPhotos.splice(index, 1);
-        setPhotos(newPhotos);
+    const removePhoto = (index: number) => {
+        const newPhotos = [...photos]
+        newPhotos.splice(index, 1)
+        setPhotos(newPhotos)
     }
 
     return (

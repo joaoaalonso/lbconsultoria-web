@@ -1,5 +1,3 @@
-import 'react-responsive-modal/styles.css'
-
 import React, {useState, useEffect} from 'react'
 import swal from 'sweetalert'
 import { BiPlus } from 'react-icons/bi'

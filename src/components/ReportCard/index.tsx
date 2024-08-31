@@ -1,13 +1,13 @@
 import './styles.css'
 
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { FaEye } from 'react-icons/fa'
 import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
 import { Report } from '../../services/report'
 import { getSexLabel } from '../../services/sex'
-import { Link } from 'react-router-dom'
 import { isEmployee } from '../../services/auth'
 
 interface ReportCardProps {
