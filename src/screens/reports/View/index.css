@@ -1,6 +1,7 @@
 .report-view {
     width: 100%;
     display: flex;
+    padding: 12px;
     flex-direction: column;
     background-color: white;
 
@@ -74,16 +75,26 @@
     .column {
         flex-direction: column;
     }
+
+    .signature {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        img {
+            width: 125px;
+        }
+    }
 }
 
 @media print {
-    /* @page {
-        size: 841px; 
-    } */
-
     body,
     html {
         width: 841px;
+    }
+
+    .report-view {
+        padding: 0;
     }
 }
 

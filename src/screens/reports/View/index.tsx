@@ -3,6 +3,7 @@ import './index.css'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
+import Signature from './Signature'
 import ReportHeader from './Header'
 import ReportWeights from './Weights'
 import ReportPenalties from './Penalties'
@@ -41,6 +42,7 @@ const ReportViewScreen = () => {
             <ReportWeights report={report} />
             <ReportEvaluation report={report} />
             <ReportPenalties report={report} />
+            <Signature />
         </div>
     )
 }
