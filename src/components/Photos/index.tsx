@@ -1,18 +1,24 @@
 import './index.css'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Compress from 'compress.js'
 import { BiPlus, BiX } from 'react-icons/bi'
 
+import Loading from '../Loading'
+
+import { addImage, Photo } from '../../services/photos'
+
 interface PhotosProps {
-    photos: string[]
-    setPhotos: (photos: string[]) => void
+    photos: Photo[]
+    setPhotos: (photos: Photo[]) => void
 }
 
 const Photos = ({ photos, setPhotos }: PhotosProps) => {
+    const [loading, setLoading] = useState(false)
+
     const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e?.target?.files) {
-            const newPhotos: string[] = []
+            const newPhotos: Photo[] = []
             const compressor = new Compress()
 
             for (const file of e.target.files) {
@@ -21,7 +27,15 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
                     maxWidth: 1200,
                     maxHeight: 1200,
                 })
-                newPhotos.push(URL.createObjectURL(result))
+
+                setLoading(true)
+                try {
+                    const image = await addImage(result)
+                    newPhotos.push(image)
+                } catch {
+                    swal('', 'Ocorreu um erro ao enviar a image', 'error')
+                }
+                setLoading(false)
             }
 
             setPhotos([...photos, ...newPhotos])
@@ -41,6 +55,7 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
 
     return (
         <div className='photos-container'>
+            <Loading loading={loading} text='Enviando foto' />
             <div className='photos-header'>
                 <span>Fotos</span>
                 <input 
@@ -55,7 +70,7 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
             <div className='photos-body'>
                 {photos.map((photo, index) => (
                     <div key={`photo-${index}`} className='photo-wrapper'>
-                        <img src={photo} />
+                        <img src={photo.imageUrl} />
                         <a onClick={() => removePhoto(index)}><BiX size={30} /></a>
                     </div>
                 ))}

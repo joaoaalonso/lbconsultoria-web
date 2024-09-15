@@ -1,6 +1,7 @@
 import { apiClient } from './api'
 
 import { User } from './users'
+import { Photo } from './photos'
 import { Ranch } from './ranches'
 import { Slaughterhouse, SlaughterhouseUnit } from './slaughterhouse'
 
@@ -43,7 +44,7 @@ export interface Report {
     comments?: string
     penalties?: string
     awards?: string
-    photos?: string[]
+    photos?: Photo[]
     maturity?: ObjectTypeValue[]
     finishing?: ObjectTypeValue[]
     rumenScore?: ObjectTypeValue[]

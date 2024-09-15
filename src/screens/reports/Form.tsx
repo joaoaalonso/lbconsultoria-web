@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 import { BiPlus, BiTrash } from 'react-icons/bi'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
 import Button from '../../components/Button'
@@ -12,6 +13,7 @@ import TextField from '../../components/TextField'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { Photo } from '../../services/photos'
 import { User, getClients } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
 import { 
@@ -28,7 +30,6 @@ import {
     deleteReport
 } from '../../services/report'
 import { getAvailableSex } from '../../services/sex'
-import { useNavigate, useParams } from 'react-router-dom'
 
 
 const ReportFormScreen = () => {
@@ -71,7 +72,7 @@ const ReportFormScreen = () => {
     const [dif, setDif] = useState([{ seq: '', type: '', value: '' }])
     const [bruises, setBruises] = useState([{ seq: '', type: '', value: '' }])
     
-    const [photos, setPhotos] = useState<string[]>([])
+    const [photos, setPhotos] = useState<Photo[]>([])
     
     const { reportId } = useParams()
     const navigate = useNavigate()
