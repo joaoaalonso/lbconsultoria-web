@@ -13,6 +13,7 @@ import ReportCorralEvaluation from './CorralEvaluation'
 
 import { getReportBySlug, Report } from '../../../services/report'
 import ReportPhotos from './Photos'
+import ReportAwards from './Awards'
 
 const ReportViewScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -42,6 +43,7 @@ const ReportViewScreen = () => {
             <ReportCorralEvaluation report={report} />
             <ReportWeights report={report} />
             <ReportEvaluation report={report} />
+            <ReportAwards report={report} />
             <ReportPenalties report={report} />
             <Signature />
             <ReportPhotos report={report} />

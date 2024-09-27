@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Report } from '../../../services/report'
+import { sortByType } from '../../../utils/sort'
 
 type ReportEvaluationProps = {
     report: Report
@@ -12,6 +13,21 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
         return percentage.toFixed(0)
     }
 
+    const getFinishingName = (finishing) => {
+        const finishingNames = {
+            1: 'Ausente',
+            2: 'Escasso',
+            3: 'Mediano',
+            4: 'Uniforme',
+            5: 'Excessivo'
+        }
+        return finishingNames[finishing]
+    }
+
+    report.maturity && sortByType(report.maturity)
+    report.finishing && sortByType(report.finishing)
+    report.rumenScore && sortByType(report.rumenScore)
+
     return (
         <div className="section">
             <div className="section-title">
@@ -22,13 +38,13 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
                 <div className='column'>
                     <p>MATURIDADE</p>
                     {report.maturity?.filter(maturity => maturity.value !== '0').map(maturity => (
-                        <p>{maturity.type}D - {calculatePercentage(maturity.value)}% ({maturity.value})</p>
+                        <p>{maturity.type} dentes - {calculatePercentage(maturity.value)}% ({maturity.value})</p>
                     ))}
                 </div>
                 <div className='column'>
                     <p>ACABAMENTO</p>
                     {report.finishing?.filter(finishing => finishing.value !== '0').map(finishing => (
-                        <p>{finishing.type} - {calculatePercentage(finishing.value)}% ({finishing.value})</p>
+                        <p>{getFinishingName(finishing.type)} ({finishing.type}) - {calculatePercentage(finishing.value)}% ({finishing.value})</p>
                     ))}
                 </div>
                 <div className='column'>

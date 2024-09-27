@@ -2,22 +2,22 @@ import React from 'react'
 
 import { Report } from '../../../services/report'
 
-type ReportPenaltiesProps = {
+type ReportAwardsProps = {
     report: Report
 }
 
-const ReportPenalties: React.FC<ReportPenaltiesProps> = ({ report }) => {
+const ReportAwards: React.FC<ReportAwardsProps> = ({ report }) => {
     return (
         <div className="section">
             <div className="section-title">
-                DESCLASSIFICAÇÕES
+                BONIFICAÇÕES
             </div>
 
             <div className='section-content'>
-                <p>{report.penalties?.toUpperCase() || 'NENHUMA'}</p>
+                <p>{report.awards?.toUpperCase() || 'NENHUMA'}</p>
             </div>
         </div>
     )   
 }
 
-export default ReportPenalties
+export default ReportAwards

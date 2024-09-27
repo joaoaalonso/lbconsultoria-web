@@ -1,0 +1,1 @@
+export const sortByType = (array: any) => array.sort(({type:a}, {type:b}) => parseInt(a)-parseInt(b))

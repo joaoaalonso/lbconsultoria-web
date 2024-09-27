@@ -29,6 +29,7 @@ import {
     editReport,
     deleteReport
 } from '../../services/report'
+import { sortByType } from '../../utils/sort'
 import { getAvailableSex } from '../../services/sex'
 
 
@@ -133,8 +134,6 @@ const ReportFormScreen = () => {
             comments: ''
         }
     })
-
-    const sortByType = (array: any) => array.sort(({type:a}, {type:b}) => parseInt(a)-parseInt(b))
     
     useEffect(() => {
         if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
@@ -448,8 +447,8 @@ const ReportFormScreen = () => {
                     <div className='row'>
                         <div className='column'>
                             <TextField label='Avaliação do curral' name='corralEvaluation' type='textarea' register={register} errors={errors} required />
-                            <TextField label='Premiações' name='awards' register={register} errors={errors} />
-                            <TextField label='Penalizações' name='penalties' type='textarea' register={register} errors={errors} />
+                            <TextField label='Bonificações' name='awards' type='textarea' register={register} errors={errors} />
+                            <TextField label='Desclassificações' name='penalties' type='textarea' register={register} errors={errors} />
                             <TextField label='Observações' name='comments' type='textarea' register={register} errors={errors} />
                         </div>
                     </div>
