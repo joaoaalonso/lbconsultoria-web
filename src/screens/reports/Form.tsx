@@ -34,7 +34,7 @@ import { getAvailableSex } from '../../services/sex'
 
 
 const ReportFormScreen = () => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [isFemale, setIsFemale] = useState(true)
 
@@ -137,6 +137,7 @@ const ReportFormScreen = () => {
     
     useEffect(() => {
         if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
+            setLoading(true)
             getReport(reportId)
                 .then(report => {
                     reset(getFormattedReport(report))

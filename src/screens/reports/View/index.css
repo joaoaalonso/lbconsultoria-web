@@ -66,14 +66,38 @@
                 flex-direction: column;
             }
         }
+
+        .section-fetus {
+            display: flex;
+
+            p {
+                flex: 1;
+            }
+            
+            @media screen and (max-width: 800px) {
+                flex-direction: column;
+            }
+        }
+
+        .section-table {
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+
+            td, th {
+                padding: 6px;
+                font-weight: normal;
+                border: 1px solid #f0f0f0;
+            }
+        }
     }
 
     .row {
-        flex-direction: row;
+        flex-direction: row !important;
     }
 
     .column {
-        flex-direction: column;
+        flex-direction: column !important;
     }
 
     .signature {
