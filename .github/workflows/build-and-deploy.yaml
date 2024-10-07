@@ -8,7 +8,7 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     env:
-      BUCKET: frases-da-sorte #Nome do S3 Bucket
+      BUCKET: lbconsultoria-website #Nome do S3 Bucket
       DIST: build #Qual pasta você irá enviar pra AWS
       REGION: us-east-1 #Qual região do Bucket
       #DIST_ID: aqui seria o ID do Cloudfront para invalidar o cache.
@@ -39,7 +39,7 @@ jobs:
 
       - name: Copy files to the production website with AWS CLI
         run: |
-          aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}  
+          aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}
 
       #Caso você tenha um Cloudfront, precisa colocar essas informações para invalidar o cache.
       #- name: Create an Invalidation on Cloudfront with AWS CLI
