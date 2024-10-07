@@ -10,7 +10,7 @@ const ReportPhotos: React.FC<ReportPhotosProps> = ({ report }) => {
     return (
         <div className="section">
             {report.photos?.map(photo => (
-                <img src={photo.imageUrl} />
+                <img alt="imagem do relatório" src={photo.imageUrl} />
             ))}
         </div>
     )   

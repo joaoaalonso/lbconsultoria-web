@@ -70,8 +70,8 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
             <div className='photos-body'>
                 {photos.map((photo, index) => (
                     <div key={`photo-${index}`} className='photo-wrapper'>
-                        <img src={photo.imageUrl} />
-                        <a onClick={() => removePhoto(index)}><BiX size={30} /></a>
+                        <img alt={`foto ${index}`} src={photo.imageUrl} />
+                        <button onClick={() => removePhoto(index)}><BiX size={30} /></button>
                     </div>
                 ))}
                 {!photos.length && <span>Nenhum foto adicionada</span>}

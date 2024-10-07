@@ -19,10 +19,10 @@ const SideMenu = () => {
                 <img src={logo} alt="LB Consultoria" />
             </div>
             <MenuItems />
-            <a className="logout" onClick={logoutWithConfirmation}>
+            <button className="logout" onClick={logoutWithConfirmation}>
                 <RiLogoutBoxRLine size={25} />
                 <span>Sair</span>
-            </a>
+            </button>
             <div 
                 className='side-menu-minimize' 
                 onClick={() => { setMenuIsClosed(!menuIsClosed) }}

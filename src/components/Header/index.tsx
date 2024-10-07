@@ -1,13 +1,12 @@
 import './index.css'
 
 import React, { useState } from 'react'
-import swal from 'sweetalert'
 import { GiHamburgerMenu } from "react-icons/gi"
 import { RiLogoutBoxRLine } from "react-icons/ri"
 
 import logo from '../../images/logo.jpeg'
 
-import { logout, isEmployee, logoutWithConfirmation } from '../../services/auth'
+import { isEmployee, logoutWithConfirmation } from '../../services/auth'
 import MobileMenu from '../Menu/MobileMenu'
 
 const Header = () => {

@@ -52,17 +52,19 @@
 }
 
 .side-menu > .logout {
-  bottom: 50px;
   width: 100%;
+  border: none;
+  bottom: 50px;
   display: flex;
+  color: black;
   cursor: pointer;
   font-size: 14px;
-  color: black;
   position: absolute;
   padding: 10px 25px;
   align-items: center;
   text-decoration: none;
-
+  background-color: transparent;
+  
   &:hover {
     color: #ff19d5;
   }

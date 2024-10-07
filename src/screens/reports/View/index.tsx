@@ -18,7 +18,6 @@ import ReportFetus from './Fetus'
 import ReportComments from './Comments'
 
 const ReportViewScreen = () => {
-    const [loading, setLoading] = useState(true)
     const [report, setReport] = useState<Report>()
 
     const { slug } = useParams()
@@ -28,7 +27,6 @@ const ReportViewScreen = () => {
             getReportBySlug(slug)
                 .then(setReport)
                 .catch(e => swal('', e.message, 'error'))
-                .finally(() => setLoading(false))
         }
     }, [slug])
 
