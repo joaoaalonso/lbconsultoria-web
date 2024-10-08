@@ -36,6 +36,8 @@ jobs:
 
       - name: Build Static Website
         run: npm run build
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
       - name: Copy files to the production website with AWS CLI
         run: |
