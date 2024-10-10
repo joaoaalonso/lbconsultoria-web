@@ -40,7 +40,9 @@ export const generateReportStructure = async (report: Report): Promise<any> => {
     }
 
     return {
-        title: `${report.ranch.name} ${formatDate(report.date)} ${report.sex}`,
+        info: {
+            title: `${report.ranch.name} ${formatDate(report.date)} ${report.sex}`,
+        },
         pageSize: 'A4',
         defaultStyle: {
             fontSize: 9

@@ -3,19 +3,19 @@ import './index.css'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
+import ReportFetus from './Fetus'
 import Signature from './Signature'
 import ReportHeader from './Header'
+import ReportPhotos from './Photos'
+import ReportAwards from './Awards'
 import ReportWeights from './Weights'
+import ReportComments from './Comments'
 import ReportPenalties from './Penalties'
 import ReportEvaluation from './Evaluation'
 import ReportInformation from './Informations'
 import ReportCorralEvaluation from './CorralEvaluation'
 
 import { getReportBySlug, Report } from '../../../services/report'
-import ReportPhotos from './Photos'
-import ReportAwards from './Awards'
-import ReportFetus from './Fetus'
-import ReportComments from './Comments'
 
 const ReportViewScreen = () => {
     const [report, setReport] = useState<Report>()
