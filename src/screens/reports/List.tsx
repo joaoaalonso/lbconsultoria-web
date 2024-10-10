@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
 
+import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getReports, Report } from '../../services/report'
+import { downloadReportPDFBySlug } from '../../services/generateReport'
 
 const ReportListScreen = () => {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [reports, setReports] = useState<Report[]>([])
+    const [generatingPdf, setGeneratingPdf] = useState(false)
 
     useEffect(() => {
         getReports()
@@ -32,6 +35,12 @@ const ReportListScreen = () => {
         })
     }
 
+    const donwloadPdf = async (reportSlug: string) => {
+        setGeneratingPdf(true)
+        downloadReportPDFBySlug(reportSlug)
+            .finally(() => setGeneratingPdf(false))
+    }
+
     return (
         <ScreenTemplate
             title='Relatórios'
@@ -43,10 +52,11 @@ const ReportListScreen = () => {
             )}
         >
             <>
+                <Loading loading={generatingPdf} text='Gerando PDF...' />
                 {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredReports().map(report => (
-                    <ReportCard key={report.id} report={report} />
+                    <ReportCard key={report.id} report={report} downloadPdf={donwloadPdf} />
                 ))}
                 
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}

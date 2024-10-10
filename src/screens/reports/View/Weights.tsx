@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Report } from '../../../services/report'
-import { formatCurrency, formatNumber } from '../../../utils/formatter'
+import { formatCurrency, formatNumber, formatPercentage } from '../../../utils/formatter'
 import { getArroba } from '../../../services/settings'
 
 type ReportWeightsProps = {
@@ -35,7 +35,7 @@ const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
                 <div className='column'>
                     <p>MÉDIA DO LOTE: <b>{formatNumber(avg)}</b></p>
                     <p>PESO DE CARCAÇA: <b>{formatNumber(PC)}KG</b></p>
-                    <p>RENDIMENTO DE CARCAÇA: <b>{RC.toFixed(1)}%</b></p>
+                    <p>RENDIMENTO DE CARCAÇA: <b>{formatPercentage(RC)}</b></p>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { FaEye } from 'react-icons/fa'
+import { FaDownload } from 'react-icons/fa6'
 import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
 import { Report } from '../../services/report'
@@ -12,9 +13,10 @@ import { isEmployee } from '../../services/auth'
 
 interface ReportCardProps {
     report: Report
+    downloadPdf: (reportSlug: string) => Promise<void>
 }
 
-function ReportCard({ report }: ReportCardProps) {
+function ReportCard({ report, downloadPdf }: ReportCardProps) {
     const date = new Date(report.date)
     const day = date.getDate()
     const month = date.toLocaleString('default', { month: 'short' }).replace('.', '')
@@ -39,6 +41,9 @@ function ReportCard({ report }: ReportCardProps) {
             <div className='buttons'>
                 {isEmployee() ? (
                     <>
+                        <button className='hide-mobile' onClick={() => downloadPdf(report.slug)}>
+                            <FaDownload size={25} />
+                        </button>
                         <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer">
                             <FaEye size={25} />
                         </Link>

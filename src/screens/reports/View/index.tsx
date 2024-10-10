@@ -35,20 +35,22 @@ const ReportViewScreen = () => {
             <div>Carregando relatório</div>
         )
     }
-
+    
     return (
         <div className="report-view">
-            <ReportHeader />
-            <ReportInformation report={report} />
-            <ReportCorralEvaluation report={report} />
-            <ReportWeights report={report} />
-            <ReportEvaluation report={report} />
-            <ReportAwards report={report} />
-            <ReportPenalties report={report} />
-            <ReportFetus report={report} />
-            <ReportComments report={report} />
-            <Signature />
-            <ReportPhotos report={report} />
+            <div>
+                <ReportHeader report={report} />
+                <ReportInformation report={report} />
+                <ReportCorralEvaluation report={report} />
+                <ReportWeights report={report} />
+                <ReportEvaluation report={report} />
+                <ReportAwards report={report} />
+                <ReportPenalties report={report} />
+                <ReportFetus report={report} />
+                <ReportComments report={report} />
+                <Signature />
+                <ReportPhotos report={report} />
+            </div>
         </div>
     )
 }
