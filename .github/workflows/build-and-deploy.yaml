@@ -8,7 +8,7 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     env:
-      BUCKET: lbconsultoria-website #Nome do S3 Bucket
+      BUCKET: painel.lbconsultoriadeabate.com #Nome do S3 Bucket
       DIST: build #Qual pasta você irá enviar pra AWS
       REGION: us-east-1 #Qual região do Bucket
       #DIST_ID: aqui seria o ID do Cloudfront para invalidar o cache.
