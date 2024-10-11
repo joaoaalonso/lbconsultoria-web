@@ -129,7 +129,7 @@ const EmployeeFormScreen = () => {
             <>
                 <Loading loading={loading} />
                 <Loading loading={saving} text="Salvando..." />
-                <Loading loading={saving} text="Enviando e-mail..." />
+                <Loading loading={sendingEmail} text="Enviando e-mail..." />
                 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
