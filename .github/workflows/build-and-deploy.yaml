@@ -11,7 +11,7 @@ jobs:
       BUCKET: painel.lbconsultoriadeabate.com #Nome do S3 Bucket
       DIST: build #Qual pasta você irá enviar pra AWS
       REGION: us-east-1 #Qual região do Bucket
-      #DIST_ID: aqui seria o ID do Cloudfront para invalidar o cache.
+      DIST_ID: E135Q3TFXBZ0D7
 
     steps:
       - name: Checkout
@@ -44,8 +44,8 @@ jobs:
           aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}
 
       #Caso você tenha um Cloudfront, precisa colocar essas informações para invalidar o cache.
-      #- name: Create an Invalidation on Cloudfront with AWS CLI
-      #  run: |
-      #    aws cloudfront create-invalidation \
-      #    --distribution-id ${{ env.DIST_ID }} \
-      #    --paths "/*"
+      - name: Create an Invalidation on Cloudfront with AWS CLI
+       run: |
+         aws cloudfront create-invalidation \
+         --distribution-id ${{ env.DIST_ID }} \
+         --paths "/*"
