@@ -9,8 +9,8 @@
   background-color: white;
   border-right: 1px solid #b3b3b3;
 
-  @media (max-width: 762px) {
-    display: none;
+  @media (max-width: 800px) {
+    display: none !important;
   }
 }
 

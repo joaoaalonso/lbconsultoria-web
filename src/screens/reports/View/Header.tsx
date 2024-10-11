@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { FaPrint, FaDownload } from 'react-icons/fa6'
+import { IoShareSocialOutline } from 'react-icons/io5'
 
 import logo from '../../../images/logo.jpeg'
 import { Report } from '../../../services/report'
@@ -22,10 +23,13 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({ report }) => {
             RELATÓRIO DE ABATE
 
             <div className='buttons'>
-                <button onClick={downloadPDF}>
+                <button onClick={downloadPDF} className='hide-desk'>
+                    <IoShareSocialOutline size={24} color='#ff19d5' />
+                </button>
+                <button onClick={downloadPDF} className='hide-mobile'>
                     <FaDownload size={24} color='#ff19d5' />
                 </button>
-                <button onClick={window.print}>
+                <button onClick={window.print} className='hide-mobile'>
                     <FaPrint size={24} color='#ff19d5' />
                 </button>
             </div>

@@ -8,13 +8,13 @@ import { renderInfo } from './renderInfo'
 import { renderFetus } from './renderFetus'
 import { renderAwards } from './renderAwards'
 import { renderHeader } from './renderHeader'
-import { getPhotosProperties, renderPhotos } from './renderPhotos'
 import { renderWeight } from './renderWeights'
 import { renderComments } from './renderComments'
 import { renderPenalties } from './renderPenalties'
 import { renderSignature } from './renderSignature'
 import { renderEvaluation } from './renderEvaluation'
 import { renderCorralEvaluation } from './renderCorralEvaluation'
+import { getPhotosProperties, renderPhotos } from './renderPhotos'
 
 export const generateReportStructure = async (report: Report): Promise<any> => {
     const sections = [
