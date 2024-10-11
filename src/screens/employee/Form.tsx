@@ -82,7 +82,7 @@ const EmployeeFormScreen = () => {
                     </div>
 
                     <div className='row'>
-                        <Button type='submit' variant='secondary' text={userId ? 'Salvar alterações' : 'Cadastrar cliente'} />
+                        <Button type='submit' variant='secondary' text={userId ? 'Salvar alterações' : 'Cadastrar funcionário'} />
                     </div>
                 </form>
             </>

@@ -11,6 +11,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { getReportsByUser, Report } from '../../services/report'
 import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
+import { downloadReportPDFBySlug } from '../../services/generateReport'
 
 const ClientDetailsScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -18,6 +19,7 @@ const ClientDetailsScreen = () => {
     const [client, setClient] = useState<User>()
     const [ranches, setRanches] = useState<Ranch[]>([])
     const [reports, setReports] = useState<Report[]>([])
+    const [generatingPdf, setGeneratingPdf] = useState(false)
 
     const { userId } = useParams()
     const navigate = useNavigate()
@@ -123,6 +125,12 @@ const ClientDetailsScreen = () => {
         return addressComponents.join(', ')
     }
 
+    const downloadPdf = async (reportSlug: string) => {
+        setGeneratingPdf(true)
+        downloadReportPDFBySlug(reportSlug)
+            .finally(() => setGeneratingPdf(false))
+    }
+
     return (
         <ScreenTemplate
             backLink='/clientes'
@@ -131,6 +139,7 @@ const ClientDetailsScreen = () => {
         >
             <>
                 <Loading loading={loading} />
+                <Loading loading={generatingPdf} text='Gerando PDF...' />
 
                 <p>Nome: {client?.name || '-'}</p>
                 <p>Endereço: {renderAddress()}</p>
@@ -156,6 +165,8 @@ const ClientDetailsScreen = () => {
                                 <th>Estado</th>
                                 <th>Inscrição</th>
                                 <th>Observações</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -183,7 +194,7 @@ const ClientDetailsScreen = () => {
 
                 <p>Relatórios</p>
                 {reports.map(report => (
-                    <ReportCard key={report.id} report={report} />
+                    <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
                 ))}
                 {!!loadingReports && <p>Carregando relatórios...</p>}
                 {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}

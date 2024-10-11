@@ -17,6 +17,7 @@ import {
 } from '../../services/slaughterhouse'
 import { getReportsBySlaughterhouse, Report } from '../../services/report'
 import Loading from '../../components/Loading'
+import { downloadReportPDFBySlug } from '../../services/generateReport'
 
 const SlaughterhouseDetailsScreen = () => {
     const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
@@ -24,6 +25,7 @@ const SlaughterhouseDetailsScreen = () => {
     const [reports, setReports] = useState<Report[]>([])
     const [loading, setLoading] = useState(true)
     const [loadingReports, setLoadingReports] = useState(true)
+    const [generatingPdf, setGeneratingPdf] = useState(false)
 
     const { slaughterhouseId } = useParams()
     
@@ -116,6 +118,12 @@ const SlaughterhouseDetailsScreen = () => {
         })
     }
 
+    const downloadPdf = async (reportSlug: string) => {
+        setGeneratingPdf(true)
+        downloadReportPDFBySlug(reportSlug)
+            .finally(() => setGeneratingPdf(false))
+    }
+
     return (
         <ScreenTemplate
             backLink='/slaughterhouses'
@@ -125,6 +133,7 @@ const SlaughterhouseDetailsScreen = () => {
             <>
 
                 <Loading loading={loading} />
+                <Loading loading={generatingPdf} text='Gerando PDF...' />
 
                 <p>Nome: {slaughterhouse?.name}</p>
                 <Table
@@ -142,6 +151,8 @@ const SlaughterhouseDetailsScreen = () => {
                             <tr>
                                 <th>Cidade</th>
                                 <th>Estado</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,7 +176,7 @@ const SlaughterhouseDetailsScreen = () => {
                 
                 <p>Relatórios</p>
                 {reports.map(report => (
-                    <ReportCard key={report.id} report={report} />
+                    <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
                 ))}
                 {!!loadingReports && <p>Carregando relatórios...</p>}
                 {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}

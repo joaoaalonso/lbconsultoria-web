@@ -35,7 +35,7 @@ const ReportListScreen = () => {
         })
     }
 
-    const donwloadPdf = async (reportSlug: string) => {
+    const downloadPdf = async (reportSlug: string) => {
         setGeneratingPdf(true)
         downloadReportPDFBySlug(reportSlug)
             .finally(() => setGeneratingPdf(false))
@@ -56,7 +56,7 @@ const ReportListScreen = () => {
                 {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
                 {getFilteredReports().map(report => (
-                    <ReportCard key={report.id} report={report} downloadPdf={donwloadPdf} />
+                    <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
                 ))}
                 
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}
