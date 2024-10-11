@@ -45,7 +45,7 @@ jobs:
 
       #Caso você tenha um Cloudfront, precisa colocar essas informações para invalidar o cache.
       - name: Create an Invalidation on Cloudfront with AWS CLI
-       run: |
-         aws cloudfront create-invalidation \
-         --distribution-id ${{ env.DIST_ID }} \
-         --paths "/*"
+        run: |
+          aws cloudfront create-invalidation \
+          --distribution-id ${{ env.DIST_ID }} \
+          --paths "/*"
