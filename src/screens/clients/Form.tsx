@@ -4,17 +4,19 @@ import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
+import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { recoveryPassword } from '../../services/auth'
 import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
-import Loading from '../../components/Loading'
 
 const ClientFormScreen = () => {
     const { userId } = useParams()
-    const [loading, setLoading] = useState(!!userId)
     const [saving, setSaving] = useState(false)
+    const [loading, setLoading] = useState(!!userId)
+    const [sendingEmail, setSendingEmail] = useState(false)
 
     const {
         register,
@@ -55,22 +57,57 @@ const ClientFormScreen = () => {
         }
     }, [watchPostalCode, handlePostalCodeChange])
 
-    function onSubmit(data: any) {
+    const handlePasswordEmail = async (email: string) => {
+        return swal({
+            title: 'Deseja enviar o e-mail de criação de senha?',
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: 'Não'
+                },
+                confirm: {
+                    text: 'Sim',
+                },
+            },
+            dangerMode: true,
+        })
+        .then(confirm => {
+            if (confirm) {
+                setSendingEmail(true)
+                return recoveryPassword(email)
+                    .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
+                    .catch(() => { 
+                        setSendingEmail(false)
+                        swal('', 'Não foi possível enviar o e-mail.', 'error') 
+                    })
+            }
+        })
+    }
+
+    const onSubmit = (data: any) => {
         setSaving(true)
         
         let handler: any = createClient
         let params = data
         let message = 'Cliente cadastrado com sucesso!'
+        let sendPasswordEmail = false;
         
 
         if (userId) {
             handler = editClient
             params = { id: userId, ...data }
             message = 'Cliente atualizado com sucesso!'
+        } else {
+            sendPasswordEmail = true
         }
 
         handler(params)
             .then(() => swal('', message, 'success'))
+            .then(() => {
+                if (sendPasswordEmail) {
+                    return handlePasswordEmail(params.email)
+                }
+            })
             .catch(e => swal('', e.message, 'error'))
             .finally(() => setSaving(false))
     }
@@ -84,6 +121,7 @@ const ClientFormScreen = () => {
             <>
                 <Loading loading={loading} />
                 <Loading loading={saving} text="Salvando..." />
+                <Loading loading={saving} text="Enviando e-mail..." />
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
