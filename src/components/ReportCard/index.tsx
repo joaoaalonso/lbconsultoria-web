@@ -1,6 +1,6 @@
 import './styles.css'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { FaEye } from 'react-icons/fa'
@@ -17,17 +17,32 @@ interface ReportCardProps {
 }
 
 function ReportCard({ report, downloadPdf }: ReportCardProps) {
+    const [bottomSheetIsOpen, setBottomSheetIsOpen] = useState(false)
+
     const date = new Date(report.date)
     const day = date.getDate()
     const month = date.toLocaleString('default', { month: 'short' }).replace('.', '')
 
+    const handleOnClick = () => {
+        if (window.innerWidth < 800) {
+            const bodyOverflow = !bottomSheetIsOpen ? 'hidden' : 'unset'
+            document.body.style.overflow = bodyOverflow
+            setBottomSheetIsOpen(!bottomSheetIsOpen)
+        }
+    }
+
+    const handleShare = () => {
+        downloadPdf(report.slug)
+        handleOnClick()
+    }
+
     return (
         <div className='report-card'>
-            <div className='date'>
+            <div className='date' onClick={handleOnClick}>
                 <span className='day'>{day}</span>
                 <span className='month'>{month}</span>
             </div>
-            <div className='content'>
+            <div className='content' onClick={handleOnClick}>
                 <div className='title'>
                     <span>{report.ranch.name}</span>
                 </div>
@@ -38,7 +53,23 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
                     <span>{getSexLabel(report.sex)}</span>
                 </div>
             </div>
-            <div className='buttons'>
+            <div 
+                className='backdrop' 
+                style={{ display: bottomSheetIsOpen ? 'block' : 'none' }}
+                onClick={handleOnClick}
+            ></div>
+            <div className={`bottomsheet ${bottomSheetIsOpen ? 'open' : ''}`}>
+                <Link to={`/relatorios/${report.id}`}>
+                    Editar
+                </Link>
+                <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer" onClick={handleOnClick}>
+                    Visualizar
+                </Link>
+                <button onClick={handleShare}>
+                    Compartilhar
+                </button>
+            </div>
+            <div className='buttons hide-mobile'>
                 {isEmployee() ? (
                     <>
                         <button className='hide-mobile' onClick={() => downloadPdf(report.slug)}>

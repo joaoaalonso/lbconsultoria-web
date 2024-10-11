@@ -45,4 +45,45 @@
             background-color: transparent;
         }
     }
+
+    .bottomsheet {
+        position: absolute;
+        bottom: -200px;
+        transition: 0.3s bottom;
+        left: 0;
+        z-index: 2;
+        right: 0;
+        background: #f3f3f3;
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        flex-direction: column;
+        /* padding: 16px 0; */
+        
+        a, button {
+            border: none;
+            text-align: center;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            color: #000;
+            border-bottom: 1px solid #dcdcdc;
+            background-color: transparent;
+            padding: 12px 0 12px 0;
+        }
+    }
+
+    .open {
+        bottom: 0;
+    }
+    
+    .backdrop {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: black;
+        opacity: 0.5;
+    }
 }
