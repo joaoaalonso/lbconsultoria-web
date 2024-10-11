@@ -73,7 +73,6 @@ export const renderEvaluation = (report: Report) => {
     }
 
     const vaccineWeight = report.vaccineWeight / 100
-    const vaccinePrice = (report.arroba || 0) / 15 * vaccineWeight
 
     return renderSection('Avaliação de abate', {
         stack: [

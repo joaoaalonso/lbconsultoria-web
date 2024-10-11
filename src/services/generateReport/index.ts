@@ -1,6 +1,6 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 
-import vfs from './vfs'
+import { vfs } from './vfs'
 import { formatDate } from '../../utils/formatter'
 import { getReportBySlug, Report } from '../report'
 
