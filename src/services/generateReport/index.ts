@@ -41,7 +41,7 @@ export const generateReportStructure = async (report: Report): Promise<any> => {
 
     return {
         info: {
-            title: `${report.ranch.name} ${formatDate(report.date)} ${report.sex}`,
+            title: `${report.ranch.name} ${formatDate(report.date).replaceAll('/', '-')} ${report.sex}`,
         },
         pageSize: 'A4',
         defaultStyle: {
@@ -65,6 +65,23 @@ export const downloadReportPDF = async (report: Report): Promise<void> => {
     const docDefinitions = await generateReportStructure(report)
 
     pdfMake.vfs = vfs
-    // pdfMake.createPdf(docDefinitions).download(`${docDefinitions.title}.pdf`)
-    pdfMake.createPdf(docDefinitions).open({}, window.open("", "_blank"))
+    const fileName = `${docDefinitions.info.title}.pdf`
+    const pdf = pdfMake.createPdf(docDefinitions)
+
+    if (window.innerWidth >= 800) {
+        return pdf.download(fileName)
+    }
+
+    return new Promise((resolve) => {
+        pdf.getBlob(blob => {
+            const files = [new File([blob], fileName, { type: 'application/pdf' })]
+            if (navigator.canShare && navigator.canShare({ files })) {
+                navigator.share({ files })
+                    .catch(console.log)
+            } else {
+                pdf.download(fileName)
+            }
+            return resolve()
+        })
+    })
 }
