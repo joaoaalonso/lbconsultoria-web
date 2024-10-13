@@ -15,6 +15,7 @@ import ReportEvaluation from './Evaluation'
 import ReportInformation from './Informations'
 import ReportCorralEvaluation from './CorralEvaluation'
 
+import Loading from '../../../components/Loading'
 import { getReportBySlug, Report } from '../../../services/report'
 
 const ReportViewScreen = () => {
@@ -32,7 +33,7 @@ const ReportViewScreen = () => {
 
     if (!report) {
         return (
-            <div>Carregando relatório</div>
+            <Loading loading={true} text='Carregando relatório...' />
         )
     }
     
