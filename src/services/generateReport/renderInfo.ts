@@ -13,7 +13,7 @@ export const renderInfo = (report: Report) => {
                 ],
                 [
                     renderProperty('UNIDADE ABATEDOURA', report.slaughterhouse.name), 
-                    renderProperty('LOTE', report.batch)
+                    renderProperty('LOTE ', report.batch)
                 ],
                 [
                     renderProperty('MUNICÍPIO', report.slaughterhouseUnit.city),
