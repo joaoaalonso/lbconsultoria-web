@@ -90,7 +90,7 @@ const RanchFormScreen = () => {
                             <TextField name='name' label='Nome' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField name='postalCode' label='CEP' mask="11111-111" control={control} register={register} errors={errors} required />
+                            <TextField name='postalCode' label='CEP' maxLength={8} control={control} register={register} errors={errors} required />
                         </div>
                     </div>
                     <div className='row'>

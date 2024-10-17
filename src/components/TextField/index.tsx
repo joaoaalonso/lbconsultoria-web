@@ -12,8 +12,8 @@ interface TextFieldProps {
     register?: any;
     required?: boolean;
     disabled?: boolean;
+    maxLength?: number;
     control?: any;
-    mask?: string
     placeholder?: string;
     onChange?: (value: string) => void;
 }
@@ -23,9 +23,9 @@ function TextField({
     name, 
     label, 
     errors, 
-    mask, 
     control, 
     placeholder, 
+    maxLength,
     register, 
     onChange, 
     type = 'text', 
@@ -45,7 +45,7 @@ function TextField({
     const Tag = type === 'textarea' ? 'textarea' : 'input'
 
     function renderInput() {
-        if (mask && name && control) {
+        if (name && control) {
             return (
                 <Controller
                     control={control}
@@ -58,6 +58,7 @@ function TextField({
                             className={`text-field ${hasError ? 'text-field-error' : ''}`}
                             onChange={onChange}
                             value={value}
+                            maxLength={maxLength}
                             disabled={disabled}
                         />
                     )}
