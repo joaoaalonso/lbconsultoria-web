@@ -77,6 +77,7 @@ function TextField({
                     render={({ field: { onChange, value, ref } }) => (
                         <InputMask
                             ref={ref}
+                            maskChar=""
                             mask={mask}
                             type={type}
                             value={value}
