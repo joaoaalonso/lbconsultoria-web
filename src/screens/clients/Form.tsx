@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button'
 import Loading from '../../components/Loading'
@@ -17,6 +17,8 @@ const ClientFormScreen = () => {
     const [saving, setSaving] = useState(false)
     const [loading, setLoading] = useState(!!userId)
     const [sendingEmail, setSendingEmail] = useState(false)
+
+    const navigate = useNavigate()
 
     const {
         register,
@@ -106,6 +108,11 @@ const ClientFormScreen = () => {
             .then(() => {
                 if (sendPasswordEmail) {
                     return handlePasswordEmail(params.email)
+                }
+            })
+            .then(() => {
+                if (!userId) {
+                    navigate('/clientes')
                 }
             })
             .catch(e => swal('', e.message, 'error'))
