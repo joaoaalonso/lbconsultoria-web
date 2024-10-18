@@ -14,6 +14,7 @@ import { getReportsByUser, Report } from '../../services/report'
 import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
 import { downloadReportPDFBySlug } from '../../services/generateReport'
+import { formatDocument, formatPhone } from '../../utils/formatter'
 
 const ClientDetailsScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -174,9 +175,9 @@ const ClientDetailsScreen = () => {
 
                 <p>Nome: {client?.name || '-'}</p>
                 <p>Endereço: {renderAddress()}</p>
-                <p>CPF/CNPJ: {client?.document || '-'}</p>
+                <p>CPF/CNPJ: {client?.document ? formatDocument(client.document) : '-'}</p>
                 <p>Email: {client?.email || '-'}</p>
-                <p>Telefone: {client?.phone || '-'}</p>
+                <p>Telefone: {client?.phone ? formatPhone(client.phone) : '-'}</p>
 
                 {!!client?.email && !!client?.document && (
                     <p>
