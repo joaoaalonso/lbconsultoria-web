@@ -11,14 +11,17 @@ import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 
 import { updatePassword } from '../../services/auth'
+import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 
 const UpdatePasswordScreen = ({ onLogin }) => {
     const [loading, setLoading] = useState(false)
+    const [useCnpjMask, setUseCnpjMask] = useState(false)
+    
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
     const token = searchParams.get('token')
-    const email = searchParams.get('email')
+    const document = searchParams.get('document')
 
     const {
         register,
@@ -27,7 +30,7 @@ const UpdatePasswordScreen = ({ onLogin }) => {
         formState: { errors }
     } = useForm({
         defaultValues: {
-            email
+            document
         }
     })
 
@@ -35,9 +38,9 @@ const UpdatePasswordScreen = ({ onLogin }) => {
         if (!token) return
 
         setLoading(true)
-        const { email, password, confirmPassword } = data
+        const { document, password, confirmPassword } = data
 
-        updatePassword(token, email, password, confirmPassword)
+        updatePassword(token, document, password, confirmPassword)
             .then(() => swal('', 'Senha atualizada com sucesso.', 'success'))
             .then(onLogin)
             .catch(err => { 
@@ -55,10 +58,14 @@ const UpdatePasswordScreen = ({ onLogin }) => {
                     {!!token && (
                         <>
                             <TextField 
-                                name="email"
-                                label="E-mail"
-                                type="email"
+                                mask={useCnpjMask ? CNPJ_MASK : CPF_MASK}
+                                name="document"
+                                label="CPF/CNPJ"
+                                type="tel"
                                 register={register}
+                                onChange={value => {
+                                    setUseCnpjMask(value.length > 11)
+                                }}
                                 control={control}
                                 errors={errors}
                                 disabled={loading}

@@ -417,7 +417,7 @@ const ReportFormScreen = () => {
                     
                     <div className='row'>
                         <div className='column'>
-                            <TextField label='Nº de animais' name='numberOfAnimals' type='integer' register={register} errors={errors} required />
+                            <TextField label='Nº de animais' name='numberOfAnimals' type='tel' register={register} errors={errors} required />
                             <Select label='Sexo' name='sex' control={control} errors={errors} options={getAvailableSex()} required />
                         </div>
                         <div className='column'>

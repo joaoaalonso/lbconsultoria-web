@@ -135,7 +135,7 @@ const ClientDetailsScreen = () => {
     }
 
     const sendPasswordEmail = () => {
-        if (!client?.email) return
+        if (!client?.email || !client?.document) return
 
         return swal({
             title: 'Deseja enviar o e-mail de criação de senha?',
@@ -178,7 +178,7 @@ const ClientDetailsScreen = () => {
                 <p>Email: {client?.email || '-'}</p>
                 <p>Telefone: {client?.phone || '-'}</p>
 
-                {!!client?.email && (
+                {!!client?.email && !!client?.document && (
                     <p>
                         <Button 
                             text='Enviar e-mail de senha'

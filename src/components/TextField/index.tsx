@@ -1,6 +1,7 @@
 import './index.css'
 
 import React from 'react'
+import InputMask from 'react-input-mask'
 import { Controller } from 'react-hook-form'
 
 interface TextFieldProps {
@@ -10,6 +11,7 @@ interface TextFieldProps {
     value?: string;
     label?: string;
     register?: any;
+    mask?: string;
     required?: boolean;
     disabled?: boolean;
     maxLength?: number;
@@ -25,6 +27,7 @@ function TextField({
     errors, 
     control, 
     placeholder, 
+    mask,
     maxLength,
     register, 
     onChange, 
@@ -34,15 +37,35 @@ function TextField({
 }: TextFieldProps) {
     const registerConfigs = !!(register && name) ? register(name, { required }) : {};
 
-    function handleOnChange(e: any) {
-        if (onChange) {
-            onChange(e.target.value)
-        }
-    }
-
     const hasError = errors && name && !!errors[name]
 
     const Tag = type === 'textarea' ? 'textarea' : 'input'
+
+    const maskChar = '_'
+
+    const unmaskValue = (value: string) => {
+        if (!mask) return value
+
+        let unmaskedValue = '';
+        for(let i = 0; i < value.length; i++) {
+  
+            const isValueChar = mask[i] === '9' || mask[i] === 'a' || mask[i] === '*';
+            const isMaskChar = value[i] === maskChar;
+  
+            if (isValueChar && !isMaskChar)
+                unmaskedValue += value[i];
+        }
+  
+        return unmaskedValue;
+    }
+
+    const handleChange = (internalOnChange: any) => {
+        return (event: React.ChangeEvent<HTMLInputElement>) => {
+            const value = unmaskValue(event.target.value)
+            internalOnChange(value, event)
+            onChange && onChange(value)
+        }
+    }
 
     function renderInput() {
         if (name && control) {
@@ -52,14 +75,15 @@ function TextField({
                     name={name}
                     rules={{ required }}
                     render={({ field: { onChange, value, ref } }) => (
-                        <input 
+                        <InputMask
                             ref={ref}
+                            mask={mask}
                             type={type}
-                            className={`text-field ${hasError ? 'text-field-error' : ''}`}
-                            onChange={onChange}
                             value={value}
-                            maxLength={maxLength}
                             disabled={disabled}
+                            maxLength={maxLength}
+                            onChange={handleChange(onChange)}
+                            className={`text-field ${hasError ? 'text-field-error' : ''}`}
                         />
                     )}
                 />
@@ -73,7 +97,9 @@ function TextField({
                 value={value}
                 className={`text-field ${hasError ? 'text-field-error' : ''}`}
                 placeholder={placeholder}
-                onChange={handleOnChange}
+                onChange={e => {
+                    onChange && onChange(e.target.value)
+                }}
                 disabled={disabled}
                 {...registerConfigs}
             />

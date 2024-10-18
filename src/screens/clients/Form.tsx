@@ -11,12 +11,14 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { recoveryPassword } from '../../services/auth'
 import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
+import { CNPJ_MASK, CPF_MASK, PHONE_MASK, POSTAL_CODE_MASK } from '../../utils/mask'
 
 const ClientFormScreen = () => {
     const { userId } = useParams()
     const [saving, setSaving] = useState(false)
     const [loading, setLoading] = useState(!!userId)
     const [sendingEmail, setSendingEmail] = useState(false)
+    const [useCnpjMask, setUseCnpjMask] = useState(false)
 
     const navigate = useNavigate()
 
@@ -90,7 +92,7 @@ const ClientFormScreen = () => {
         let handler: any = createClient
         let params = data
         let message = 'Cliente cadastrado com sucesso!'
-        let sendPasswordEmail = !!data.email;
+        let sendPasswordEmail = !!data.email && !!data.document;
         
 
         if (userId) {
@@ -133,7 +135,7 @@ const ClientFormScreen = () => {
                             <TextField name='name' label='Nome' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField name='postalCode' label='CEP' maxLength={8} control={control} register={register} errors={errors} required />
+                            <TextField type='tel' mask={POSTAL_CODE_MASK} name='postalCode' label='CEP' control={control} register={register} errors={errors} required />
                         </div>
                     </div>
 
@@ -168,10 +170,21 @@ const ClientFormScreen = () => {
 
                     <div className='row'>
                         <div className='column'>
-                            <TextField name='document' label='CPF/CNPJ' register={register} errors={errors} />
+                            <TextField
+                                mask={useCnpjMask ? CNPJ_MASK : CPF_MASK}
+                                name='document'
+                                label='CPF/CNPJ'
+                                type='tel'
+                                register={register}
+                                control={control}
+                                onChange={value => {
+                                    setUseCnpjMask(value.length > 11)
+                                }}
+                                errors={errors}
+                            />
                         </div>
                         <div className='column'>
-                            <TextField name='phone' label='Telefone' register={register} errors={errors} />
+                            <TextField type='tel' mask={PHONE_MASK} name='phone' label='Telefone' control={control} register={register} errors={errors} />
                         </div>
                     </div>
 

@@ -10,10 +10,13 @@ import Button from '../../components/Button'
 import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 
+import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
+
 import { login } from '../../services/auth'
 
 const LoginScreen = ({ onLogin }) => {
     const [loading, setLoading] = useState(false)
+    const [useCnpjMask, setUseCnpjMask] = useState(false)
 
     const {
         register,
@@ -24,12 +27,12 @@ const LoginScreen = ({ onLogin }) => {
 
     const onSubmit = (data: any) => {
         setLoading(true)
-        const {email, password} = data
-        login(email, password)
+        const {document, password} = data
+        login(document, password)
             .then(onLogin)
             .catch(() => { 
                 setLoading(false)
-                swal('', 'E-mail e/ou senha incorreto', 'error') 
+                swal('', 'CPF/CNPJ e/ou senha incorreto', 'error') 
             })
     }
 
@@ -40,10 +43,14 @@ const LoginScreen = ({ onLogin }) => {
                 <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
                     <img src={logo} alt="LB Consultoria" />
                     <TextField 
-                        name="email"
-                        label="E-mail"
-                        type="email"
+                        mask={useCnpjMask ? CNPJ_MASK : CPF_MASK}
+                        name="document"
+                        label="CPF/CNPJ"
+                        type="tel"
                         register={register}
+                        onChange={value => {
+                            setUseCnpjMask(value.length > 11)
+                        }}
                         control={control}
                         errors={errors}
                         disabled={loading}

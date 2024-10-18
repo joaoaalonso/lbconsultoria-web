@@ -10,6 +10,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getAddressFromPostalCode } from '../../services/postalCode'
 import { getRanch, createRanch, editRanch } from '../../services/ranches'
+import { POSTAL_CODE_MASK } from '../../utils/mask'
 
 const RanchFormScreen = () => {
     const navigate = useNavigate()
@@ -90,7 +91,7 @@ const RanchFormScreen = () => {
                             <TextField name='name' label='Nome' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField name='postalCode' label='CEP' maxLength={8} control={control} register={register} errors={errors} required />
+                            <TextField mask={POSTAL_CODE_MASK} name='postalCode' label='CEP' control={control} register={register} errors={errors} required />
                         </div>
                     </div>
                     <div className='row'>

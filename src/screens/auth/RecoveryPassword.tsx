@@ -11,9 +11,12 @@ import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 
 import { recoveryPassword } from '../../services/auth'
+import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 
 const RecoveryPasswordScreen = () => {
     const [loading, setLoading] = useState(false)
+    const [useCnpjMask, setUseCnpjMask] = useState(false)
+
     const navigate = useNavigate()
 
     const {
@@ -25,9 +28,9 @@ const RecoveryPasswordScreen = () => {
 
     const onSubmit = (data: any) => {
         setLoading(true)
-        const { email } = data
+        const { document } = data
 
-        recoveryPassword(email)
+        recoveryPassword(document)
             .then(() => swal('', 'Enviamos um e-mail com as instruções para alterar sua senha.', 'success'))
             .then(() => navigate('/login'))
             .catch(() => { 
@@ -43,10 +46,14 @@ const RecoveryPasswordScreen = () => {
                 <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
                     <img src={logo} alt="LB Consultoria" />
                     <TextField 
-                        name="email"
-                        label="E-mail"
-                        type="email"
+                        mask={useCnpjMask ? CNPJ_MASK : CPF_MASK}
+                        name="document"
+                        label="CPF/CNPJ"
+                        type="tel"
                         register={register}
+                        onChange={value => {
+                            setUseCnpjMask(value.length > 11)
+                        }}
                         control={control}
                         errors={errors}
                         disabled={loading}

@@ -9,14 +9,14 @@ const saveToken = (token: string) => {
     localStorage.setItem(AUTH_KEY, token)   
 }
 
-export const login = async (email: string, password: string): Promise<void> => {
+export const login = async (document: string, password: string): Promise<void> => {
     return axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        email,
+        document,
         password
     })
         .then(response => {
             if (!response?.data?.token) {
-                throw Error("E-mail e/ou senha incorreto.")
+                throw Error("CPF/CNPJ e/ou senha incorreto.")
             }
             saveToken(response.data.token)
         })
@@ -27,24 +27,24 @@ export const logout = async () => {
     window.location.href = '/login'
 }
 
-export const updatePassword = async (token: string, email: string, password: string, confirmPassword: string): Promise<void> => {
+export const updatePassword = async (token: string, document: string, password: string, confirmPassword: string): Promise<void> => {
     return axios.post(`${process.env.REACT_APP_API_URL}/auth/update-password`, {
         token,
-        email,
+        document,
         password,
         confirmPassword
     })
         .then(response => {
             if (!response?.data?.token) {
-                throw Error("E-mail e/ou senha incorreto.")
+                throw Error("CPF/CNPJ e/ou senha incorreto.")
             }
             saveToken(response.data.token)
         })
 }
 
-export const recoveryPassword = async (email: string): Promise<void> => {
+export const recoveryPassword = async (document: string): Promise<void> => {
     return axios.post(`${process.env.REACT_APP_API_URL}/auth/recovery-password`, {
-        email,
+        document,
     })
 }
 

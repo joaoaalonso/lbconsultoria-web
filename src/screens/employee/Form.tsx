@@ -9,6 +9,7 @@ import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { CPF_ONLY_MASK } from '../../utils/mask'
 import { recoveryPassword } from '../../services/auth'
 import { createEmployee, deleteEmployee, editEmployee, getEmployee } from '../../services/users'
 
@@ -24,6 +25,7 @@ const EmployeeFormScreen = () => {
         register,
         handleSubmit,
         reset,
+        control,
         formState: { errors }
     } = useForm()
 
@@ -69,15 +71,14 @@ const EmployeeFormScreen = () => {
         let handler: any = createEmployee
         let params = data
         let message = 'Funcionário cadastrado com sucesso!'
-        let sendPasswordEmail = false;
+        let sendPasswordEmail = true;
         
 
         if (userId) {
             handler = editEmployee
             params = { id: userId, ...data }
             message = 'Funcionário atualizado com sucesso!'
-        } else {
-            sendPasswordEmail = true
+            sendPasswordEmail = false
         }
 
         handler(params)
@@ -140,7 +141,13 @@ const EmployeeFormScreen = () => {
 
                     <div className='row'>
                         <div className='column'>
-                            <TextField name='email' label='Email' register={register} errors={errors} />
+                            <TextField type='tel' mask={CPF_ONLY_MASK} name='document' label='CPF' register={register} errors={errors} control={control} required />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='email' label='Email' register={register} errors={errors} required />
                         </div>
                     </div>
 
