@@ -433,16 +433,16 @@ const ReportFormScreen = () => {
 
                     <div className='row'>
                         <div className='column'>
-                            <TextField label='Valor da arroba' name='arroba' type='decimal' register={register} errors={errors} />
+                            <TextField label='Valor da arroba' name='arroba' type='text' inputMode='decimal' register={register} errors={errors} />
                         </div>
                         <div className='column'>
-                            <TextField label='Peso da vacina' name='vaccineWeight' type='decimal' register={register} errors={errors} required />
+                            <TextField label='Peso da vacina' name='vaccineWeight' type='text' inputMode='decimal' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField label='PV' name='pv' type='decimal' register={register} errors={errors} required />
+                            <TextField label='PV' name='pv' type='text' inputMode='decimal' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField label='PC' name='pc' type='decimal' register={register} errors={errors} required />
+                            <TextField label='PC' name='pc' type='text' inputMode='decimal' register={register} errors={errors} required />
                         </div>
                     </div>
 
@@ -469,7 +469,7 @@ const ReportFormScreen = () => {
                                         return (
                                             <tr key={`maturity-${index}`}>
                                                 <td>{elem.type}D</td>
-                                                <td><TextField onChange={(value) => updateTableRow(maturity, setMaturity, index, 'value', value)} value={elem.value} /></td>
+                                                <td><TextField type='tel' onChange={(value) => updateTableRow(maturity, setMaturity, index, 'value', value)} value={elem.value} /></td>
                                             </tr>
                                         )
                                     })}
@@ -490,7 +490,7 @@ const ReportFormScreen = () => {
                                         return (
                                             <tr key={`finishing-${index}`}>
                                                 <td>{elem.type}</td>
-                                                <td><TextField onChange={(value) => updateTableRow(finishing, setFinishing, index, 'value', value)} value={elem.value} /></td>
+                                                <td><TextField type='tel' onChange={(value) => updateTableRow(finishing, setFinishing, index, 'value', value)} value={elem.value} /></td>
                                             </tr>
                                         )
                                     })}
@@ -511,7 +511,7 @@ const ReportFormScreen = () => {
                                         return (
                                             <tr key={`rumen-score-${index}`}>
                                                 <td>{elem.type}</td>
-                                                <td><TextField onChange={(value) => updateTableRow(rumenScore, setRumenScore, index, 'value', value)} value={elem.value} /></td>
+                                                <td><TextField type='tel' onChange={(value) => updateTableRow(rumenScore, setRumenScore, index, 'value', value)} value={elem.value} /></td>
                                             </tr>
                                         )
                                     })}
@@ -532,7 +532,7 @@ const ReportFormScreen = () => {
                                         return (
                                             <tr key={`fetus-${index}`}>
                                                 <td>{elem.type}</td>
-                                                <td><TextField onChange={(value) => updateTableRow(fetus, setFetus, index, 'value', value)} value={elem.value} /></td>
+                                                <td><TextField type='tel' onChange={(value) => updateTableRow(fetus, setFetus, index, 'value', value)} value={elem.value} /></td>
                                             </tr>
                                         )
                                     })}

@@ -8,6 +8,7 @@ interface TextFieldProps {
     errors?: any;
     name?: string;
     type?: string;
+    inputMode?: string;
     value?: string;
     label?: string;
     register?: any;
@@ -32,6 +33,7 @@ function TextField({
     register, 
     onChange, 
     type = 'text', 
+    inputMode,
     required = false,
     disabled = false
 }: TextFieldProps) {
@@ -80,6 +82,7 @@ function TextField({
                             maskChar=""
                             mask={mask}
                             type={type}
+                            inputmode={inputMode}
                             value={value}
                             disabled={disabled}
                             maxLength={maxLength}
@@ -95,6 +98,7 @@ function TextField({
             <Tag
                 rows={3}
                 type={type}
+                inputMode={inputMode}
                 value={value}
                 className={`text-field ${hasError ? 'text-field-error' : ''}`}
                 placeholder={placeholder}
