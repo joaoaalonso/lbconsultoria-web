@@ -92,15 +92,14 @@ const ClientFormScreen = () => {
         let handler: any = createClient
         let params = data
         let message = 'Cliente cadastrado com sucesso!'
-        let sendPasswordEmail = false;
+        let sendPasswordEmail = !!data.email;
         
 
         if (userId) {
             handler = editClient
             params = { id: userId, ...data }
             message = 'Cliente atualizado com sucesso!'
-        } else {
-            sendPasswordEmail = true
+            sendPasswordEmail = false
         }
 
         handler(params)
