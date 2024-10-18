@@ -48,8 +48,10 @@
 
 .photos-container .photos-body .photo-wrapper {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: calc(50vw - 55px);
+    height: calc(50vw - 55px);
+    max-width: 200px;
+    max-height: 200px;
     overflow: hidden;
     border-radius: 3px;
     border: 1px solid black;
@@ -60,21 +62,42 @@
     height: 100%;
 }
 
-.photos-container .photos-body .photo-wrapper button {
+.photos-container .photos-body .photo-wrapper .photo-delete {
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    width: 24px;
+    height: 24px;
     border: none;
     display: flex;
     color: white;
+    color: black;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 12px;
     font-weight: bold;
     position: absolute;
+    border-radius: 4px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: white;
+}
+
+.photos-container .photos-body .photo-wrapper .photo-sort {
+    top: calc(50% - 16px);
+    right: calc(50% - 16px);
+    width: 32px;
+    height: 32px;
+    border: none;
+    display: flex;
+    color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
 }
 
 .photos-container .photos-body span {

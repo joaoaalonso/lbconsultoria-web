@@ -53,6 +53,12 @@ export interface Report {
     bruises?: ObjectSeqTypeValue[]
 }
 
+const sortPhotos = (photos?: Photo[]) => {
+    if (!photos) return []
+
+    return photos.sort((a, b) => a.sortIndex - b.sortIndex)
+}
+
 export const getReports = async (): Promise<Report[]> => {
     return apiClient().get<Report[]>(`/reports`)
         .then(response => response.data)
@@ -63,7 +69,11 @@ export const getReports = async (): Promise<Report[]> => {
 
 export const getReport = async (reportId: string): Promise<Report> => {
     return apiClient().get<Report>(`/reports/${reportId}`)
-        .then(response => response.data)
+        .then(response => {
+            const report = response.data
+            report.photos = sortPhotos(report.photos)
+            return report
+        })
         .catch(err => {
             throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
         })
@@ -71,7 +81,11 @@ export const getReport = async (reportId: string): Promise<Report> => {
 
 export const getReportBySlug = async (slug: string): Promise<Report> => {
     return apiClient().get<Report>(`/reports/${slug}/slug`)
-        .then(response => response.data)
+        .then(response => {
+            const report = response.data
+            report.photos = sortPhotos(report.photos)
+            return report
+        })
         .catch(err => {
             throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
         })
