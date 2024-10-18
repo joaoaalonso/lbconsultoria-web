@@ -34,7 +34,6 @@ export const formatDocument = (document: string): string => {
 }
 
 export const formatPhone = (document: string): string => {
-    console.log(document.length)
     if (document.length > 10) {
         // CELLPHONE
         return document.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
