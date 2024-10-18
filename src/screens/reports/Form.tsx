@@ -272,6 +272,7 @@ const ReportFormScreen = () => {
         })
         .then(confirm => {
             if (confirm) {
+                setLoading(true)
                 if (reportId) {
                     editReport({id: reportId, ...input})
                         .then(() => {

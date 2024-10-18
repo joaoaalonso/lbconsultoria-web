@@ -7,6 +7,7 @@ import TextField from '../../components/TextField'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { isEmployee } from '../../services/auth'
 import { getReports, Report } from '../../services/report'
 import { downloadReportPDFBySlug } from '../../services/generateReport'
 
@@ -45,11 +46,13 @@ const ReportListScreen = () => {
         <ScreenTemplate
             title='Relatórios'
             noBackground
-            rightComponent={(
-                <Link to='/relatorios/adicionar'>
-                    <BiPlus size={25} className='svg-button' />
-                </Link>
-            )}
+            rightComponent={
+                isEmployee() && (
+                    <Link to='/relatorios/adicionar'>
+                        <BiPlus size={25} className='svg-button' />
+                    </Link>
+                )
+            }
         >
             <>
                 <Loading loading={generatingPdf} text='Gerando PDF...' />

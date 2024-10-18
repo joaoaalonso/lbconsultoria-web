@@ -58,7 +58,7 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
                 style={{ display: bottomSheetIsOpen ? 'block' : 'none' }}
                 onClick={handleOnClick}
             ></div>
-            <div className={`bottomsheet ${bottomSheetIsOpen ? 'open' : ''}`}>
+            <div className={`bottomsheet hide-desk ${bottomSheetIsOpen ? 'open' : ''}`}>
                 <Link to={`/relatorios/${report.id}`}>
                     Editar
                 </Link>
