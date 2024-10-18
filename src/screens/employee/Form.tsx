@@ -9,7 +9,7 @@ import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { CPF_ONLY_MASK } from '../../utils/mask'
+import { CPF_MASK } from '../../utils/mask'
 import { recoveryPassword } from '../../services/auth'
 import { createEmployee, deleteEmployee, editEmployee, getEmployee } from '../../services/users'
 
@@ -141,7 +141,7 @@ const EmployeeFormScreen = () => {
 
                     <div className='row'>
                         <div className='column'>
-                            <TextField type='tel' mask={CPF_ONLY_MASK} name='document' label='CPF' register={register} errors={errors} control={control} required />
+                            <TextField type='tel' mask={CPF_MASK} name='document' label='CPF' register={register} errors={errors} control={control} required />
                         </div>
                     </div>
 

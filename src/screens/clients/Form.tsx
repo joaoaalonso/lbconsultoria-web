@@ -11,7 +11,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { recoveryPassword } from '../../services/auth'
 import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
-import { CNPJ_MASK, CPF_MASK, PHONE_MASK, POSTAL_CODE_MASK } from '../../utils/mask'
+import { CELLPHONE_MASK, CNPJ_MASK, CPF_MASK, PHONE_MASK, POSTAL_CODE_MASK } from '../../utils/mask'
 
 const ClientFormScreen = () => {
     const { userId } = useParams()
@@ -19,6 +19,7 @@ const ClientFormScreen = () => {
     const [loading, setLoading] = useState(!!userId)
     const [sendingEmail, setSendingEmail] = useState(false)
     const [useCnpjMask, setUseCnpjMask] = useState(false)
+    const [useCellphoneMask, setUseCellphoneMask] = useState(false)
 
     const navigate = useNavigate()
 
@@ -184,7 +185,17 @@ const ClientFormScreen = () => {
                             />
                         </div>
                         <div className='column'>
-                            <TextField type='tel' mask={PHONE_MASK} name='phone' label='Telefone' control={control} register={register} errors={errors} />
+                            <TextField
+                                type='tel'
+                                mask={useCellphoneMask ? CELLPHONE_MASK : PHONE_MASK}
+                                name='phone'
+                                label='Telefone'
+                                control={control}onChange={value => {
+                                    setUseCellphoneMask(value.length > 10)
+                                }}
+                                register={register}
+                                errors={errors}
+                            />
                         </div>
                     </div>
 
