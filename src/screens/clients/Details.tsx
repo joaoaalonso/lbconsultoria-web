@@ -4,10 +4,12 @@ import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
-import Loading from '../../components/Loading';
+import Button from '../../components/Button'
+import Loading from '../../components/Loading'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { recoveryPassword } from '../../services/auth'
 import { getReportsByUser, Report } from '../../services/report'
 import { getClient, deleteClient, User } from '../../services/users'
 import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
@@ -19,6 +21,7 @@ const ClientDetailsScreen = () => {
     const [client, setClient] = useState<User>()
     const [ranches, setRanches] = useState<Ranch[]>([])
     const [reports, setReports] = useState<Report[]>([])
+    const [sendingEmail, setSendingEmail] = useState(false)
     const [generatingPdf, setGeneratingPdf] = useState(false)
 
     const { userId } = useParams()
@@ -131,6 +134,33 @@ const ClientDetailsScreen = () => {
             .finally(() => setGeneratingPdf(false))
     }
 
+    const sendPasswordEmail = () => {
+        if (!client?.email) return
+
+        return swal({
+            title: 'Deseja enviar o e-mail de criação de senha?',
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: 'Não'
+                },
+                confirm: {
+                    text: 'Sim',
+                },
+            },
+            dangerMode: true,
+        })
+        .then(confirm => {
+            if (confirm) {
+                setSendingEmail(true)
+                return recoveryPassword(client.email)
+                    .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
+                    .catch(() => swal('', 'Não foi possível enviar o e-mail.', 'error'))
+                    .finally(() => setSendingEmail(false))
+            }
+        })
+    }
+
     return (
         <ScreenTemplate
             backLink='/clientes'
@@ -139,6 +169,7 @@ const ClientDetailsScreen = () => {
         >
             <>
                 <Loading loading={loading} />
+                <Loading loading={sendingEmail} text="Enviando e-mail..." />
                 <Loading loading={generatingPdf} text='Gerando PDF...' />
 
                 <p>Nome: {client?.name || '-'}</p>
@@ -146,6 +177,16 @@ const ClientDetailsScreen = () => {
                 <p>CPF/CNPJ: {client?.document || '-'}</p>
                 <p>Email: {client?.email || '-'}</p>
                 <p>Telefone: {client?.phone || '-'}</p>
+
+                {!!client?.email && (
+                    <p>
+                        <Button 
+                            text='Enviar e-mail de senha'
+                            onClick={sendPasswordEmail}
+                        />
+                    </p>
+                )}
+
                 <Table 
                     title='Propriedades'
                     righComponent={

@@ -78,10 +78,8 @@ const ClientFormScreen = () => {
                 setSendingEmail(true)
                 return recoveryPassword(email)
                     .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
-                    .catch(() => { 
-                        setSendingEmail(false)
-                        swal('', 'Não foi possível enviar o e-mail.', 'error') 
-                    })
+                    .catch(() => swal('', 'Não foi possível enviar o e-mail.', 'error'))
+                    .finally(() => setSendingEmail(false))
             }
         })
     }
