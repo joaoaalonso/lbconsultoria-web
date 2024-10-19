@@ -13,7 +13,7 @@ import { Notifications, addListener, removeListener } from '../../services/notif
 const SideMenu = () => {
     const ICON_SIZE = 20
 
-    const [menuIsClosed, setMenuIsClosed] = useState(false)
+    const [menuIsClosed, setMenuIsClosed] = useState(true)
     const [notifications, setNotifications] = useState<Notifications>({
         prematures: 0,
         total: 0
