@@ -51,6 +51,15 @@
   display: none;
 }
 
+.side-menu-close .badge {
+  top: 4px;
+  right: 24px;
+  position: absolute;
+  width: 8px !important;
+  height: 8px !important;
+  color: transparent !important;
+}
+
 .side-menu > .logout {
   width: 100%;
   border: none;

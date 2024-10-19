@@ -23,7 +23,10 @@ import ReportListScreen from './screens/reports/List'
 import ReportFormScreen from './screens/reports/Form'
 import ReportViewScreen from './screens/reports/View'
 
+import PrematureListScreen from './screens/premature/List'
+
 import { getToken } from './services/auth'
+import PrematureFormScreen from './screens/premature/Form'
 
 const Routes = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!getToken())
@@ -65,6 +68,10 @@ const Routes = () => {
                     <Route path='/relatorios' element={<ReportListScreen />} />
                     <Route path='/relatorios/adicionar' element={<ReportFormScreen />} />
                     <Route path='/relatorios/:reportId' element={<ReportFormScreen />} />
+
+                    <Route path='/precoce' element={<PrematureListScreen />} />
+                    <Route path='/precoce/adicionar' element={<PrematureFormScreen />} />
+                    <Route path='/precoce/:prematureId' element={<PrematureFormScreen />} />
 
                     <Route path='/relatorio/:slug' element={<ReportViewScreen />} />
 

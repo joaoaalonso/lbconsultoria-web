@@ -1,17 +1,33 @@
 import './index.css'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GiHamburgerMenu } from "react-icons/gi"
 import { RiLogoutBoxRLine } from "react-icons/ri"
 
 import logo from '../../images/logo.jpeg'
 
-import { isEmployee, logoutWithConfirmation } from '../../services/auth'
 import MobileMenu from '../Menu/MobileMenu'
+
+import { isEmployee, logoutWithConfirmation } from '../../services/auth'
+import { Notifications, addListener, removeListener } from '../../services/notifications'
 
 const Header = () => {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
+    const [notifications, setNotifications] = useState<Notifications>({
+        prematures: 0,
+        total: 0
+    })
 
+    useEffect(() => {
+        const listenerId = addListener(data => {
+            setNotifications(data)
+        })
+
+        return () => {
+            removeListener(listenerId)
+        }
+    }, [])
+    
     const showMenu = isEmployee()
 
     return (
@@ -19,6 +35,7 @@ const Header = () => {
             <MobileMenu visible={showMenu && menuIsVisible} onClose={() => setMenuIsVisible(false)} />
             <div className='hamburger-menu'>
                 {!!showMenu && <GiHamburgerMenu size={18} onClick={() => setMenuIsVisible(true)} />}
+                {!!notifications.total && <div className='badge' />}
             </div>
             <div className='logo'>
                 <img src={logo} alt="LB Consultoria" />

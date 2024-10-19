@@ -9,6 +9,17 @@
         width: 40px;
         padding: 12px;
         cursor: pointer;
+        position: relative;
+
+        .badge {
+            top: 8px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            background-color: #ff19d5;
+        }
     }
 
     .logout {

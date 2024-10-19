@@ -8,8 +8,28 @@
     color: black;
     transition: 0.3s;
     padding: 10px 25px;
+    position: relative;
     align-items: center;
     text-decoration: none;
+    justify-content: space-between;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .badge {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      color: white;
+      font-size: 12px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background-color: #ff19d5;
+    }
   }
   
   a:hover {
@@ -19,6 +39,11 @@
   .active {
     color: white;
     background: #ff19d5;
+
+    .badge {
+      color: #ff19d5;
+      background-color: white;
+    }
   }
   
   .active:hover {

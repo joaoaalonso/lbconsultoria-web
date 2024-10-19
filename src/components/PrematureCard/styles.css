@@ -1,0 +1,55 @@
+.premature-card {
+    padding: 12px;
+    display: flex;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.05);
+    border-style: solid;
+    border-width: 2px;
+
+    .date {
+        display: flex;
+        margin-right: 12px;
+        padding-right: 12px;
+        align-items: center;
+        flex-direction: column;
+        border-right: 1px solid #eaeaea;
+
+        .day {
+            font-size: 22px;
+        }
+
+        .month {
+            font-size: 18px;
+
+            &::first-letter {
+                text-transform: capitalize;
+            }
+        }
+    }
+
+    .content {
+        flex: 1;
+
+        .title {
+            font-weight: bold;
+        }
+    }
+
+    .tag {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            font-size: 16px;
+
+            &:first-child {
+                font-size: 18px;
+            }
+        }
+    }
+}
