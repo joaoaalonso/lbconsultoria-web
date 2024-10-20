@@ -14,10 +14,11 @@ interface SelectProps {
     label?: string;
     options: Options[];
     required?: boolean;
+    isClearable?: boolean;
     onChange?: (value: string) => void;
 }
 
-const Select = ({ name, label, errors, options, control, onChange, required = false }: SelectProps) => {
+const Select = ({ name, label, errors, options, control, onChange, isClearable = false, required = false }: SelectProps) => {
     const hasError = errors && name && !!errors[name]
 
     const getOptionBackgroundColor = (state: any) => {
@@ -50,7 +51,8 @@ const Select = ({ name, label, errors, options, control, onChange, required = fa
                 render={({ field: { onChange, value, ref } }) => (
                     <ReactSelect
                         ref={ref}
-                        onChange={(val: any) => onChange(val.value)}
+                        isClearable={isClearable}
+                        onChange={(val: any) => onChange(val?.value)}
                         value={options.find(option => option.value === value)}
                         options={options}
                         placeholder={null}

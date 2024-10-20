@@ -6,6 +6,7 @@ import { PiCowFill } from 'react-icons/pi'
 import { NavLink } from 'react-router-dom'
 import { FaUserTie } from 'react-icons/fa'
 import { GiMeatCleaver } from 'react-icons/gi'
+import { SiGoogleanalytics } from 'react-icons/si'
 import { HiOutlineDocumentReport } from 'react-icons/hi'
 
 import { isAdmin, isEmployee } from '../../services/auth'
@@ -51,6 +52,11 @@ const MenuItems: React.FC<MenuItemsProps> = ({ notifications }) => {
                             <PiCowFill size={ICON_SIZE} /><span>Precoce</span>
                         </div>
                         {!!notifications?.prematures && <span className='badge'>{notifications.prematures}</span>}
+                    </NavLink>
+                    <NavLink to='/graficos'>
+                        <div>
+                            <SiGoogleanalytics size={ICON_SIZE} /><span>Gráficos</span>
+                        </div>
                     </NavLink>
                 </>
             )}

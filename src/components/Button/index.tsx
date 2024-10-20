@@ -3,7 +3,7 @@ import './index.css'
 import React from 'react'
 
 interface ButtonProps {
-    text?: string;
+    text?: any;
     onClick?: () => void;
     type?: 'submit' | 'button' | 'reset';
     variant?: 'primary' | 'secondary';

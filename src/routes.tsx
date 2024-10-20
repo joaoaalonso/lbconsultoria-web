@@ -27,6 +27,7 @@ import PrematureListScreen from './screens/premature/List'
 
 import { getToken } from './services/auth'
 import PrematureFormScreen from './screens/premature/Form'
+import AnalyticsScreen from './screens/analytics'
 
 const Routes = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!getToken())
@@ -72,6 +73,8 @@ const Routes = () => {
                     <Route path='/precoce' element={<PrematureListScreen />} />
                     <Route path='/precoce/adicionar' element={<PrematureFormScreen />} />
                     <Route path='/precoce/:prematureId' element={<PrematureFormScreen />} />
+
+                    <Route path='/graficos' element={<AnalyticsScreen />} />
 
                     <Route path='/relatorio/:slug' element={<ReportViewScreen />} />
 
