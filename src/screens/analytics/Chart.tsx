@@ -81,7 +81,12 @@ const Chart: React.FC<ChartProps> = ({ analytics }) => {
                     }}
                 />
             </div>
-            <Button onClick={downloadChart} variant='secondary' text='Download' />
+            <Button
+                style={{ marginBottom: 12 }}
+                onClick={downloadChart}
+                variant='primary'
+                text='Download'
+            />
         </>
     )
 }
