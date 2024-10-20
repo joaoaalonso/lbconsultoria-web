@@ -13,3 +13,14 @@ export const getSexLabel = (value: string) => {
     const sex = AVAILABLE_SEX.find(sex => sex.value === value)
     return sex?.label || ''
 }
+
+export const getFinishingName = (finishing) => {
+    const finishingNames = {
+        1: 'AUSENTE',
+        2: 'ESCASSO',
+        3: 'MEDIANO',
+        4: 'UNIFORME',
+        5: 'EXCESSIVO'
+    }
+    return `${finishingNames[finishing]} (${finishing})`
+}

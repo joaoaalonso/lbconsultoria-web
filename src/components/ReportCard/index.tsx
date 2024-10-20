@@ -8,8 +8,8 @@ import { FaDownload } from 'react-icons/fa6'
 import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
 import { Report } from '../../services/report'
-import { getSexLabel } from '../../services/sex'
 import { isEmployee } from '../../services/auth'
+import { getSexLabel } from '../../services/reportHelpers'
 
 interface ReportCardProps {
     report: Report

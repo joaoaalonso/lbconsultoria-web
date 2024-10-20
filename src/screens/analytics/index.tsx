@@ -9,7 +9,7 @@ import Loading from '../../components/Loading'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { getAvailableSex } from '../../services/sex'
+import { getAvailableSex } from '../../services/reportHelpers'
 import { getClients, User } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
 import { AnalyticsResult, getAnalytics } from '../../services/analytics'

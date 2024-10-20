@@ -4,6 +4,7 @@ import { Report } from '../../../services/report'
 import { sortByType } from '../../../utils/sort'
 import { formatNumber } from '../../../utils/formatter'
 import { getArroba } from '../../../services/settings'
+import { getFinishingName } from '../../../services/reportHelpers'
 
 type ReportEvaluationProps = {
     report: Report
@@ -15,16 +16,6 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
         return percentage.toFixed(0)
     }
 
-    const getFinishingName = (finishing) => {
-        const finishingNames = {
-            1: 'AUSENTE',
-            2: 'ESCASSO',
-            3: 'MEDIANO',
-            4: 'UNIFORME',
-            5: 'EXCESSIVO'
-        }
-        return finishingNames[finishing]
-    }
 
     report.maturity && sortByType(report.maturity)
     report.finishing && sortByType(report.finishing)
@@ -56,7 +47,7 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
                 <div className='column'>
                     <p><b>ACABAMENTO</b></p>
                     {report.finishing?.filter(finishing => finishing.value !== '0').map(finishing => (
-                        <p>{getFinishingName(finishing.type)} ({finishing.type}) - {calculatePercentage(finishing.value)}% ({finishing.value})</p>
+                        <p>{getFinishingName(finishing.type)} - {calculatePercentage(finishing.value)}% ({finishing.value})</p>
                     ))}
                 </div>
                 <div className='column'>

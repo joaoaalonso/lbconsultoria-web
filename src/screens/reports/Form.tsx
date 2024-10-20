@@ -30,7 +30,7 @@ import {
     deleteReport
 } from '../../services/report'
 import { sortByType } from '../../utils/sort'
-import { getAvailableSex } from '../../services/sex'
+import { getAvailableSex } from '../../services/reportHelpers'
 
 
 const ReportFormScreen = () => {
