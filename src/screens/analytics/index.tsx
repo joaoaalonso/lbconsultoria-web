@@ -73,10 +73,29 @@ const AnalyticsScreen = () => {
         }
     }, [watchSlaughterhouse, resetField])
 
+    const scrollToChart = () => {
+        const timer = setInterval(() => {
+            const isChartRendered = !!document.getElementsByClassName('chart-wrapper')?.length
+            if (isChartRendered) {
+                const mainContent = document.getElementsByClassName('main-content')?.[0]
+                if (mainContent) {
+                    mainContent.scrollTo({
+                        top: mainContent.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                }
+                clearInterval(timer)    
+            }
+        }, 100)
+    }
+
     const onSubmit = (data: any) => {
         setLoading(true)
         getAnalytics(data)
-            .then(setAnalytics)
+            .then(data => {
+                setAnalytics(data)
+                scrollToChart()
+            })
             .catch(e => swal('', e.message, 'error'))
             .finally(() => setLoading(false))
     }
