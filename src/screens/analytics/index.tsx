@@ -75,7 +75,7 @@ const AnalyticsScreen = () => {
 
     const scrollToChart = () => {
         const timer = setInterval(() => {
-            const isChartRendered = !!document.getElementsByClassName('chart-wrapper')?.length
+            const isChartRendered = !!document.getElementById('chart-wrapper')
             if (isChartRendered) {
                 const mainContent = document.getElementsByClassName('main-content')?.[0]
                 if (mainContent) {
