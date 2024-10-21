@@ -2,7 +2,7 @@ import pdfMake from 'pdfmake/build/pdfmake'
 
 import { vfs } from './vfs'
 import { formatDate } from '../../utils/formatter'
-import { getReportBySlug, Report } from '../report'
+import { getReport, Report } from '../report'
 
 import { renderInfo } from './renderInfo'
 import { renderFetus } from './renderFetus'
@@ -56,8 +56,8 @@ export const generateReportStructure = async (report: Report): Promise<any> => {
     }
 }
 
-export const downloadReportPDFBySlug = async (reportSlug: string): Promise<void> => {
-    return getReportBySlug(reportSlug)
+export const downloadReportPDFById = async (reportId: string): Promise<void> => {
+    return getReport(reportId)
         .then(downloadReportPDF)
 }
 

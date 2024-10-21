@@ -11,10 +11,10 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { recoveryPassword } from '../../services/auth'
 import { getReportsByUser, Report } from '../../services/report'
-import { getClient, deleteClient, User } from '../../services/users'
-import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
-import { downloadReportPDFBySlug } from '../../services/generateReport'
 import { formatDocument, formatPhone } from '../../utils/formatter'
+import { getClient, deleteClient, User } from '../../services/users'
+import { downloadReportPDFById } from '../../services/generateReport'
+import { getRanches, deleteRanch, Ranch } from '../../services/ranches'
 
 const ClientDetailsScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -129,9 +129,9 @@ const ClientDetailsScreen = () => {
         return addressComponents.join(', ')
     }
 
-    const downloadPdf = async (reportSlug: string) => {
+    const downloadPdf = async (reportId: string) => {
         setGeneratingPdf(true)
-        downloadReportPDFBySlug(reportSlug)
+        downloadReportPDFById(reportId)
             .finally(() => setGeneratingPdf(false))
     }
 

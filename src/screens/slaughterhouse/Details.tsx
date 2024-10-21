@@ -4,6 +4,7 @@ import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Table from '../../components/Table'
+import Loading from '../../components/Loading'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
@@ -15,9 +16,8 @@ import {
     Slaughterhouse, 
     SlaughterhouseUnit
 } from '../../services/slaughterhouse'
+import { downloadReportPDFById } from '../../services/generateReport'
 import { getReportsBySlaughterhouse, Report } from '../../services/report'
-import Loading from '../../components/Loading'
-import { downloadReportPDFBySlug } from '../../services/generateReport'
 
 const SlaughterhouseDetailsScreen = () => {
     const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
@@ -118,9 +118,9 @@ const SlaughterhouseDetailsScreen = () => {
         })
     }
 
-    const downloadPdf = async (reportSlug: string) => {
+    const downloadPdf = async (reportId: string) => {
         setGeneratingPdf(true)
-        downloadReportPDFBySlug(reportSlug)
+        downloadReportPDFById(reportId)
             .finally(() => setGeneratingPdf(false))
     }
 

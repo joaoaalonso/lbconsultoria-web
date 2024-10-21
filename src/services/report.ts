@@ -20,7 +20,6 @@ export interface ObjectSeqTypeValue {
 
 export interface Report {
     id?: string
-    slug: string
     date: Date
     slaughterhouseId: string
     slaughterhouse: Slaughterhouse
@@ -79,18 +78,6 @@ export const getReport = async (reportId: string): Promise<Report> => {
         })
 }
 
-export const getReportBySlug = async (slug: string): Promise<Report> => {
-    return apiClient().get<Report>(`/reports/${slug}/slug`)
-        .then(response => {
-            const report = response.data
-            report.photos = sortPhotos(report.photos)
-            return report
-        })
-        .catch(err => {
-            throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
-        })
-}
-
 export const getReportsByUser = async (userId: string): Promise<Report[]> => {
     return apiClient().get<Report[]>(`/users/clients/${userId}/reports`)
         .then(response => response.data)
@@ -107,7 +94,7 @@ export const getReportsBySlaughterhouse = async (slaughterhouseId: string): Prom
         })
 }
 
-export const createReport = async (report: Omit<Report, "id" | "user"  | "slug"  | "ranch" | "slaughterhouse" | "slaughterhouseUnit">): Promise<Report> => {
+export const createReport = async (report: Omit<Report, "id" | "user"  | "ranch" | "slaughterhouse" | "slaughterhouseUnit">): Promise<Report> => {
     return apiClient().post<Report>(`/reports`, report)
         .then(response => response.data)
         .catch(err => {
@@ -115,7 +102,7 @@ export const createReport = async (report: Omit<Report, "id" | "user"  | "slug" 
         })
 }
 
-export const editReport = async (report: Omit<Report, "user"  | "slug" | "ranch" | "slaughterhouse" | "slaughterhouseUnit">): Promise<Report> => {
+export const editReport = async (report: Omit<Report, "user"| "ranch" | "slaughterhouse" | "slaughterhouseUnit">): Promise<Report> => {
     return apiClient().put<Report>(`/reports/${report.id}`, report)
         .then(response => response.data)
         .catch(err => {

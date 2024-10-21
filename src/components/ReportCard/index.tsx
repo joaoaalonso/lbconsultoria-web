@@ -13,7 +13,7 @@ import { getSexLabel } from '../../services/reportHelpers'
 
 interface ReportCardProps {
     report: Report
-    downloadPdf: (reportSlug: string) => Promise<void>
+    downloadPdf: (reportId: string) => Promise<void>
 }
 
 function ReportCard({ report, downloadPdf }: ReportCardProps) {
@@ -32,7 +32,7 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
     }
 
     const handleShare = () => {
-        downloadPdf(report.slug)
+        !!report.id && downloadPdf(report.id)
         handleOnClick()
     }
 
@@ -62,7 +62,7 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
                 <Link to={`/relatorios/${report.id}`}>
                     Editar
                 </Link>
-                <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer" onClick={handleOnClick}>
+                <Link to={`/relatorio/${report.id}`} target="_blank" rel="noopener noreferrer" onClick={handleOnClick}>
                     Visualizar
                 </Link>
                 <button onClick={handleShare}>
@@ -72,10 +72,10 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
             <div className='buttons hide-mobile'>
                 {isEmployee() ? (
                     <>
-                        <button className='hide-mobile' onClick={() => downloadPdf(report.slug)}>
+                        <button className='hide-mobile' onClick={() => !!report.id && downloadPdf(report.id)}>
                             <FaDownload size={25} />
                         </button>
-                        <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer">
+                        <Link to={`/relatorio/${report.id}`} target="_blank" rel="noopener noreferrer">
                             <FaEye size={25} />
                         </Link>
                         <Link to={`/relatorios/${report.id}`}>
@@ -83,7 +83,7 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
                         </Link>
                     </>
                 ) : (
-                    <Link to={`/relatorio/${report.slug}`} target="_blank" rel="noopener noreferrer">
+                    <Link to={`/relatorio/${report.id}`} target="_blank" rel="noopener noreferrer">
                         <BiChevronRight size={25} />
                     </Link>
                 )}

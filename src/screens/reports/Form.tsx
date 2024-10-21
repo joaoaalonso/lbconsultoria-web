@@ -227,7 +227,7 @@ const ReportFormScreen = () => {
     }
 
     const onSubmit = (data: any) => {
-        const input: Omit<Report, "user" | "slug" | "ranch" | "slaughterhouse" | "slaughterhouseUnit"> = {
+        const input: Omit<Report, "user" | "ranch" | "slaughterhouse" | "slaughterhouseUnit"> = {
             date: data.date,
             slaughterhouseId: data.slaughterhouseId,
             slaughterhouseUnitId: data.slaughterhouseUnitId,

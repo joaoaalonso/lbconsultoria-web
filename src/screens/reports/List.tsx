@@ -9,7 +9,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { isEmployee } from '../../services/auth'
 import { getReports, Report } from '../../services/report'
-import { downloadReportPDFBySlug } from '../../services/generateReport'
+import { downloadReportPDFById } from '../../services/generateReport'
 
 const ReportListScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -36,9 +36,9 @@ const ReportListScreen = () => {
         })
     }
 
-    const downloadPdf = async (reportSlug: string) => {
+    const downloadPdf = async (reportId: string) => {
         setGeneratingPdf(true)
-        downloadReportPDFBySlug(reportSlug)
+        downloadReportPDFById(reportId)
             .finally(() => setGeneratingPdf(false))
     }
 
