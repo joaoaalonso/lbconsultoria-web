@@ -38,7 +38,7 @@ const EmployeeFormScreen = () => {
         }
     }, [userId, reset])
 
-    const handlePasswordEmail = async (email: string) => {
+    const handlePasswordEmail = async (document: string) => {
         return swal({
             title: 'Deseja enviar o e-mail de criação de senha?',
             buttons: {
@@ -55,7 +55,7 @@ const EmployeeFormScreen = () => {
         .then(confirm => {
             if (confirm) {
                 setSendingEmail(true)
-                return recoveryPassword(email)
+                return recoveryPassword(document)
                     .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
                     .catch(() => { 
                         setSendingEmail(false)
@@ -85,7 +85,7 @@ const EmployeeFormScreen = () => {
             .then(() => swal('', message, 'success'))
             .then(() => {
                 if (sendPasswordEmail) {
-                    return handlePasswordEmail(params.email)
+                    return handlePasswordEmail(params.document)
                 }
             })
             .then(() => navigate('/funcionarios'))

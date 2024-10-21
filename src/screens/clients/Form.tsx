@@ -62,7 +62,7 @@ const ClientFormScreen = () => {
         }
     }, [watchPostalCode, handlePostalCodeChange])
 
-    const handlePasswordEmail = async (email: string) => {
+    const handlePasswordEmail = async (document: string) => {
         return swal({
             title: 'Deseja enviar o e-mail de criação de senha?',
             buttons: {
@@ -79,7 +79,7 @@ const ClientFormScreen = () => {
         .then(confirm => {
             if (confirm) {
                 setSendingEmail(true)
-                return recoveryPassword(email)
+                return recoveryPassword(document)
                     .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
                     .catch(() => swal('', 'Não foi possível enviar o e-mail.', 'error'))
                     .finally(() => setSendingEmail(false))
@@ -107,7 +107,7 @@ const ClientFormScreen = () => {
             .then(() => swal('', message, 'success'))
             .then(() => {
                 if (sendPasswordEmail) {
-                    return handlePasswordEmail(params.email)
+                    return handlePasswordEmail(params.document)
                 }
             })
             .then(() => {

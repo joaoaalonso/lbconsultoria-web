@@ -154,7 +154,7 @@ const ClientDetailsScreen = () => {
         .then(confirm => {
             if (confirm) {
                 setSendingEmail(true)
-                return recoveryPassword(client.email)
+                return recoveryPassword(client.document)
                     .then(() => swal('', 'E-mail de criação de senha enviado com sucesso.', 'success'))
                     .catch(() => swal('', 'Não foi possível enviar o e-mail.', 'error'))
                     .finally(() => setSendingEmail(false))
