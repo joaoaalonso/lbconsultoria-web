@@ -1,4 +1,5 @@
 import { Report } from '../report'
+import { getSexLabel } from '../reportHelpers'
 import { formatDate } from '../../utils/formatter'
 import { renderProperty, renderSection } from './helpers'
 
@@ -29,7 +30,7 @@ export const renderInfo = (report: Report) => {
                 ],
                 [
                     renderProperty('MUNÍCIPIO', report.ranch.city),
-                    renderProperty('SEXO', report.sex.toUpperCase())
+                    renderProperty('SEXO', getSexLabel(report.sex).toUpperCase())
                 ],
             ]
         },

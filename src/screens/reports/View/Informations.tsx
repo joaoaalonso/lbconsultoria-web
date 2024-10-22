@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Report } from '../../../services/report'
 import { formatDate } from '../../../utils/formatter'
+import { getSexLabel } from '../../../services/reportHelpers'
 
 type ReportInformationProps = {
     report: Report
@@ -30,7 +31,7 @@ const ReportInformation: React.FC<ReportInformationProps> = ({ report }) => {
                     <p>CURRAL: <b>{report.cattleShed}</b></p>
                     <p>SEQUENCIAL: <b>{report.sequential}</b></p>
                     <p>RAÇA: <b>{report.breed.toUpperCase()}</b></p>
-                    <p>SEXO: <b>{report.sex.toUpperCase()}</b></p>
+                    <p>SEXO: <b>{getSexLabel(report.sex).toUpperCase()}</b></p>
                 </div>
             </div>
         </div>
