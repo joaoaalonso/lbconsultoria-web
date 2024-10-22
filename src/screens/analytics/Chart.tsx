@@ -15,7 +15,7 @@ interface ChartProps {
 const Chart: React.FC<ChartProps> = ({ analytics }) => {
     const data = [
         {
-            label: 'Abates',
+            label: 'Animais',
             data: analytics
         }
     ]
