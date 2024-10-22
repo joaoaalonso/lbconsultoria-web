@@ -16,6 +16,7 @@ import { AnalyticsResult, getAnalytics } from '../../services/analytics'
 import { getSlaughterhouses, getSlaughterhouseUnits, Slaughterhouse, SlaughterhouseUnit } from '../../services/slaughterhouse'
 
 const AnalyticsScreen = () => {
+    const [total, setTotal] = useState(0)
     const [loading, setLoading] = useState(false)
     const [analytics, setAnalytics] = useState<AnalyticsResult[]>()
     
@@ -46,6 +47,16 @@ const AnalyticsScreen = () => {
                 }
             })
     }, [])
+
+    useEffect(() => {
+        if (analytics) {
+            let newTotal = 0
+            analytics.forEach(data => {
+                newTotal += data.count
+            })
+            setTotal(newTotal)
+        }
+    }, [analytics])
 
 
     const watchUser = watch('userId')
@@ -90,6 +101,8 @@ const AnalyticsScreen = () => {
     }
 
     const onSubmit = (data: any) => {
+        setAnalytics(undefined)
+        setTotal(0)
         setLoading(true)
         getAnalytics(data)
             .then(data => {
@@ -154,7 +167,12 @@ const AnalyticsScreen = () => {
                 </form>
 
                 {!!loading && <Loading loading={loading} />}
-                {!!analytics && <AnalyticsChart analytics={analytics} />}
+                {!!analytics && (
+                    <>
+                    {!!total && <p>Total: <strong>{total}</strong></p>}
+                    <AnalyticsChart analytics={analytics} />
+                    </>
+                )}
                 {!loading && !analytics && (
                     <p style={{ width: '100%', textAlign: 'center'}}>
                         Selecione os filtros desejados e clique em 'Atualizar' para gerar o gráfico
