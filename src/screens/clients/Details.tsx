@@ -224,7 +224,7 @@ const ClientDetailsScreen = () => {
                                     <td>{ranch.name}</td>
                                     <td className='address-field'>
                                         <span>{ranch.address}</span>
-                                        <a onClick={() => showAddress(ranch.address)}><IoSearch /></a>
+                                        <IoSearch onClick={() => showAddress(ranch.address)} />
                                     </td>
                                     <td>{ranch.city}</td>
                                     <td>{ranch.state}</td>
