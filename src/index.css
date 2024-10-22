@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-print-color-adjust:exact !important;
   print-color-adjust:exact !important;
+  overflow: hidden;
 }
 
 code {

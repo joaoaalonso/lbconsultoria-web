@@ -36,6 +36,10 @@
 
 .content {
     min-height: 100%;
+    
+    &:first-child {
+        padding-bottom: 8px;
+    }
 }
 
 .content-bg {

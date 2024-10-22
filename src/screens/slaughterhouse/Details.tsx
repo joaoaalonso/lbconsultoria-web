@@ -126,7 +126,7 @@ const SlaughterhouseDetailsScreen = () => {
 
     return (
         <ScreenTemplate
-            backLink='/slaughterhouses'
+            backLink='/abatedouros'
             title='Detalhes do abatedouro'
             rightComponent={renderTopBarButtons()}
         >
