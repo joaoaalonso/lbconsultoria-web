@@ -1,10 +1,11 @@
 import { Report } from '../report'
 import { getFetuWeight } from '../settings'
-import { formatNumber, formatPercentage } from '../../utils/formatter'
+import { sexIsFemale } from '../reportHelpers'
 import { renderSection, renderProperty } from './helpers'
+import { formatNumber, formatPercentage } from '../../utils/formatter'
 
 export const renderFetus = async (report: Report) => {
-    if (report.sex !== 'F' || !report.fetus ||  Object.keys(report.fetus).length === 0) return null
+    if (!sexIsFemale(report.sex) || !report.fetus ||  Object.keys(report.fetus).length === 0) return null
 
     const P = +(report.fetus.find(fetus => fetus.type === 'P')?.value || 0)
     const M = +(report.fetus.find(fetus => fetus.type === 'M')?.value || 0)

@@ -1,5 +1,6 @@
 const AVAILABLE_SEX = [
-    {value: 'F', label: 'Fêmea'},
+    {value: 'N', label: 'Novilha'},
+    {value: 'V', label: 'Vaca'},
     {value: 'MI', label: 'Macho inteiro'},
     {value: 'MC', label: 'Macho castrado'},
     {value: 'MI/MC', label: 'Macho inteiro/castrado'}
@@ -12,6 +13,10 @@ export const getAvailableSex = () => {
 export const getSexLabel = (value: string) => {
     const sex = AVAILABLE_SEX.find(sex => sex.value === value)
     return sex?.label || ''
+}
+
+export const sexIsFemale = (sex: string) => {
+    return sex === 'N' || sex === 'V'
 }
 
 export const getFinishingName = (finishing) => {

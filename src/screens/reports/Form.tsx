@@ -30,7 +30,7 @@ import {
     deleteReport
 } from '../../services/report'
 import { sortByType } from '../../utils/sort'
-import { getAvailableSex } from '../../services/reportHelpers'
+import { getAvailableSex, sexIsFemale } from '../../services/reportHelpers'
 
 
 const ReportFormScreen = () => {
@@ -121,7 +121,7 @@ const ReportFormScreen = () => {
             ranchId: '',
             ranchCity: '',
             numberOfAnimals: '',
-            sex: 'F',
+            sex: 'N',
             batch: '',
             breed: '',
             cattleShed: '',
@@ -184,7 +184,7 @@ const ReportFormScreen = () => {
     const watchSlaughterhouse = watch('slaughterhouseId')
 
     useEffect(() => {
-        setIsFemale(watchSex === 'F')
+        setIsFemale(sexIsFemale(watchSex))
     }, [watchSex])
 
     useEffect(() => {

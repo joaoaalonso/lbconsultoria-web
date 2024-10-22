@@ -30,7 +30,7 @@ export interface Report {
     ranchId: string
     ranch: Ranch
     numberOfAnimals: number
-    sex: 'F' | 'MI' | 'MC' | 'MI/MC'
+    sex: 'N' | 'V' | 'MI' | 'MC' | 'MI/MC'
     breed: string
     batch: string
     cattleShed: string

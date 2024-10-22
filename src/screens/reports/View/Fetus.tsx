@@ -1,15 +1,16 @@
 import React from 'react'
 
 import { Report } from '../../../services/report'
-import { getFetuWeight } from '../../../services/settings'
 import { formatNumber } from '../../../utils/formatter'
+import { getFetuWeight } from '../../../services/settings'
+import { sexIsFemale } from '../../../services/reportHelpers'
 
 type ReportFetusProps = {
     report: Report
 }
 
 const ReportFetus: React.FC<ReportFetusProps> = ({ report }) => {
-    if (report.sex !== 'F' || !report.fetus ||  Object.keys(report.fetus).length === 0) return null
+    if (!sexIsFemale(report.sex) || !report.fetus ||  Object.keys(report.fetus).length === 0) return null
 
     const P = +(report.fetus.find(fetus => fetus.type === 'P')?.value || 0)
     const M = +(report.fetus.find(fetus => fetus.type === 'M')?.value || 0)
