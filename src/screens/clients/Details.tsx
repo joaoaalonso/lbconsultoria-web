@@ -1,5 +1,8 @@
+import './Details.css'
+
 import React, { useState, useEffect, useCallback } from 'react'
 import swal from 'sweetalert'
+import { IoSearch } from 'react-icons/io5'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -162,6 +165,10 @@ const ClientDetailsScreen = () => {
         })
     }
 
+    const showAddress = (address: string) => {
+        swal(address)
+    }
+
     return (
         <ScreenTemplate
             backLink='/clientes'
@@ -215,7 +222,10 @@ const ClientDetailsScreen = () => {
                             {ranches.map(ranch => (
                                 <tr key={ranch.id}>
                                     <td>{ranch.name}</td>
-                                    <td>{ranch.address}</td>
+                                    <td className='address-field'>
+                                        <span>{ranch.address}</span>
+                                        <a onClick={() => showAddress(ranch.address)}><IoSearch /></a>
+                                    </td>
                                     <td>{ranch.city}</td>
                                     <td>{ranch.state}</td>
                                     <td>{ranch.ie}</td>
