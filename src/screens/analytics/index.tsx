@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 
+import AnalyticsChart from './Chart'
 import Select from '../../components/Select'
 import Button from '../../components/Button'
-import AnalyticsChart from './Chart'
 import Loading from '../../components/Loading'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { getAvailableSex } from '../../services/reportHelpers'
 import { getClients, User } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
+import { getAvailableSex } from '../../services/reportHelpers'
 import { AnalyticsResult, getAnalytics } from '../../services/analytics'
 import { getSlaughterhouses, getSlaughterhouseUnits, Slaughterhouse, SlaughterhouseUnit } from '../../services/slaughterhouse'
 
@@ -51,8 +51,12 @@ const AnalyticsScreen = () => {
     useEffect(() => {
         if (analytics) {
             let newTotal = 0
-            analytics.forEach(data => {
-                newTotal += data.count
+            analytics.forEach(analytic => {
+                for (const [key, value] of Object.entries(analytic)) {
+                    if (key !== 'date') {
+                        newTotal += value
+                    }
+                }
             })
             setTotal(newTotal)
         }

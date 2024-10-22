@@ -12,7 +12,7 @@ export interface AnalyticsSettings {
 
 export interface AnalyticsResult {
     date: string
-    count: number
+    [key: string]: string
 }
 
 export const getAnalytics = async (settings: AnalyticsSettings): Promise<any> => {
