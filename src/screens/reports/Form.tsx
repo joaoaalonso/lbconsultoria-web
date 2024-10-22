@@ -456,7 +456,7 @@ const ReportFormScreen = () => {
                     </div>
 
                     <div className='row'>
-                        <Table title='Maturidade'>
+                        <Table title='Maturidade' center>
                             <>
                                 <thead>
                                     <tr>
@@ -477,7 +477,7 @@ const ReportFormScreen = () => {
                             </>
                         </Table>
 
-                        <Table title='Acabamento'>
+                        <Table title='Acabamento' center>
                             <>
                                 <thead>
                                     <tr>
@@ -498,7 +498,7 @@ const ReportFormScreen = () => {
                             </>
                         </Table>
 
-                        <Table title='Escore ruminal'>
+                        <Table title='Escore ruminal' center>
                             <>
                                 <thead>
                                     <tr>
@@ -519,7 +519,7 @@ const ReportFormScreen = () => {
                             </>
                         </Table>
 
-                        { isFemale && <Table title='Fetos'>
+                        { isFemale && <Table title='Fetos' center>
                             <>
                                 <thead>
                                     <tr>
