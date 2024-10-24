@@ -37,6 +37,7 @@ const ReportFormScreen = () => {
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [isFemale, setIsFemale] = useState(true)
+    const [reportFetched, setReportFetched] = useState(false)
 
     const [users, setUsers] = useState<User[]>([])
     const [ranches, setRanches] = useState<Ranch[]>([])
@@ -138,8 +139,9 @@ const ReportFormScreen = () => {
     })
     
     useEffect(() => {
-        if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits) return
+        if (!reportId || !users || !ranches || !slaughterhouses || !slaughterhouseUnits || !!reportFetched) return
             setLoading(true)
+            setReportFetched(true)
             getReport(reportId)
                 .then(report => {
                     reset(getFormattedReport(report))
@@ -161,24 +163,24 @@ const ReportFormScreen = () => {
                     if (report.photos) setPhotos(report.photos)
                     setLoading(false)
                 })
-    }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, reset, getFormattedReport])
+    }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, reset, getFormattedReport, reportFetched])
 
     useEffect(() => {
         getClients()
             .then(u => {
                 if (u.length) {
                     setUsers(u)
-                    setValue('userId', `${u[0].id}`)
+                    !reportId && setValue('userId', `${u[0].id}`)
                 }
             })
         getSlaughterhouses()
             .then(s => {
                 if (s.length) {
                     setSlaughterhouses(s)
-                    setValue('slaughterhouseId', `${s[0].id}`)
+                    !reportId && setValue('slaughterhouseId', `${s[0].id}`)
                 }
             })
-    }, [setValue])
+    }, [reportId, setValue])
 
     const watchSex = watch('sex')
     const watchUser = watch('userId')
@@ -196,8 +198,8 @@ const ReportFormScreen = () => {
                 if (r.length) {
                     if (reportId) {
                         const ranch = r.find(r => r.id === getValues('ranchId')) || r[0]
-                        setValue('ranchId', `${ranch.id}`)
-                        setValue('ranchCity', `${ranch.city}`)
+                        setValue('ranchId', ranch.id)
+                        setValue('ranchCity', ranch.city)
                     } else {
                         setValue('ranchId', `${r[0].id}`)
                         setValue('ranchCity', `${r[0].city}`)
@@ -209,7 +211,10 @@ const ReportFormScreen = () => {
 
     useEffect(() => {
         if (watchRanch) {
-            setValue('ranchCity', ranches.find(r => r.id === watchRanch)?.city || '')
+            const ranch = ranches.find(r => r.id === watchRanch)
+            if (ranch && ranch.city) {
+                setValue('ranchCity', ranch.city)
+            }
         }
     }, [watchRanch, ranches, setValue])
 
