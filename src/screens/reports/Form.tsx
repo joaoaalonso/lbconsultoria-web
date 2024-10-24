@@ -99,7 +99,9 @@ const ReportFormScreen = () => {
             pv: (report.pv / 100).toFixed(2).replace('.', ','),
             pc: (report.pc / 100).toFixed(2).replace('.', ','),
             corralEvaluation: report.corralEvaluation,
-            comments: report.comments || ''
+            comments: report.comments || '',
+            awards: report.awards || '',
+            penalties: report.penalties || '',
         }
     }, [ranches])
 
