@@ -48,8 +48,19 @@ export const recoveryPassword = async (document: string): Promise<void> => {
     })
 }
 
+const tokenIsValid = (token: string): Boolean => {
+    const exp = (JSON.parse(atob(token.split('.')[1]))).exp
+    return (Math.floor((new Date()).getTime() / 1000)) < exp
+}
+
 export const getToken = (): string | null => {
-    return localStorage.getItem(AUTH_KEY)
+    const token = localStorage.getItem(AUTH_KEY)
+    if (!token) return null
+    if (!tokenIsValid(token)) {
+        localStorage.removeItem(AUTH_KEY)
+        return null
+    }
+    return token
 }
 
 export const getUserType = (): number => {
