@@ -30,6 +30,7 @@ import {
     deleteReport
 } from '../../services/report'
 import { sortByType } from '../../utils/sort'
+import { parseNumber } from '../../utils/parser'
 import { getAvailableSex, sexIsFemale } from '../../services/reportHelpers'
 
 
@@ -228,10 +229,6 @@ const ReportFormScreen = () => {
             })
         }
     }, [watchSlaughterhouse, setValue])
-
-    const parseNumber = (number: string) => {
-        return Math.floor(parseFloat(number.replace(',', '.')) * 100)
-    }
 
     const onSubmit = (data: any) => {
         const input: Omit<Report, "user" | "ranch" | "slaughterhouse" | "slaughterhouseUnit"> = {

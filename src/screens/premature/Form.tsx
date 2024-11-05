@@ -10,6 +10,7 @@ import TextField from '../../components/TextField'
 import DatePicker from '../../components/DatePicker'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
+import { parseNumber } from '../../utils/parser'
 import { createPremature, deletePremature, editPremature, getPremature } from '../../services/prematures'
 
 const PrematureFormScreen = () => {
@@ -30,7 +31,10 @@ const PrematureFormScreen = () => {
     useEffect(() => {
         if (prematureId) {
             getPremature(prematureId)
-                .then(reset)
+                .then(data => {
+                    const value = data.value ? (data.value / 100).toFixed(2).replace('.', ',') : null
+                    reset({...data, value})
+                })
                 .catch(e => swal('', e.message, 'error'))
                 .finally(() => setLoading(false))
         }
@@ -40,13 +44,17 @@ const PrematureFormScreen = () => {
         setSaving(true)
 
         let handler: any = createPremature
-        let params = data
+        let params = {
+            ...data, 
+            value: data.value ? parseNumber(data.value) : null,
+            comments: data.comments !== "" ? data.comments : null
+        }
         let message = 'Cadastro realizado com sucesso!'
         
 
         if (prematureId) {
             handler = editPremature
-            params = { id: prematureId, ...data }
+            params = { id: prematureId, ...params }
             message = 'Cadastro atualizado com sucesso!'
         }
 
@@ -123,6 +131,18 @@ const PrematureFormScreen = () => {
                                 errors={errors}
                                 required
                             />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='value' label='Valor' register={register} errors={errors} />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='column'>
+                            <TextField name='comments' label='Observações' type='textarea' register={register} errors={errors} />
                         </div>
                     </div>
 
