@@ -1,3 +1,5 @@
+import './Chart.css'
+
 import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 
@@ -104,7 +106,10 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
 
     return (
         <>
-            <center>{getChartSubtitle()}</center>
+            <div className='chart-header'>
+                <span className="chart-title">{getChartTitle()}</span>
+                <span className='chart-subtitle'>{getChartSubtitle()}</span>
+            </div>
             <canvas id="chart"></canvas>
             <Button
                 text='Gerar PDF'

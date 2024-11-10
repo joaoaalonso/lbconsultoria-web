@@ -1,0 +1,15 @@
+.chart-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 12px 0;
+
+    .chart-title {
+        font-weight: bold;
+    }
+    
+    .chart-subtitle {
+        font-weight: bold;
+        font-size: 14px;
+    }
+}
