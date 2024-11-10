@@ -107,7 +107,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         return () => {
             if (chart) chart.destroy()
         }
-    }, [analytics])
+    }, [analytics, getChartTitle])
 
     return (
         <canvas id="chart"></canvas>
