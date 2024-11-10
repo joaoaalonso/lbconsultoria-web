@@ -8,6 +8,15 @@ import { formatCurrency, formatDate, formatNumber, formatPercentage } from '../u
 export const generateChart = (element: any, analytics: AnalyticsResult[], aspectRatio?: number, disableAnimation?: boolean, maintainAspectRatio = true) => {
         const datasets: any = [
             {
+                label: 'Peso vivo',
+                type: 'bar',
+                borderColor: '#ffa556',
+                backgroundColor: '#ffa556',
+                yAxisID: 'C',
+                data: analytics.map(row => row.pv / 100),
+                formatter: (value: number) => `${formatNumber(value)}kg`
+            },
+            {
                 label: 'Peso em arroba',
                 type: 'bar',
                 borderColor: '#5083b9',
@@ -67,6 +76,12 @@ export const generateChart = (element: any, analytics: AnalyticsResult[], aspect
                         display: false,
                         type: 'linear',
                         min: 100,
+                    },
+                    C: {
+                        display: false,
+                        type: 'linear',
+                        min: 300,
+                        max: 750
                     }
                 },
                 plugins: {
