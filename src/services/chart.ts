@@ -40,7 +40,7 @@ export const generateChart = (element: any, analytics: AnalyticsResult[], aspect
                 borderColor: '#9bbe5a',
                 backgroundColor: '#9bbe5a',
                 yAxisID: 'B',
-                data: analytics.map(row => row.value / 100),
+                data: analytics.map(row => row.value > 0 ? row.value / 100 : null),
                 formatter: formatCurrency
             }
         ]
