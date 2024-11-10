@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
 
 import AnalyticsChart from './Chart'
 import Select from '../../components/Select'
@@ -22,13 +23,20 @@ const AnalyticsScreen = () => {
     const [users, setUsers] = useState<User[]>([])
     const [ranches, setRanches] = useState<Ranch[]>([])
 
+    const [searchParams, setSearchParams] = useSearchParams()
+
     const {
         handleSubmit,
         watch,
         resetField,
         control,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: {
+            userId: searchParams.get('userId'),
+            ranchId: searchParams.get('ranchId')
+        }
+    })
 
     useEffect(() => {
         getClients()
@@ -39,19 +47,19 @@ const AnalyticsScreen = () => {
             })
     }, [])
 
-
     const watchUser = watch('userId')
 
     useEffect(() => {
         resetField('ranchId')
         if (watchUser) {
+            setSearchParams({ userId: watchUser })
             getRanches(watchUser).then(r => {
                 setRanches(r)
             })
         } else {
             setRanches([])
         }
-    }, [watchUser, resetField])
+    }, [watchUser, resetField, setSearchParams])
 
     const onSubmit = (data: any) => {
         if (data.userId) {

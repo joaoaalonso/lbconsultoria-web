@@ -12,7 +12,7 @@ import Loading from '../../components/Loading'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { recoveryPassword } from '../../services/auth'
+import { isAdmin, recoveryPassword } from '../../services/auth'
 import { getReportsByUser, Report } from '../../services/report'
 import { formatDocument, formatPhone } from '../../utils/formatter'
 import { getClient, deleteClient, User } from '../../services/users'
@@ -191,6 +191,15 @@ const ClientDetailsScreen = () => {
                         <Button 
                             text='Enviar e-mail de senha'
                             onClick={sendPasswordEmail}
+                        />
+                    </p>
+                )}
+
+                {isAdmin() && !!client && (
+                    <p>
+                        <Button
+                            text='Gerar relatório de controle'
+                            onClick={() => navigate(`/graficos?userId=${client.id}`)}
                         />
                     </p>
                 )}
