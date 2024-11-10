@@ -26,7 +26,7 @@ const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
 
             <div className='section-content'>
                 <div className='column'>
-                    <p>VALOR DA @ NEGOCIADA: <b>{value ? formatCurrency(value) : ''}</b></p>
+                    <p>VALOR DA @ NEGOCIADA: <b>{ !!value ? formatCurrency(value) : '-'}</b></p>
                     <p>PESO TOTAL: <b>{formatNumber(totalWeight/ARROBA)}KG</b></p>
                     <p>PESO TOTAL@: <b>{formatNumber(totalWeight)}</b></p>
                     <p>PESO VIVO: <b>{formatNumber(PV)}KG</b></p>

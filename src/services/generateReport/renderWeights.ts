@@ -18,7 +18,7 @@ export const renderWeight = (report: Report) => {
             widths: ['*', '*'],
             body: [
                 [
-                    renderProperty('Valor da @ negociada', `R$${value}`),
+                    renderProperty('Valor da @ negociada', !!value ? `R$${value}` : '-'),
                     renderProperty('Média do lote@', `${avg}`)
                 ],
                 [
