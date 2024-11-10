@@ -11,19 +11,16 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getClients, User } from '../../services/users'
 import { getRanches, Ranch } from '../../services/ranches'
-import { getAvailableSex } from '../../services/reportHelpers'
 import { AnalyticsResult, getAnalytics } from '../../services/analytics'
-import { getSlaughterhouses, getSlaughterhouseUnits, Slaughterhouse, SlaughterhouseUnit } from '../../services/slaughterhouse'
 
 const AnalyticsScreen = () => {
-    const [total, setTotal] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [userName, setUserName] = useState<string | undefined>(undefined)
+    const [ranchName, setRanchName] = useState<string | undefined>(undefined)
     const [analytics, setAnalytics] = useState<AnalyticsResult[]>()
     
     const [users, setUsers] = useState<User[]>([])
     const [ranches, setRanches] = useState<Ranch[]>([])
-    const [slaughterhouses, setSlaughterhouses] = useState<Slaughterhouse[]>([])
-    const [slaughterhouseUnits, setSlaughterhouseUnits] = useState<SlaughterhouseUnit[]>([])
 
     const {
         handleSubmit,
@@ -40,31 +37,10 @@ const AnalyticsScreen = () => {
                     setUsers(u)
                 }
             })
-        getSlaughterhouses()
-            .then(s => {
-                if (s.length) {
-                    setSlaughterhouses(s)
-                }
-            })
     }, [])
-
-    useEffect(() => {
-        if (analytics) {
-            let newTotal = 0
-            analytics.forEach(analytic => {
-                for (const [key, value] of Object.entries(analytic)) {
-                    if (key !== 'date') {
-                        newTotal += value
-                    }
-                }
-            })
-            setTotal(newTotal)
-        }
-    }, [analytics])
 
 
     const watchUser = watch('userId')
-    const watchSlaughterhouse = watch('slaughterhouseId')
 
     useEffect(() => {
         resetField('ranchId')
@@ -77,41 +53,25 @@ const AnalyticsScreen = () => {
         }
     }, [watchUser, resetField])
 
-    useEffect(() => {
-        resetField('slaughterhouseUnitId')
-        if (watchSlaughterhouse) {
-            getSlaughterhouseUnits(watchSlaughterhouse).then(u => {
-                setSlaughterhouseUnits(u)
-            })
-        } else {
-            setSlaughterhouseUnits([])
-        }
-    }, [watchSlaughterhouse, resetField])
-
-    const scrollToChart = () => {
-        const timer = setInterval(() => {
-            const isChartRendered = !!document.getElementById('chart-wrapper')
-            if (isChartRendered) {
-                const mainContent = document.getElementsByClassName('main-content')?.[0]
-                if (mainContent) {
-                    mainContent.scrollTo({
-                        top: mainContent.scrollHeight,
-                        behavior: 'smooth'
-                    })
-                }
-                clearInterval(timer)    
-            }
-        }, 100)
-    }
-
     const onSubmit = (data: any) => {
+        if (data.userId) {
+            const user = users.find(user => user.id === data.userId)
+            setUserName(user ? user.name : undefined)
+        } else {
+            setUserName(undefined)
+        }
+        if (data.ranchId) {
+            const ranch = ranches.find(ranch => ranch.id === data.ranchId)
+            setRanchName(ranch ? ranch.name : undefined)
+        } else {
+            setRanchName(undefined)
+        }
+        
         setAnalytics(undefined)
-        setTotal(0)
         setLoading(true)
         getAnalytics(data)
             .then(data => {
                 setAnalytics(data)
-                scrollToChart()
             })
             .catch(e => swal('', e.message, 'error'))
             .finally(() => setLoading(false))
@@ -126,26 +86,13 @@ const AnalyticsScreen = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
                         <div className='column'>
-                            <Select label='Proprietário' name='userId' isClearable control={control} errors={errors} options={
+                            <Select label='Cliente' name='userId' isClearable control={control} errors={errors} options={
                                 users.map(user => ({ value: `${user.id}`, label: user.name }))
                             } />
                         </div>
                         <div className='column'>
                             <Select label='Propriedade' name='ranchId' isClearable control={control} errors={errors} options={
                                 ranches.map(ranch => ({ value: `${ranch.id}`, label: ranch.name }))
-                            } />
-                        </div>
-                        <div className='column'>
-                            <Select label='Sexo' name='sex' control={control} isClearable errors={errors} options={getAvailableSex()} />
-                        </div>
-                        <div className='column'>
-                            <Select label='Abatedouro' name='slaughterhouseId' isClearable control={control} errors={errors} options={
-                                slaughterhouses.map(s => ({ value: `${s.id}`, label: s.name }))
-                            } />
-                        </div>
-                        <div className='column'>
-                            <Select label='Unidade' name='slaughterhouseUnitId' isClearable control={control} errors={errors} options={
-                                slaughterhouseUnits.map(s => ({ value: `${s.id}`, label: s.city }))
                             } />
                         </div>
                         <div className='column'>
@@ -173,8 +120,7 @@ const AnalyticsScreen = () => {
                 {!!loading && <Loading loading={loading} />}
                 {!!analytics && (
                     <>
-                    {!!total && <p>Total: <strong>{total}</strong></p>}
-                    <AnalyticsChart analytics={analytics} />
+                    <AnalyticsChart analytics={analytics} userName={userName} ranchName={ranchName} />
                     </>
                 )}
                 {!loading && !analytics && (

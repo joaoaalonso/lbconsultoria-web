@@ -11,8 +11,16 @@ export interface AnalyticsSettings {
 }
 
 export interface AnalyticsResult {
-    date: string
-    [key: string]: string
+    pv: number
+    pc: number
+    rc: number
+    date: Date
+    pva: number
+    sex: string
+    value: number
+    breed: string
+    numberOfAnimals: number
+    slaughterhouseName: string
 }
 
 export const getAnalytics = async (settings: AnalyticsSettings): Promise<any> => {
