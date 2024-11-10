@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import ChartJS from 'chart.js/auto'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
@@ -13,7 +13,7 @@ interface ChartProps {
 }
 
 const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
-    const getChartTitle = () => {
+    const getChartTitle = useCallback(() => {
         const parts = ['CONTROLE DE ABATE']
         if (ranchName) {
             parts.push(ranchName.toUpperCase())
@@ -21,7 +21,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
             parts.push(userName.toUpperCase())
         }
         return parts.join(' - ')
-    }
+    }, [userName, ranchName])
 
     useEffect(() => {
         let chart: any
