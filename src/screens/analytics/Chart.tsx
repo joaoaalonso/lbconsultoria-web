@@ -24,6 +24,8 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
     }, [userName, ranchName])
 
     useEffect(() => {
+        const aspectRatio = window.innerWidth < 800 ? 0.5 : 2
+
         let chart: any
         
         const element: any = document.getElementById('chart')
@@ -35,6 +37,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                 type: 'bar',
                 borderColor: '#5083b9',
                 backgroundColor: '#5083b9',
+                yAxisID: 'A',
                 data: analytics.map(row => row.pva / 100),
                 formatter: (value: number) => `${formatNumber(value)}@`
             },
@@ -43,6 +46,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                 type: 'bar',
                 borderColor: '#be504b',
                 backgroundColor: '#be504b',
+                yAxisID: 'A',
                 data: analytics.map(row => row.rc / 100),
                 formatter: formatPercentage
             },
@@ -51,6 +55,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                 type: 'line',
                 borderColor: '#9bbe5a',
                 backgroundColor: '#9bbe5a',
+                yAxisID: 'B',
                 data: analytics.map(row => row.value / 100),
                 formatter: formatCurrency
             }
@@ -70,6 +75,22 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                     datasets
                 },
                 options: {
+                    aspectRatio,
+                    scales: {
+                        A: {
+                            type: 'linear',
+                            ticks: {
+                                display: false
+                            },
+                            min: 0,
+                            max: 100
+                        },
+                        B: {
+                            display: false,
+                            type: 'linear',
+                            min: 100,
+                        }
+                    },
                     plugins: {
                         tooltip: {
                             enabled: false

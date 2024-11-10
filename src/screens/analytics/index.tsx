@@ -28,6 +28,7 @@ const AnalyticsScreen = () => {
     const {
         handleSubmit,
         watch,
+        setValue,
         resetField,
         control,
         formState: { errors }
@@ -55,11 +56,14 @@ const AnalyticsScreen = () => {
             setSearchParams({ userId: watchUser })
             getRanches(watchUser).then(r => {
                 setRanches(r)
+                if (r.length === 1) {
+                    setValue('ranchId', r[0].id)
+                }
             })
         } else {
             setRanches([])
         }
-    }, [watchUser, resetField, setSearchParams])
+    }, [watchUser, resetField, setValue, setSearchParams])
 
     const onSubmit = (data: any) => {
         if (data.userId) {
@@ -80,11 +84,27 @@ const AnalyticsScreen = () => {
         getAnalytics(data)
             .then(data => {
                 setAnalytics(data)
+                scrollToChart()
             })
             .catch(e => swal('', e.message, 'error'))
             .finally(() => setLoading(false))
     }
-
+    const scrollToChart = () => {
+        const timer = setInterval(() => {
+            const isChartRendered = !!document.getElementById('chart')
+            if (isChartRendered) {
+                const mainContent = document.getElementsByClassName('main-content')?.[0]
+                if (mainContent) {
+                    mainContent.scrollTo({
+                        top: mainContent.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                }
+                clearInterval(timer)    
+            }
+        }, 100)
+    }
+    
     return (
         <ScreenTemplate
             title='Gráficos'
