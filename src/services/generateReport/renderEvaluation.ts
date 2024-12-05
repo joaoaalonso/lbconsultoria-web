@@ -1,11 +1,12 @@
 import { getArroba } from '../settings'
 import { renderSection } from './helpers'
+import { sortByType } from '../../utils/sort'
 import { ObjectTypeValue, Report } from '../report'
 import { getFinishingName } from '../reportHelpers'
 import { formatNumber, formatPercentage } from '../../utils/formatter'
 
 const formatRow = (data: ObjectTypeValue[], report: Report, sufix: string = '', getTypeName?: (name: string) => string) => {
-    return data.map(d => {
+    return sortByType(data).map(d => {
         if (d.value === '0') return null
         const percentil = formatPercentage((+d.value / report.numberOfAnimals) * 100)
         const typeName = !!getTypeName ? getTypeName(d.type) : d.type
@@ -64,7 +65,7 @@ export const renderEvaluation = (report: Report) => {
     const finishing = formatRow(report.finishing || [], report, '', getFinishingName)
     const rumenScore = formatRow(report.rumenScore || [], report)
 
-    const rows = []
+    const rows: any = []
     for(let i = 0; i < 5; i++) {
         const row: any = []
         if (!maturity[i] && !finishing[i] && !rumenScore[i]) continue
