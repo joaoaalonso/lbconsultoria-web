@@ -19,8 +19,10 @@ const PrematureCard = ({ premature }: PrematureCardProps) => {
     const now = new Date()
     const daysToExpire = Math.floor((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     
+    const isInactive = daysToExpire < DAYS_TO_INACTIVE
+
     let borderColor = ''
-    if (daysToExpire < DAYS_TO_INACTIVE) {
+    if (isInactive) {
         borderColor = '#000'
     } else if (daysToExpire < 0) {
         borderColor = '#cc3300'
@@ -44,10 +46,16 @@ const PrematureCard = ({ premature }: PrematureCardProps) => {
                     <span>{premature.clientName}</span>
                 </div>
             </div>
-            {/* <BiChevronRight size={25} /> */}
+            
             <div className='tag'>
-                <span>{Math.abs(daysToExpire)}</span>
-                <span>{daysToExpire === 1 ? 'dia' : 'dias'}</span>
+                {!isInactive && (
+                    <>
+                        <span>{Math.abs(daysToExpire)}</span>
+                        <span>{daysToExpire === 1 ? 'dia' : 'dias'}</span>
+                    </>
+                )}
+                {isInactive && (<span>inativo</span>)}
+                
             </div>
         </div>
     )
