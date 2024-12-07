@@ -10,6 +10,7 @@ interface PrematureCardProps {
 
 const PrematureCard = ({ premature }: PrematureCardProps) => {
     const DAYS_TO_REMINDER = 15
+    const DAYS_TO_INACTIVE = -10
 
     const expirationDate = new Date(premature.expirationDate)
     const day = expirationDate.getDate()
@@ -19,7 +20,9 @@ const PrematureCard = ({ premature }: PrematureCardProps) => {
     const daysToExpire = Math.floor((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     
     let borderColor = ''
-    if (daysToExpire < 0) {
+    if (daysToExpire < DAYS_TO_INACTIVE) {
+        borderColor = '#000'
+    } else if (daysToExpire < 0) {
         borderColor = '#cc3300'
     } else if (daysToExpire <= DAYS_TO_REMINDER) {
         borderColor = '#ffcc00'
