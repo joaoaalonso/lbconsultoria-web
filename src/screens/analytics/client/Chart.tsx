@@ -3,16 +3,16 @@ import './Chart.css'
 import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 
-import Button from '../../components/Button'
+import Button from '../../../components/Button'
 
-import { generateChart } from '../../services/chart'
-import { vfs } from '../../services/generateReport/vfs'
-import { AnalyticsResult } from '../../services/analytics'
+import { generateChart } from '../../../services/chart'
+import { vfs } from '../../../services/generateReport/vfs'
+import { AnalyticsClientResult } from '../../../services/analytics'
 
 interface ChartProps {
     userName?: string
     ranchName?: string
-    analytics: AnalyticsResult[]
+    analytics: AnalyticsClientResult[]
 }
 
 const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {

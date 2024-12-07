@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Routes as ReactRoutes, Route, Navigate, useNavigate } from 'react-router-dom'
 
+import { getToken } from './services/auth'
+
 import LoginScreen from './screens/auth/Login'
 import UpdatePasswordScreen from './screens/auth/UpdatePassword'
 import RecoveryPasswordScreen from './screens/auth/RecoveryPassword'
@@ -9,8 +11,8 @@ import EmployeeListScreen from './screens/employee/List'
 import EmployeeFormScreen from './screens/employee/Form'
 
 import ClientListScreen from './screens/clients/List'
-import ClientDetailsScreen from './screens/clients/Details'
 import ClientFormScreen from './screens/clients/Form'
+import ClientDetailsScreen from './screens/clients/Details'
 
 import RanchFormScreen from './screens/ranches/Form'
 
@@ -24,10 +26,11 @@ import ReportFormScreen from './screens/reports/Form'
 import ReportViewScreen from './screens/reports/View'
 
 import PrematureListScreen from './screens/premature/List'
-
-import { getToken } from './services/auth'
 import PrematureFormScreen from './screens/premature/Form'
+
 import AnalyticsScreen from './screens/analytics'
+import AnalyticsClientScreen from './screens/analytics/client'
+import AnalyticsPerformanceScreen from './screens/analytics/performance'
 
 const Routes = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!getToken())
@@ -75,6 +78,8 @@ const Routes = () => {
                     <Route path='/precoce/:prematureId' element={<PrematureFormScreen />} />
 
                     <Route path='/graficos' element={<AnalyticsScreen />} />
+                    <Route path='/graficos/clientes' element={<AnalyticsClientScreen />} />
+                    <Route path='/graficos/desempenho' element={<AnalyticsPerformanceScreen />} />
 
                     <Route path='/relatorio/:reportId' element={<ReportViewScreen />} />
 

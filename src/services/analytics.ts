@@ -1,6 +1,6 @@
 import { apiClient } from "./api"
 
-export interface AnalyticsSettings {
+export interface AnalyticsClientSettings {
     userID?: string
 	ranchID?: string
 	slaughterhouseID?: string
@@ -10,7 +10,7 @@ export interface AnalyticsSettings {
 	toDate?: Date
 }
 
-export interface AnalyticsResult {
+export interface AnalyticsClientResult {
     pv: number
     pc: number
     rc: number
@@ -23,8 +23,26 @@ export interface AnalyticsResult {
     slaughterhouseName: string
 }
 
-export const getAnalytics = async (settings: AnalyticsSettings): Promise<any> => {
-    return apiClient().post(`/analytics`, { ...settings })
+export interface AnalyticsPerformanceSettings {
+    fromDate?: Date
+	toDate?: Date
+}
+
+export interface AnalyticsPerformanceResult {
+    date: string
+    [key: string]: string
+}
+
+export const getAnalyticsClient = async (settings: AnalyticsClientSettings): Promise<AnalyticsClientResult[]> => {
+    return apiClient().post(`/analytics/clients`, { ...settings })
+        .then(response => response.data)
+        .catch(err => {
+            throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
+        })
+}
+
+export const getAnalyticsPerformance = async (settings: AnalyticsPerformanceSettings): Promise<AnalyticsPerformanceResult[]> => {
+    return apiClient().post(`/analytics/performance`, { ...settings })
         .then(response => response.data)
         .catch(err => {
             throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
