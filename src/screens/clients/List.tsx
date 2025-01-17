@@ -8,6 +8,7 @@ import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getClients, User } from '../../services/users'
+import SkeletonCard from '../../components/Card/skeleton'
 
 const ClientListScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -36,15 +37,15 @@ const ClientListScreen = () => {
             rightComponent={<BiPlus onClick={() => navigate('/clientes/adicionar')} size={25} className='svg-button' />}
         >
             <>
-                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
+                {<TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
+                {loading && [...Array(15)].map((item, i) => <SkeletonCard />)}
                 {getFilteredClients().map(client => (
                     <Link key={client.id} to={`/clientes/${client.id}`}>
                         <Card text={client.name} />
                     </Link>
                 ))}
                 
-                {!!loading && <p>Carregando lista de clientes...</p>}
                 {!loading && !clients.length && <p>Nenhum cliente cadastrado</p>}
                 {!!clients.length && !getFilteredClients().length && <p>Nenhum cliente encontrado</p>}
             </>

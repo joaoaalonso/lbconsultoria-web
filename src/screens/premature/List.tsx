@@ -6,6 +6,7 @@ import PrematureCard from '../../components/PrematureCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getPrematures, Premature } from '../../services/prematures'
+import SkeletonPrematureCard from '../../components/PrematureCard/skeleton'
 
 const PrematureListScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -32,8 +33,8 @@ const PrematureListScreen = () => {
             }
         >
             <>
-                {!!loading && <p>Carregando cadastros...</p>}
                 {!loading && !prematures.length && <p>Nenhum cadastro</p>}
+                {loading && [...Array(15)].map((item, i) => <SkeletonPrematureCard />)}
                 {prematures.map(premature => (
                     <Link key={`premature-${premature.id}`} to={`/precoce/${premature.id}`}>
                         <PrematureCard premature={premature} />

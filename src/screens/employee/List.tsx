@@ -8,6 +8,7 @@ import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getEmployees, User } from '../../services/users'
+import SkeletonCard from '../../components/Card/skeleton'
 
 const EmployeeListScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -42,15 +43,15 @@ const EmployeeListScreen = () => {
             }
         >
             <>
-                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
+                {<TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
+                {loading && [...Array(5)].map((item, i) => <SkeletonCard />)}
                 {getFilteredEmployees().map(employee => (
                     <Link key={employee.id} to={`/funcionarios/${employee.id}`}>
                         <Card text={employee.name} />
                     </Link>
                 ))}
                 
-                {!!loading && <p>Carregando lista de funcionários...</p>}
                 {!loading && !employees.length && <p>Nenhum funcionário cadastrado</p>}
                 {!!employees.length && !getFilteredEmployees().length && <p>Nenhum funcionário encontrado</p>}
             </>

@@ -8,6 +8,7 @@ import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getSlaughterhouses, Slaughterhouse } from '../../services/slaughterhouse'
+import SkeletonCard from '../../components/Card/skeleton'
 
 const SlaugtherhouseListScreen = () => {
     const [loading, setLoading] = useState(true)
@@ -37,15 +38,15 @@ const SlaugtherhouseListScreen = () => {
             rightComponent={<BiPlus size={25} onClick={() => navigate('/abatedouros/adicionar')} className='svg-button' />}
         >
             <>
-                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
+                {<TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
 
+                {loading && [...Array(15)].map((item, i) => <SkeletonCard />)}
                 {getFilteredSlaughterhouses().map(slaughterhouse => (
                     <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`}>
                         <Card text={slaughterhouse.name} />
                     </Link>
                 ))}
 
-                {!!loading && <p>Carregando abatedouros...</p>}
                 {!loading && !slaughterhouses.length && <p>Nenhum abatedouro cadastrado</p>}
                 {!!slaughterhouses.length && !getFilteredSlaughterhouses().length && <p>Nenhum abatedouro encontrado</p>}
             </>
