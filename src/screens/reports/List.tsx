@@ -3,7 +3,6 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
-import Skeleton from 'react-loading-skeleton'
 
 import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
