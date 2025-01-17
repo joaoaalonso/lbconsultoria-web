@@ -1,10 +1,14 @@
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
+import Skeleton from 'react-loading-skeleton'
 
 import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ReportCard from '../../components/ReportCard'
+import SkeletonReportCard from '../../components/ReportCard/skeleton'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { isEmployee } from '../../services/auth'
@@ -85,17 +89,18 @@ const ReportListScreen = () => {
         >
             <>
                 <Loading loading={generatingPdf} text='Gerando PDF...' />
-                {!loading && <TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
+                <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
+                
+                {loading && [...Array(5)].map((item, i) => <SkeletonReportCard />)}
                 
                 {getFilteredReports().map(report => (
                     <ReportCard report={report} downloadPdf={downloadPdf} />
                 ))}
                 
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}
-                {!!loading && <p>Carregando relatórios...</p>}
                 {!!reports.length && !getFilteredReports().length && <p>Nenhum relatório encontrado</p>}
                 <div ref={endPageElementRef}>
-                    {hasNextPage && <p>Carregamento mais relatórios...</p>}
+                    {hasNextPage && [...Array(5)].map((item, i) => <SkeletonReportCard />)}
                 </div>
             </>
         </ScreenTemplate>
