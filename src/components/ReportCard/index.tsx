@@ -7,12 +7,12 @@ import { FaEye } from 'react-icons/fa'
 import { FaDownload } from 'react-icons/fa6'
 import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
-import { Report } from '../../services/report'
+import { SimpleReport } from '../../services/report'
 import { isEmployee } from '../../services/auth'
 import { getSexLabel } from '../../services/reportHelpers'
 
 interface ReportCardProps {
-    report: Report
+    report: SimpleReport
     downloadPdf: (reportId: string) => Promise<void>
 }
 

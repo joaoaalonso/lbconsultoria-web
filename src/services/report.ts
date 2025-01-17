@@ -52,14 +52,16 @@ export interface Report {
     bruises?: ObjectSeqTypeValue[]
 }
 
+export type SimpleReport = Pick<Report, "id" | "date" | "user" | "ranch" | "sex" | "slaughterhouse">
+
 const sortPhotos = (photos?: Photo[]) => {
     if (!photos) return []
 
     return photos.sort((a, b) => a.sortIndex - b.sortIndex)
 }
 
-export const getReports = async (): Promise<Report[]> => {
-    return apiClient().get<Report[]>(`/reports`)
+export const getReports = async (page: number): Promise<SimpleReport[]> => {
+    return apiClient().get<Report[]>(`/reports`, { params: { page } })
         .then(response => response.data)
         .catch(err => {
             throw Error(err?.response?.data || "Ocorreu um erro inesperado.")
