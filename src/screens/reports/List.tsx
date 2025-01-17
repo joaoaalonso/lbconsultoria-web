@@ -94,7 +94,9 @@ const ReportListScreen = () => {
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}
                 {!!loading && <p>Carregando relatórios...</p>}
                 {!!reports.length && !getFilteredReports().length && <p>Nenhum relatório encontrado</p>}
-                <div ref={endPageElementRef} />
+                <div ref={endPageElementRef}>
+                    {hasNextPage && <p>Carregamento mais relatórios...</p>}
+                </div>
             </>
         </ScreenTemplate>
     )
