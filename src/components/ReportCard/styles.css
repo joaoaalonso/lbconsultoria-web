@@ -51,7 +51,7 @@
         bottom: -200px;
         transition: 0.3s bottom;
         left: 0;
-        z-index: 2;
+        z-index: 30;
         right: 0;
         background: #f3f3f3;
         border-radius: 12px 12px 0 0;
@@ -78,7 +78,7 @@
     
     .backdrop {
         position: absolute;
-        z-index: 1;
+        z-index: 20;
         top: 0;
         bottom: 0;
         left: 0;

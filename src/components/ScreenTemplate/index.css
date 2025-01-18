@@ -3,6 +3,11 @@
     flex: 1;
     height: 100dvh;
     overflow: scroll;
+    padding-top: 60px;
+
+    @media (min-width: 762px) {
+        padding-top: unset;
+    }
 }
 
 .main-content > .top-bar {

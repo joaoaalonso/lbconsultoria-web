@@ -26,6 +26,7 @@ const MobileMenu = ({ visible, onClose }) => {
     
     return (
         <div className={`mobile-menu ${!visible ? 'mobile-menu-close' : ''}`}>
+            <div className="backdrop" onClick={onClose} />
             <div className='mobile-menu-content'>
                 <div className='close'>
                     <IoClose size={25} onClick={onClose} />
