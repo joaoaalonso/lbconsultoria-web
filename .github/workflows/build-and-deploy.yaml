@@ -41,7 +41,8 @@ jobs:
 
       - name: Copy files to the production website with AWS CLI
         run: |
-          aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}
+          aws s3 sync --delete ${{ env.DIST }}/static s3://${{ env.BUCKET }}/static --cache-control "max-age=31536000"
+          aws s3 sync ${{ env.DIST }} s3://${{ env.BUCKET }} --exclude "static/*"
 
       #Caso você tenha um Cloudfront, precisa colocar essas informações para invalidar o cache.
       - name: Create an Invalidation on Cloudfront with AWS CLI
