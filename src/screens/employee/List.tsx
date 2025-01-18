@@ -45,7 +45,7 @@ const EmployeeListScreen = () => {
             <>
                 {<TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
                 
-                {loading && [...Array(5)].map((item, i) => <SkeletonCard />)}
+                {loading && [...Array(5)].map((item, i) => <SkeletonCard key={`skeleton-${i}`} />)}
                 {getFilteredEmployees().map(employee => (
                     <Link key={employee.id} to={`/funcionarios/${employee.id}`}>
                         <Card text={employee.name} />

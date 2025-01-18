@@ -34,7 +34,7 @@ const PrematureListScreen = () => {
         >
             <>
                 {!loading && !prematures.length && <p>Nenhum cadastro</p>}
-                {loading && [...Array(15)].map((item, i) => <SkeletonPrematureCard />)}
+                {loading && [...Array(15)].map((item, i) => <SkeletonPrematureCard key={`skeleton-${i}`} />)}
                 {prematures.map(premature => (
                     <Link key={`premature-${premature.id}`} to={`/precoce/${premature.id}`}>
                         <PrematureCard premature={premature} />

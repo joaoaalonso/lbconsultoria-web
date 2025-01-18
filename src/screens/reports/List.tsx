@@ -90,16 +90,16 @@ const ReportListScreen = () => {
                 <Loading loading={generatingPdf} text='Gerando PDF...' />
                 <TextField placeholder='Pesquisar' onChange={setSearchTerm} />
                 
-                {loading && [...Array(5)].map((item, i) => <SkeletonReportCard />)}
+                {loading && [...Array(5)].map((item, i) => <SkeletonReportCard key={`skeleton-${i}`} />)}
                 
                 {getFilteredReports().map(report => (
-                    <ReportCard report={report} downloadPdf={downloadPdf} />
+                    <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
                 ))}
                 
                 {!reports.length && !loading && <p>Nenhum relatório cadastrado</p>}
                 {!!reports.length && !getFilteredReports().length && <p>Nenhum relatório encontrado</p>}
                 <div ref={endPageElementRef}>
-                    {hasNextPage && [...Array(5)].map((item, i) => <SkeletonReportCard />)}
+                    {hasNextPage && [...Array(5)].map((item, i) => <SkeletonReportCard key={`skeleton-${5+i}`} />)}
                 </div>
             </>
         </ScreenTemplate>

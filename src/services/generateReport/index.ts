@@ -1,6 +1,3 @@
-import pdfMake from 'pdfmake/build/pdfmake'
-
-import { vfs } from './vfs'
 import { formatDate } from '../../utils/formatter'
 import { getReport, Report } from '../report'
 
@@ -63,10 +60,12 @@ export const downloadReportPDFById = async (reportId: string): Promise<void> => 
 
 export const downloadReportPDF = async (report: Report): Promise<void> => {
     const docDefinitions = await generateReportStructure(report)
-
-    pdfMake.vfs = vfs
+    
+    const pdfMake = await import('pdfmake/build/pdfmake')
+    const { vfs } = await import('./vfs')
+    
     const fileName = `${docDefinitions.info.title}.pdf`
-    const pdf = pdfMake.createPdf(docDefinitions)
+    const pdf = pdfMake.createPdf(docDefinitions, null, null, vfs)
 
     if (window.innerWidth >= 800) {
         return pdf.download(fileName)

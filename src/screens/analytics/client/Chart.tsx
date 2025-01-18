@@ -1,12 +1,10 @@
 import './Chart.css'
 
 import React, { useEffect } from 'react'
-import pdfMake from 'pdfmake/build/pdfmake'
 
 import Button from '../../../components/Button'
 
 import { generateChart } from '../../../services/chart'
-import { vfs } from '../../../services/generateReport/vfs'
 import { AnalyticsClientResult } from '../../../services/analytics'
 
 interface ChartProps {
@@ -57,7 +55,9 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
 
         const chart = generateChart(chartEl, analytics, 1, true, false)
 
-        pdfMake.vfs = vfs
+        const pdfMake = await import('pdfmake/build/pdfmake')
+        const { vfs } = await import('../../../services/generateReport/vfs')
+        
         const docDefinitions = {
             pageSize: 'A4',
             info: {
@@ -84,7 +84,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         }
 
         const fileName = `${docDefinitions.info.title}.pdf`
-        const pdf = pdfMake.createPdf(docDefinitions)
+        const pdf = pdfMake.createPdf(docDefinitions, null, null, vfs)
 
         if (window.innerWidth >= 800) {
             return pdf.download(fileName)

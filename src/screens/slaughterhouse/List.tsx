@@ -40,7 +40,7 @@ const SlaugtherhouseListScreen = () => {
             <>
                 {<TextField placeholder='Pesquisar' onChange={setSearchTerm} />}
 
-                {loading && [...Array(15)].map((item, i) => <SkeletonCard />)}
+                {loading && [...Array(15)].map((item, i) => <SkeletonCard key={`skeleton-${i}`} />)}
                 {getFilteredSlaughterhouses().map(slaughterhouse => (
                     <Link key={slaughterhouse.id} to={`/abatedouros/${slaughterhouse.id}`}>
                         <Card text={slaughterhouse.name} />
