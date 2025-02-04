@@ -13,6 +13,7 @@ import ScreenTemplate from '../../../components/ScreenTemplate'
 import { getClients, User } from '../../../services/users'
 import { getRanches, Ranch } from '../../../services/ranches'
 import { AnalyticsClientResult, getAnalyticsClient } from '../../../services/analytics'
+import { getAvailableSex } from '../../../services/reportHelpers'
 
 const AnalyticsScreen = () => {
     const [loading, setLoading] = useState(false)
@@ -115,7 +116,7 @@ const AnalyticsScreen = () => {
             noBackground
         >
             <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
                         <div className='column'>
                             <Select label='Cliente' name='userId' isClearable control={control} errors={errors} options={
@@ -125,6 +126,11 @@ const AnalyticsScreen = () => {
                         <div className='column'>
                             <Select label='Propriedade' name='ranchId' isClearable control={control} errors={errors} options={
                                 ranches.map(ranch => ({ value: `${ranch.id}`, label: ranch.name }))
+                            } />
+                        </div>
+                        <div className='column'>
+                            <Select label='Sexo' name='sex' isClearable control={control} errors={errors} options={
+                                getAvailableSex().map(({ value, label }) => ({ value, label }))
                             } />
                         </div>
                         <div className='column'>
