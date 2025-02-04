@@ -1,11 +1,21 @@
 import ChartJS from 'chart.js/auto'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
-import { AnalyticsResult } from './analytics'
 import { getSexLabel } from './reportHelpers'
+import { AnalyticsClientResult } from './analytics'
 import { formatCurrency, formatDate, formatNumber, formatPercentage } from '../utils/formatter'
 
-export const generateChart = (element: any, analytics: AnalyticsResult[], aspectRatio?: number, disableAnimation?: boolean, maintainAspectRatio = true) => {
+export const generateChart = (element: any, analytics: AnalyticsClientResult[], aspectRatio?: number, disableAnimation?: boolean, maintainAspectRatio = true) => {
+        const valueOffset = 25
+        let maxValue = 0
+
+        analytics.forEach(analytic => {
+            const value = analytic.value / 100
+            if (value > maxValue) {
+                maxValue = value
+            }
+        })
+        
         const datasets: any = [
             {
                 label: 'Peso vivo',
@@ -76,6 +86,7 @@ export const generateChart = (element: any, analytics: AnalyticsResult[], aspect
                         display: false,
                         type: 'linear',
                         min: 100,
+                        max: maxValue + valueOffset,
                     },
                     C: {
                         display: false,
