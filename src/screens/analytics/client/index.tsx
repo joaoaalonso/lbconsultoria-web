@@ -129,7 +129,7 @@ const AnalyticsScreen = () => {
                             } />
                         </div>
                         <div className='column'>
-                            <Select label='Sexo' name='sex' isClearable control={control} errors={errors} options={
+                            <Select label='Sexo' name='sex' isClearable control={control} errors={errors} isMulti options={
                                 getAvailableSex().map(({ value, label }) => ({ value, label }))
                             } />
                         </div>

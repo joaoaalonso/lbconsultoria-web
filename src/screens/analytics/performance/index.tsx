@@ -137,7 +137,7 @@ const AnalyticsScreen = () => {
                             } />
                         </div>
                         <div className='column'>
-                            <Select label='Sexo' name='sex' control={control} isClearable errors={errors} options={getAvailableSex()} />
+                            <Select label='Sexo' name='sex' control={control} isMulti isClearable errors={errors} options={getAvailableSex()} />
                         </div>
                         <div className='column'>
                             <Select label='Abatedouro' name='slaughterhouseId' isClearable control={control} errors={errors} options={
