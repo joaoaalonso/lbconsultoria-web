@@ -7,8 +7,9 @@ import { FaEye } from 'react-icons/fa'
 import { FaDownload } from 'react-icons/fa6'
 import { BiChevronRight, BiEdit } from 'react-icons/bi'
 
-import { SimpleReport } from '../../services/report'
 import { isEmployee } from '../../services/auth'
+import { capitalize } from '../../utils/formatter'
+import { SimpleReport } from '../../services/report'
 import { getSexLabel } from '../../services/reportHelpers'
 
 interface ReportCardProps {
@@ -21,7 +22,7 @@ function ReportCard({ report, downloadPdf }: ReportCardProps) {
 
     const date = new Date(report.date)
     const day = date.getDate()
-    const month = date.toLocaleString('default', { month: 'short' }).replace('.', '')
+    const month = capitalize(date.toLocaleString('pt-BR', { month: 'short' }).replace('.', ''))
 
     const handleOnClick = () => {
         if (window.innerWidth < 800) {

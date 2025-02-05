@@ -42,3 +42,7 @@ export const formatPhone = (document: string): string => {
         return document.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
     }
 }
+
+export const capitalize = (text: string): string => {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+}
