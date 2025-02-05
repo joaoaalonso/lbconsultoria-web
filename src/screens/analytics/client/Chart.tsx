@@ -39,7 +39,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         return () => {
             if (chart) chart.destroy()
         }
-    }, [analytics])
+    }, [analytics, ranchName])
 
     const generatePdf = async (): Promise<void> => {
         const chartEl = document.createElement('canvas')
