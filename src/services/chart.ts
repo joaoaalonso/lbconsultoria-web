@@ -5,7 +5,14 @@ import { getSexLabel } from './reportHelpers'
 import { AnalyticsClientResult } from './analytics'
 import { formatCurrency, formatDate, formatNumber, formatPercentage } from '../utils/formatter'
 
-export const generateChart = (element: any, analytics: AnalyticsClientResult[], aspectRatio?: number, disableAnimation?: boolean, maintainAspectRatio = true) => {
+export const generateChart = (
+    element: any, 
+    analytics: AnalyticsClientResult[], 
+    aspectRatio?: number, 
+    showRanchName = false,
+    disableAnimation?: boolean,
+    maintainAspectRatio = true, 
+) => {
         const valueOffset = 25
         let maxValue = 0
 
@@ -64,7 +71,8 @@ export const generateChart = (element: any, analytics: AnalyticsClientResult[], 
                     row.slaughterhouseName,
                     getSexLabel(row.sex),
                     row.breed,
-                    formatDate(row.date)
+                    formatDate(row.date),
+                    showRanchName ? row.ranchName : null,
                 ]),
                 datasets
             },

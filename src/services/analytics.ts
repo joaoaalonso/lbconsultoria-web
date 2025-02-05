@@ -19,6 +19,7 @@ export interface AnalyticsClientResult {
     sex: string
     value: number
     breed: string
+    ranchName: string
     numberOfAnimals: number
     slaughterhouseName: string
 }

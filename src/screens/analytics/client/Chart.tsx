@@ -34,7 +34,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         const element: any = document.getElementById('chart')
         if (!element) return
 
-        const chart = generateChart(element, analytics, aspectRatio)
+        const chart = generateChart(element, analytics, aspectRatio, !ranchName)
 
         return () => {
             if (chart) chart.destroy()
@@ -53,7 +53,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
 
         document.body.append(chartContainer)
 
-        const chart = generateChart(chartEl, analytics, 1, true, false)
+        const chart = generateChart(chartEl, analytics, 1, !ranchName, true, false)
 
         const pdfMake = await import('pdfmake/build/pdfmake')
         const { vfs } = await import('../../../services/generateReport/vfs')
