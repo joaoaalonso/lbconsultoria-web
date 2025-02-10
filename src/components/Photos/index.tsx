@@ -12,13 +12,12 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import Loading from '../Loading'
 
 import { addImage, Photo } from '../../services/photos'
-
+import CropModal from './CropModal'
 
 interface PhotosProps {
     photos: Photo[]
     setPhotos: any
 }
-
 
 const SortablePhoto = ({ photo, remove }) => {
     const {
@@ -55,35 +54,62 @@ const SortablePhoto = ({ photo, remove }) => {
 
 const Photos = ({ photos, setPhotos }: PhotosProps) => {
     const [loading, setLoading] = useState(false)
+    const [newPhoto, setNewPhoto] = useState<string | null>(null)
+
     const sensors = useSensors(
         useSensor(PointerSensor),
     )
 
-    const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e?.target?.files) {
-            const newPhotos: Photo[] = []
-            const compressor = new Compress()
+    const uploadPhoto = async (file: File) => {
+        setNewPhoto(null)
+        const compressor = new Compress()
 
-            for (const file of e.target.files) {
-                const result = await compressor.compress(file, {
-                    quality: 0.7,
-                    maxWidth: 1200,
-                    maxHeight: 1200,
-                })
+        const result = await compressor.compress(file, {
+            quality: 0.7,
+            maxWidth: 1200,
+            maxHeight: 1200,
+        })
 
-                setLoading(true)
-                try {
-                    const image = await addImage(result)
-                    image.sortIndex = photos.length + newPhotos.length
-                    newPhotos.push(image)
-                } catch {
-                    swal('', 'Ocorreu um erro ao enviar a image', 'error')
-                }
-                setLoading(false)
-            }
-
-            setPhotos([...photos, ...newPhotos])
+        setLoading(true)
+        try {
+            const image = await addImage(result)
+            image.sortIndex = photos.length
+            setPhotos([...photos, image])
+        } catch {
+            swal('', 'Ocorreu um erro ao enviar a image', 'error')
+        } finally {
+            setLoading(false)
         }
+    }
+
+    const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e?.target?.files?.length !== 1)  return
+        console.log(e.target.files)
+        const reader = new FileReader()
+        reader.addEventListener('load', () => {
+            setNewPhoto(reader.result?.toString() || null)
+        })
+        reader.readAsDataURL(e.target.files[0])
+        // const newPhoto = e.target.files[0]
+        // const compressor = new Compress()
+
+        // const result = await compressor.compress(newPhoto, {
+        //     quality: 0.7,
+        //     maxWidth: 1200,
+        //     maxHeight: 1200,
+        // })
+
+        // setLoading(true)
+        // try {
+        //     console.log(result)
+        //     // const image = await addImage(result)
+        //     // image.sortIndex = photos.length
+        //     // setPhotos([...photos, newPhoto])
+        // } catch {
+        //     swal('', 'Ocorreu um erro ao enviar a image', 'error')
+        // } finally {
+        //     setLoading(false)
+        // }
 
         const inputElem: any = document?.getElementById('add-photo')
         if (inputElem) {
@@ -118,34 +144,40 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
     }
 
     return (
-        <div className='photos-container'>
-            <Loading loading={loading} text='Enviando foto' />
-            <div className='photos-header'>
-                <span>Fotos</span>
-                <input 
-                    id='add-photo' 
-                    type='file' 
-                    onChange={addPhoto} 
-                    accept='image/*'
-                    multiple 
-                />
-                <label htmlFor='add-photo'><BiPlus /></label>
+        <>
+            <CropModal 
+                imageSrc={newPhoto}     
+                onSave={uploadPhoto}
+                onCancel={() => { setNewPhoto(null) }}
+            />
+            <div className='photos-container'>
+                <Loading loading={loading} text='Enviando foto' />
+                <div className='photos-header'>
+                    <span>Fotos</span>
+                    <input 
+                        id='add-photo' 
+                        type='file' 
+                        onChange={addPhoto} 
+                        accept='image/*'
+                    />
+                    <label htmlFor='add-photo'><BiPlus /></label>
+                </div>
+                <div className='photos-body'>
+                    <DndContext 
+                        sensors={sensors}
+                        onDragEnd={handleDragEnd}
+                        collisionDetection={closestCenter}
+                    >
+                        <SortableContext items={photos}>
+                            {photos.map(photo => (
+                                <SortablePhoto key={photo.id} photo={photo} remove={removePhoto} />
+                            ))}
+                        </SortableContext>
+                    </DndContext>
+                    {!photos.length && <span>Nenhum foto adicionada</span>}
+                </div>
             </div>
-            <div className='photos-body'>
-                <DndContext 
-                    sensors={sensors}
-                    onDragEnd={handleDragEnd}
-                    collisionDetection={closestCenter}
-                >
-                    <SortableContext items={photos}>
-                        {photos.map(photo => (
-                            <SortablePhoto key={photo.id} photo={photo} remove={removePhoto} />
-                        ))}
-                    </SortableContext>
-                </DndContext>
-                {!photos.length && <span>Nenhum foto adicionada</span>}
-            </div>
-        </div>
+        </>
     )
 }
 
