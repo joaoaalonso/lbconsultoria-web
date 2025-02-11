@@ -95,7 +95,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                 const files = [new File([blob], fileName, { type: 'application/pdf' })]
                 if (navigator.canShare && navigator.canShare({ files })) {
                     navigator.share({ files })
-                        .catch(console.log)
+                        .catch(console.error)
                 } else {
                     pdf.download(fileName)
                 }

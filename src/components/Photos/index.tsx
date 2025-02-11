@@ -3,23 +3,23 @@ import './index.css'
 
 import React, { useState } from 'react'
 import Compress from 'compress.js'
-import { BiPlus } from 'react-icons/bi'
 import { CSS } from '@dnd-kit/utilities'
 import { TfiHandDrag } from 'react-icons/tfi'
+import { BiPlus, BiCrop } from 'react-icons/bi'
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable'
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 
 import Loading from '../Loading'
 
-import { addImage, Photo } from '../../services/photos'
 import CropModal from './CropModal'
+import { addImage, Photo } from '../../services/photos'
 
 interface PhotosProps {
     photos: Photo[]
     setPhotos: any
 }
 
-const SortablePhoto = ({ photo, remove }) => {
+const SortablePhoto = ({ photo, remove, crop }) => {
     const {
         attributes,
         listeners,
@@ -44,9 +44,10 @@ const SortablePhoto = ({ photo, remove }) => {
     return (
         <div ref={setNodeRef} style={style}>
             <div className='photo-wrapper'>
+                <a className="photo-crop" onClick={() => crop(photo)}><BiCrop size={18} /></a>
                 <a className="photo-sort" {...attributes} {...listeners}><TfiHandDrag size={24} /></a>
-                <img alt={`foto ${photo.id}`} src={photo.imageUrl} />
                 <a className="photo-delete" onClick={() => remove(photo.id)}>X</a>
+                <img alt={`foto ${photo.id}`} src={photo.imageUrl} />
             </div>
         </div>
     )
@@ -55,13 +56,51 @@ const SortablePhoto = ({ photo, remove }) => {
 const Photos = ({ photos, setPhotos }: PhotosProps) => {
     const [loading, setLoading] = useState(false)
     const [newPhoto, setNewPhoto] = useState<string | null>(null)
+    const [cropPhoto, setCropPhoto] = useState<Photo | null>(null)
 
     const sensors = useSensors(
         useSensor(PointerSensor),
     )
 
-    const uploadPhoto = async (file: File) => {
+    const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e?.target?.files?.length !== 1)  return
+        
+        setCropPhoto(null)
+        const reader = new FileReader()
+        reader.addEventListener('load', () => {
+            setNewPhoto(reader.result?.toString() || null)
+        })
+        reader.readAsDataURL(e.target.files[0])
+
+        const inputElem: any = document?.getElementById('add-photo')
+        if (inputElem) {
+            inputElem.value = ''
+        }
+    }
+
+    const removePhoto = async (id: string) => {
+        const newPhotos = [...photos]
+        const index = newPhotos.findIndex(photo => photo.id === id)
+        newPhotos.splice(index, 1)
+        setPhotos(newPhotos)
+    }
+
+    const onCropPhoto = (photo: Photo) => {
         setNewPhoto(null)
+        setCropPhoto(photo)
+    }
+
+    const onSavePhoto = async (file: File) => {
+        if (newPhoto) {
+            uploadPhoto(file)
+            setNewPhoto(null)
+        } else if (cropPhoto) {
+            await uploadPhoto(file, cropPhoto)
+            setCropPhoto(null)
+        }
+    }
+    
+    const uploadPhoto = async (file: File, photoToReplace?: Photo) => {
         const compressor = new Compress()
 
         const result = await compressor.compress(file, {
@@ -73,55 +112,21 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
         setLoading(true)
         try {
             const image = await addImage(result)
-            image.sortIndex = photos.length
-            setPhotos([...photos, image])
+            if (photoToReplace) {
+                image.sortIndex = photoToReplace.sortIndex
+                const newPhotos = [...photos]
+                const index = newPhotos.findIndex(photo => photo.id === photoToReplace.id)
+                newPhotos[index] = image
+                setPhotos(newPhotos)
+            } else {
+                image.sortIndex = photos.length
+                setPhotos([...photos, image])
+            }
         } catch {
             swal('', 'Ocorreu um erro ao enviar a image', 'error')
         } finally {
             setLoading(false)
         }
-    }
-
-    const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e?.target?.files?.length !== 1)  return
-        console.log(e.target.files)
-        const reader = new FileReader()
-        reader.addEventListener('load', () => {
-            setNewPhoto(reader.result?.toString() || null)
-        })
-        reader.readAsDataURL(e.target.files[0])
-        // const newPhoto = e.target.files[0]
-        // const compressor = new Compress()
-
-        // const result = await compressor.compress(newPhoto, {
-        //     quality: 0.7,
-        //     maxWidth: 1200,
-        //     maxHeight: 1200,
-        // })
-
-        // setLoading(true)
-        // try {
-        //     console.log(result)
-        //     // const image = await addImage(result)
-        //     // image.sortIndex = photos.length
-        //     // setPhotos([...photos, newPhoto])
-        // } catch {
-        //     swal('', 'Ocorreu um erro ao enviar a image', 'error')
-        // } finally {
-        //     setLoading(false)
-        // }
-
-        const inputElem: any = document?.getElementById('add-photo')
-        if (inputElem) {
-            inputElem.value = ''
-        }
-    }
-
-    const removePhoto = (id: string) => {
-        const newPhotos = [...photos]
-        const index = newPhotos.findIndex(photo => photo.id === id)
-        newPhotos.splice(index, 1)
-        setPhotos(newPhotos)
     }
 
     const handleDragEnd = (event) => {
@@ -146,9 +151,12 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
     return (
         <>
             <CropModal 
-                imageSrc={newPhoto}     
-                onSave={uploadPhoto}
-                onCancel={() => { setNewPhoto(null) }}
+                imageSrc={newPhoto || cropPhoto?.imageUrl}     
+                onSave={onSavePhoto}
+                onCancel={() => { 
+                    setNewPhoto(null) 
+                    setCropPhoto(null)
+                }}
             />
             <div className='photos-container'>
                 <Loading loading={loading} text='Enviando foto' />
@@ -170,7 +178,12 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
                     >
                         <SortableContext items={photos}>
                             {photos.map(photo => (
-                                <SortablePhoto key={photo.id} photo={photo} remove={removePhoto} />
+                                <SortablePhoto
+                                    key={photo.id}
+                                    photo={photo}
+                                    crop={onCropPhoto}
+                                    remove={removePhoto}
+                                />
                             ))}
                         </SortableContext>
                     </DndContext>

@@ -43,64 +43,84 @@
         flex-wrap: wrap;
         background-color: white;
         border-top: 1px solid #c0c0c0;
-    }
 
-    .photos-body .photo-wrapper {
-        position: relative;
-        width: calc(50vw - 55px);
-        height: calc(50vw - 55px);
-        max-width: 200px;
-        max-height: 200px;
-        overflow: hidden;
-        border-radius: 3px;
-        border: 1px solid black;
-    }
+        .photo-wrapper {
+            position: relative;
+            width: calc(50vw - 55px);
+            height: calc(50vw - 55px);
+            max-width: 200px;
+            max-height: 200px;
+            overflow: hidden;
+            border-radius: 3px;
+            border: 1px solid black;
 
-    .photos-body .photo-wrapper img {
-        width: 100%;
-        height: 100%;
-    }
+            img {
+                width: 100%;
+                height: 100%;
+            }
 
-    .photos-body .photo-wrapper .photo-delete {
-        top: 0;
-        right: 0;
-        width: 24px;
-        height: 24px;
-        border: none;
-        display: flex;
-        color: white;
-        color: black;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        position: absolute;
-        border-radius: 4px;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-    }
+            .photo-delete {
+                top: 0;
+                right: 0;
+                width: 24px;
+                height: 24px;
+                border: none;
+                display: flex;
+                color: white;
+                color: black;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: bold;
+                position: absolute;
+                border-radius: 4px;
+                align-items: center;
+                justify-content: center;
+                background-color: white;
+            }
 
-    .photos-body .photo-wrapper .photo-sort {
-        top: calc(50% - 16px);
-        right: calc(50% - 16px);
-        width: 32px;
-        height: 32px;
-        border: none;
-        display: flex;
-        color: white;
-        color: black;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        position: absolute;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-    }
 
-    .photos-body span {
-        font-size: 10px;
+            .photo-crop {
+                top: 0;
+                left: 0;
+                width: 24px;
+                height: 24px;
+                border: none;
+                display: flex;
+                color: white;
+                color: black;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: bold;
+                position: absolute;
+                border-radius: 4px;
+                align-items: center;
+                justify-content: center;
+                background-color: white;
+            }
+
+            .photo-sort {
+                top: calc(50% - 16px);
+                right: calc(50% - 16px);
+                width: 32px;
+                height: 32px;
+                border: none;
+                display: flex;
+                color: white;
+                color: black;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: bold;
+                position: absolute;
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                background-color: white;
+            }
+        }
+
+        span {
+            font-size: 10px;
+        }
     }
 }
 
@@ -110,6 +130,7 @@
     right: 0;
     bottom: 0;
     z-index: 100;
+    padding: 8px;
     display: flex;
     position: absolute;
     align-items: center;
@@ -128,6 +149,7 @@
     .crop-image {
         z-index: 1;
         padding: 12px;
+        max-width: 100%;
         border-radius: 4px;
         background-color: white;
 
