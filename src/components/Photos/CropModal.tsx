@@ -19,6 +19,11 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
     
     const imgRef = useRef<HTMLImageElement>(null)
 
+    const cancelCrop = () => {
+        onCancel()
+        setCompletedCrop(undefined)
+    }
+
     const saveCroppedPhoto = () => {
         if (!completedCrop) return
 
@@ -27,15 +32,13 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
 
         const scaleX = image.naturalWidth / image.width
         const scaleY = image.naturalHeight / image.height
-        const pixelRatio = window.devicePixelRatio
 
         const canvas = document.createElement('canvas');
-        canvas.width = Math.floor(completedCrop.width * scaleX * pixelRatio)
-        canvas.height = Math.floor(completedCrop.height * scaleY * pixelRatio)
+        canvas.width = Math.floor(completedCrop.width * scaleX)
+        canvas.height = Math.floor(completedCrop.height * scaleY)
         const ctx = canvas.getContext('2d');
         if (!ctx) return
-
-        ctx?.scale(pixelRatio, pixelRatio)
+        
         ctx.imageSmoothingQuality = 'high'
 
         const cropX = completedCrop.x * scaleX
@@ -64,6 +67,7 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
             if (blob) {
                 const file = new File([blob], "photo.jpeg")
                 onSave(file)
+                setCompletedCrop(undefined)
             }
         }, 'image/jpeg');
       }
@@ -78,7 +82,10 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
             <div className='crop-image'>
                 <ReactCrop
                     crop={crop}
-                    onComplete={setCompletedCrop}
+                    onComplete={c => {
+                        console.log(c)
+                        setCompletedCrop(c)
+                    }}
                     onChange={(_, percentCrop) => setCrop(percentCrop)}
                 >
                     <img src={imageSrc || ''}
@@ -91,7 +98,7 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
                     <Button
                         text="Cancelar"
                         variant='primary'
-                        onClick={onCancel}
+                        onClick={cancelCrop}
                     />
                     <Button
                         text="Salvar"
