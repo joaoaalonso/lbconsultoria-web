@@ -98,7 +98,7 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
                         alt="Crop"
                         ref={imgRef}
                         onLoad={onImageLoad}
-                         crossOrigin='anonymous'
+                        crossOrigin='anonymous'
                     />
                 </ReactCrop>
                 <div className='crop-actions'>
