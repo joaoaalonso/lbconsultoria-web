@@ -38,7 +38,7 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
         canvas.width = Math.floor(completedCrop ? completedCrop.width * scaleX : image.naturalWidth)
         canvas.height = Math.floor(completedCrop ? completedCrop.height * scaleY : image.naturalHeight)
         
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false });
         if (!ctx) {
             console.error("[crop] empty canvas ctx")
             return
