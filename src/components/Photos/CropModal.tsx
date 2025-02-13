@@ -78,7 +78,7 @@ const CropModal = ({ imageSrc, onSave, onCancel }: CropModalProps) => {
                 onSave(file)
                 setCompletedCrop(undefined)
             }
-        }, 'image/jpeg');
+        }, 'image/jpeg', 0.7);
       }
 
     const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {

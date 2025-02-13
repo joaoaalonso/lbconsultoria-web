@@ -2,7 +2,6 @@
 import './index.css'
 
 import React, { useState } from 'react'
-import Compress from 'compress.js'
 import { CSS } from '@dnd-kit/utilities'
 import { TfiHandDrag } from 'react-icons/tfi'
 import { BiPlus, BiCrop } from 'react-icons/bi'
@@ -101,17 +100,10 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
     }
     
     const uploadPhoto = async (file: File, photoToReplace?: Photo) => {
-        const compressor = new Compress()
-
-        const result = await compressor.compress(file, {
-            quality: 0.7,
-            maxWidth: 1200,
-            maxHeight: 1200,
-        })
-
         setLoading(true)
         try {
-            const image = await addImage(result)
+
+            const image = await addImage(file)
             if (photoToReplace) {
                 image.sortIndex = photoToReplace.sortIndex
                 const newPhotos = [...photos]
