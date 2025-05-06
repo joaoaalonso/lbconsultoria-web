@@ -39,7 +39,7 @@ export const generateChart = (
                 borderColor: '#5083b9',
                 backgroundColor: '#5083b9',
                 yAxisID: 'A',
-                data: analytics.map(row => row.pva / 100),
+                data: analytics.map(row => row.pca / 100),
                 formatter: (value: number) => `${formatNumber(value)}@`
             },
             {

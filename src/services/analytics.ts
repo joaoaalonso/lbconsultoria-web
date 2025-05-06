@@ -15,7 +15,7 @@ export interface AnalyticsClientResult {
     pc: number
     rc: number
     date: Date
-    pva: number
+    pca: number
     sex: string
     value: number
     breed: string
