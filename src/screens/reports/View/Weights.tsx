@@ -35,7 +35,7 @@ const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
                 <div className='column'>
                     <p>MÉDIA DO LOTE: <b>{formatNumber(avg)}</b></p>
                     <p>PESO DE CARCAÇA: <b>{formatNumber(PC)}KG</b></p>
-                    <p>RENDIMENTO DE CARCAÇA: <b>{formatPercentage(RC)}</b></p>
+                    <p>RENDIMENTO DE CARCAÇA: <b>{Number.isFinite(RC) ? formatPercentage(RC) : "-"}</b></p>
                 </div>
             </div>
         </div>

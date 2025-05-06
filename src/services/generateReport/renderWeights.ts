@@ -27,7 +27,7 @@ export const renderWeight = (report: Report) => {
                 ],
                 [
                     renderProperty('Peso total@', `${formatNumber(totalWeight/ARROBA)}`),
-                    renderProperty('Rendimento de carcaça', `${formatPercentage(RC)}`),
+                    renderProperty('Rendimento de carcaça', `${Number.isFinite(RC) ? formatPercentage(RC) : "-"}`),
                 ],
                 [
                     renderProperty('Peso vivo', `${formatNumber(PV)}KG`),
