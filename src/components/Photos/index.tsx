@@ -2,6 +2,7 @@
 import './index.css'
 
 import React, { useState } from 'react'
+import Compress from 'compress.js'
 import { CSS } from '@dnd-kit/utilities'
 import { TfiHandDrag } from 'react-icons/tfi'
 import { BiPlus, BiCrop } from 'react-icons/bi'
@@ -62,14 +63,31 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
     )
 
     const addPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e?.target?.files?.length !== 1)  return
-        
+        if (typeof e?.target?.files?.length == 'undefined') return
+
         setCropPhoto(null)
-        const reader = new FileReader()
-        reader.addEventListener('load', () => {
-            setNewPhoto(reader.result?.toString() || null)
-        })
-        reader.readAsDataURL(e.target.files[0])
+        if (e?.target?.files?.length === 1) { 
+            const reader = new FileReader()
+            reader.addEventListener('load', () => {
+                setNewPhoto(reader.result?.toString() || null)
+            })
+            reader.readAsDataURL(e.target.files[0])
+        } else if (e?.target?.files?.length > 1) {
+            const newPhotos: File[] = []
+            const compressor = new Compress()
+
+            for (const file of e.target.files) {
+                const result = await compressor.compress(file, {
+                    quality: 0.7,
+                    maxWidth: 1200,
+                    maxHeight: 1200,
+                })
+
+                newPhotos.push(result)
+            }
+
+            uploadPhotos(newPhotos)
+        }
 
         const inputElem: any = document?.getElementById('add-photo')
         if (inputElem) {
@@ -102,7 +120,6 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
     const uploadPhoto = async (file: File, photoToReplace?: Photo) => {
         setLoading(true)
         try {
-
             const image = await addImage(file)
             if (photoToReplace) {
                 image.sortIndex = photoToReplace.sortIndex
@@ -119,6 +136,24 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
         } finally {
             setLoading(false)
         }
+    }
+    
+    const uploadPhotos = async (files: File[]) => {
+        const newPhotos: Photo[] = []
+
+        for (const file of files) {
+            setLoading(true)
+            try {
+                const image = await addImage(file)
+                image.sortIndex = photos.length + newPhotos.length
+                newPhotos.push(image)
+            } catch {
+                swal('', 'Ocorreu um erro ao enviar a image', 'error')
+            }
+            setLoading(false)
+        }
+
+        setPhotos([...photos, ...newPhotos])
     }
 
     const handleDragEnd = (event) => {
@@ -159,6 +194,7 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
                         type='file' 
                         onChange={addPhoto} 
                         accept='image/*'
+                        multiple
                     />
                     <label htmlFor='add-photo'><BiPlus /></label>
                 </div>
