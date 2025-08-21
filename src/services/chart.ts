@@ -67,13 +67,18 @@ export const generateChart = (
         {
             plugins: [ChartDataLabels],
             data: {
-                labels: analytics.map(row => [
-                    row.slaughterhouseName,
-                    getSexLabel(row.sex),
-                    row.breed,
-                    formatDate(row.date),
-                    showRanchName ? row.ranchName : null,
-                ]),
+                labels: analytics.map(row => {
+                    const labels = [
+                        row.slaughterhouseName,
+                        getSexLabel(row.sex),
+                        row.breed,
+                        formatDate(row.date)
+                    ]
+                    if (showRanchName) {
+                        labels.push(row.ranchName)
+                    }
+                    return labels
+                }),
                 datasets
             },
             options: {
