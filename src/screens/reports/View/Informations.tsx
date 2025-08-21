@@ -26,7 +26,7 @@ const ReportInformation: React.FC<ReportInformationProps> = ({ report }) => {
                 </div>
 
                 <div className='column'>     
-                    <p>Nº DE ANIMARIS: <b>{report.numberOfAnimals}</b></p>
+                    <p>Nº DE ANIMAIS: <b>{report.numberOfAnimals}</b></p>
                     <p>LOTE: <b>{report.batch}</b></p>       
                     <p>CURRAL: <b>{report.cattleShed}</b></p>
                     <p>SEQUENCIAL: <b>{report.sequential}</b></p>
