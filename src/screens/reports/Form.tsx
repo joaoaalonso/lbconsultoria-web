@@ -76,6 +76,9 @@ const ReportFormScreen = () => {
     const [bruises, setBruises] = useState([{ seq: '', type: '', value: '' }])
     
     const [photos, setPhotos] = useState<Photo[]>([])
+
+    const [createdBy, setCreatedBy] = useState<User | null>(null)
+    const [updatedBy, setUpdateddBy] = useState<User | null>(null)
     
     const { reportId } = useParams()
     const navigate = useNavigate()
@@ -103,7 +106,7 @@ const ReportFormScreen = () => {
             corralEvaluation: report.corralEvaluation,
             comments: report.comments || '',
             awards: report.awards || '',
-            penalties: report.penalties || '',
+            penalties: report.penalties || ''
         }
     }, [ranches])
 
@@ -162,6 +165,8 @@ const ReportFormScreen = () => {
                     if (report.dif) setDif(report.dif)
                     if (report.bruises) setBruises(report.bruises)
                     if (report.photos) setPhotos(report.photos)
+                    if (report.createdByUser) setCreatedBy(report.createdByUser)
+                    if (report.updatedByUser) setUpdateddBy(report.updatedByUser)
                     setLoading(false)
                 })
     }, [reportId, users, ranches, slaughterhouses, slaughterhouseUnits, reset, getFormattedReport, reportFetched])
@@ -605,6 +610,12 @@ const ReportFormScreen = () => {
                         {!reportId && <Button type="reset" onClick={resetForm} variant='primary' text='Limpar formulário' />}
                         <Button type='submit' variant='secondary' text='Salvar relatório' />
                     </div>
+
+                    <p>
+                        {!!createdBy?.name && <small>Criado por: {createdBy.name}</small>}
+                        {!!createdBy?.name && !!updatedBy?.name && <br />}
+                        {!!updatedBy?.name && <small>Atualizado por: {updatedBy.name}</small>}
+                    </p>
                 </form>
             </>
         </ScreenTemplate>

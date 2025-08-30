@@ -50,6 +50,8 @@ export interface Report {
     fetus?: ObjectTypeValue[]
     dif?: ObjectSeqTypeValue[]
     bruises?: ObjectSeqTypeValue[]
+    createdByUser?: User
+    updatedByUser?: User
 }
 
 export type SimpleReport = Pick<Report, "id" | "date" | "user" | "ranch" | "sex" | "slaughterhouse">
