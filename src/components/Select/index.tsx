@@ -61,6 +61,7 @@ const Select = ({ name, label, errors, options, control, onChange, isMulti = fal
                         placeholder={null}
                         isSearchable={true}
                         styles={customStyles}
+                        value={options.find(c => c.value === value)}
                         noOptionsMessage={() => 'Nenhuma opção'} 
                     />
                 )}
