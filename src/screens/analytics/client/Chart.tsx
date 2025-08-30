@@ -46,8 +46,8 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         chartEl.style.display = 'none'
 
         const chartContainer = document.createElement('div')
-        chartContainer.style.width = '800px'
-        chartContainer.style.height = '600px'
+        chartContainer.style.width = '1000px'
+        chartContainer.style.height = '400px'
 
         chartContainer.appendChild(chartEl)
 
@@ -60,6 +60,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
         
         const docDefinitions = {
             pageSize: 'A4',
+            pageOrientation: 'landscape',
             info: {
                 title: getChartTitle()
             },
@@ -77,7 +78,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
                 },
                 {
                     image: chart.toBase64Image(),
-                    fit: [550, 760], 
+                    fit: [800, 600], 
                     alignment: 'center' 
                 }
             ]
