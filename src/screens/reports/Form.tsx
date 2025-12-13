@@ -102,7 +102,7 @@ const ReportFormScreen = () => {
             arroba: report.arroba ? (report.arroba / 100).toFixed(2).replace('.', ',') : '',
             vaccineWeight: (report.vaccineWeight / 100).toFixed(2).replace('.', ','),
             pv: (report.pv / 100).toFixed(2).replace('.', ','),
-            pc: (report.pc / 100).toFixed(2).replace('.', ','),
+            totalWeight: (report.totalWeight / 1000).toFixed(3).replace('.', ','),
             corralEvaluation: report.corralEvaluation,
             comments: report.comments || '',
             awards: report.awards || '',
@@ -251,7 +251,7 @@ const ReportFormScreen = () => {
             arroba: data.arroba ? parseNumber(data.arroba) : undefined,
             vaccineWeight: parseNumber(data.vaccineWeight),
             pv: parseNumber(data.pv),
-            pc: parseNumber(data.pc),
+            totalWeight: parseNumber(data.totalWeight, 1000),
             corralEvaluation: data.corralEvaluation,
             comments: data.comments,
             penalties: data.penalties,
@@ -451,7 +451,7 @@ const ReportFormScreen = () => {
                             <TextField label='PV' name='pv' type='text' inputMode='decimal' register={register} errors={errors} required />
                         </div>
                         <div className='column'>
-                            <TextField label='PC' name='pc' type='text' inputMode='decimal' register={register} errors={errors} required />
+                            <TextField label='Peso total' name='totalWeight' type='text' inputMode='decimal' register={register} errors={errors} required />
                         </div>
                     </div>
 

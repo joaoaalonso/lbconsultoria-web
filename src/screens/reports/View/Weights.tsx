@@ -10,12 +10,12 @@ type ReportWeightsProps = {
 
 const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
     const ARROBA = getArroba()
-    const PC = report.pc / 100
+    const totalWeight = report.totalWeight / 1000
+    const PC = totalWeight / report.numberOfAnimals
     const PV = report.pv / 100
     const RC = (PC/PV)*100
 
-    const totalWeight = PC * report.numberOfAnimals
-    const avg = (report.pc / 100) / ARROBA
+    const avg = PC / ARROBA
     const value = report.arroba ? report.arroba / 100 : ''
 
     return (
@@ -27,8 +27,8 @@ const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
             <div className='section-content'>
                 <div className='column'>
                     <p>VALOR DA @ NEGOCIADA: <b>{ !!value ? formatCurrency(value) : '-'}</b></p>
-                    <p>PESO TOTAL: <b>{formatNumber(totalWeight/ARROBA)}KG</b></p>
-                    <p>PESO TOTAL@: <b>{formatNumber(totalWeight)}</b></p>
+                    <p>PESO TOTAL: <b>{formatNumber(totalWeight)}KG</b></p>
+                    <p>PESO TOTAL@: <b>{formatNumber(totalWeight/ARROBA)}</b></p>
                     <p>PESO VIVO: <b>{formatNumber(PV)}KG</b></p>
                 </div>
 

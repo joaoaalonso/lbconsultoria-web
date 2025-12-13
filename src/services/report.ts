@@ -38,7 +38,7 @@ export interface Report {
     arroba?: number
     vaccineWeight: number
     pv: number
-    pc: number
+    totalWeight: number
     corralEvaluation: string
     comments?: string
     penalties?: string

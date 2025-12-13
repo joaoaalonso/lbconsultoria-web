@@ -5,12 +5,12 @@ import { formatNumber, formatPercentage } from '../../utils/formatter'
 
 export const renderWeight = (report: Report) => {
     const ARROBA = getArroba()
-    const PC = report.pc / 100
+    const totalWeight = report.totalWeight / 1000
+    const PC = totalWeight / report.numberOfAnimals
     const PV = report.pv / 100
     const RC = (PC/PV)*100
 
-    const totalWeight = PC * report.numberOfAnimals
-    const avg = formatNumber((report.pc / 100) / ARROBA)
+    const avg = formatNumber(PC / ARROBA)
     const value = report.arroba ? formatNumber(report.arroba / 100) : ''
 
     return renderSection('Pesos', {
