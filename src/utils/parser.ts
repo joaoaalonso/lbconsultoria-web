@@ -1,3 +1,3 @@
-export const parseNumber = (number: string) => {
-    return Math.floor(parseFloat(number.replace(',', '.')) * 100)
+export const parseNumber = (number: string, decimalPlaces: number = 100) => {
+    return Math.floor(parseFloat(number.replace(',', '.')) * decimalPlaces)
 }

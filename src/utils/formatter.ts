@@ -15,7 +15,7 @@ export const formatNumber = (num: number): string => {
     return new Intl.NumberFormat('pt-BR', { 
         style: 'decimal', 
         minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 
+        maximumFractionDigits: 3
     }).format(num)
 }
 

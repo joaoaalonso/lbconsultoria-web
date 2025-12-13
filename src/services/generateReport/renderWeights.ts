@@ -5,7 +5,7 @@ import { formatNumber, formatPercentage } from '../../utils/formatter'
 
 export const renderWeight = (report: Report) => {
     const ARROBA = getArroba()
-    const totalWeight = report.totalWeight / 100
+    const totalWeight = report.totalWeight / 1000
     const PC = totalWeight / report.numberOfAnimals
     const PV = report.pv / 100
     const RC = (PC/PV)*100
