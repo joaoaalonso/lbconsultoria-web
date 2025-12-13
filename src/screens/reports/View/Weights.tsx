@@ -10,12 +10,12 @@ type ReportWeightsProps = {
 
 const ReportWeights: React.FC<ReportWeightsProps> = ({ report }) => {
     const ARROBA = getArroba()
-    const PC = report.pc / 100
+    const totalWeight = report.totalWeight / 100
+    const PC = totalWeight / report.numberOfAnimals
     const PV = report.pv / 100
     const RC = (PC/PV)*100
 
-    const totalWeight = PC * report.numberOfAnimals
-    const avg = (report.pc / 100) / ARROBA
+    const avg = PC / ARROBA
     const value = report.arroba ? report.arroba / 100 : ''
 
     return (
