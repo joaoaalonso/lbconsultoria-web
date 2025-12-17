@@ -17,11 +17,12 @@ const ReportFetus: React.FC<ReportFetusProps> = ({ report }) => {
     const G = +(report.fetus.find(fetus => fetus.type === 'G')?.value || 0)
     const totalQuantity = P + M + G
 
+    const totalWeight = report.totalWeight / 1000
     const PV = report.pv / 100
-    const PC = report.pc / 100
+    const PC = totalWeight / report.numberOfAnimals
 
-    const totalWeight = P*getFetuWeight('P') + M*getFetuWeight('M') + G*getFetuWeight('G')
-    const newPV = PV - (totalWeight / report.numberOfAnimals)
+    const totalFetusWeight = P*getFetuWeight('P') + M*getFetuWeight('M') + G*getFetuWeight('G')
+    const newPV = PV - (totalFetusWeight / report.numberOfAnimals)
     const newRC = (PC / newPV) * 100
 
 
@@ -54,7 +55,7 @@ const ReportFetus: React.FC<ReportFetusProps> = ({ report }) => {
 
                 <div className='section-fetus'>
                     <p>QUANTIDADE TOTAL: <b>{totalQuantity}</b></p>
-                    <p style={{flex: 2}}>PESO TOTAL: <b>{formatNumber(totalWeight)}KG</b></p>
+                    <p style={{flex: 2}}>PESO TOTAL: <b>{formatNumber(totalFetusWeight)}KG</b></p>
                 </div>
 
                 <div className='section-fetus'>

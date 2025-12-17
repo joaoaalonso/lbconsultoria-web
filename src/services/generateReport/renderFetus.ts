@@ -17,11 +17,12 @@ export const renderFetus = async (report: Report) => {
 
     const totalQuantity = P + M + G
 
+    const totalWeight = report.totalWeight / 1000
     const PV = report.pv / 100
-    const PC = report.pc / 100
+    const PC = totalWeight / report.numberOfAnimals
 
-    const totalWeight = P*getFetuWeight('P') + M*getFetuWeight('M') + G*getFetuWeight('G')
-    const newPV = PV - (totalWeight / report.numberOfAnimals)
+    const totalFetusWeight = P*getFetuWeight('P') + M*getFetuWeight('M') + G*getFetuWeight('G')
+    const newPV = PV - (totalFetusWeight / report.numberOfAnimals)
     const newRC = (PC / newPV) * 100
 
     return renderSection('Fêmeas prenhas', {
@@ -35,7 +36,7 @@ export const renderFetus = async (report: Report) => {
                 ],
                 [
                     renderProperty('Quantidade total', `${totalQuantity}`),
-                    renderProperty('Peso total', `${formatNumber(totalWeight)}KG`),
+                    renderProperty('Peso total', `${formatNumber(totalFetusWeight)}KG`),
                     ''
                 ],
                 [
