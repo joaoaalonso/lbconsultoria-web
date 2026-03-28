@@ -2,7 +2,7 @@ import './Login.css'
 
 import React, { useState } from 'react'
 import swal from 'sweetalert'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import logo from '../../images/logo.jpeg'
@@ -13,8 +13,11 @@ import TextField from '../../components/TextField'
 import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 
 import { login } from '../../services/auth'
+import { useAuth } from '../../contexts/AuthContext'
 
-const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
+const LoginScreen = () => {
+  const { onLogin } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [useCnpjMask, setUseCnpjMask] = useState(false)
 
@@ -30,6 +33,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
     const { document, password } = data
     login(document, password)
       .then(onLogin)
+      .then(() => navigate('/'))
       .catch(() => {
         setLoading(false)
         swal('', 'CPF/CNPJ e/ou senha incorreto', 'error')

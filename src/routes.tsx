@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Routes as ReactRoutes, Route, Navigate, useNavigate } from 'react-router-dom'
+import React from 'react'
+import { Routes as ReactRoutes, Route, Navigate } from 'react-router-dom'
 
-import { getToken } from './services/auth'
+import { useAuth } from './contexts/AuthContext'
 
 import LoginScreen from './screens/auth/Login'
 import UpdatePasswordScreen from './screens/auth/UpdatePassword'
@@ -33,68 +33,70 @@ import AnalyticsClientScreen from './screens/analytics/client'
 import AnalyticsPerformanceScreen from './screens/analytics/performance'
 
 const Routes = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(!!getToken())
+  const { isLoggedIn } = useAuth()
 
-    const navigate = useNavigate()
+  return (
+    <ReactRoutes>
+      <Route path="/alterar-senha" element={<UpdatePasswordScreen />} />
+      <Route path="/recuperar-senha" element={<RecoveryPasswordScreen />} />
 
-    const onLogin = () => {
-        setIsLoggedIn(true)
-        navigate('/')
-    }
+      {!!isLoggedIn && (
+        <>
+          <Route path="/funcionarios" element={<EmployeeListScreen />} />
+          <Route path="/funcionarios/adicionar" element={<EmployeeFormScreen />} />
+          <Route path="/funcionarios/:userId" element={<EmployeeFormScreen />} />
 
-    return (
-        <ReactRoutes>
-            <Route path='/alterar-senha' element={<UpdatePasswordScreen onLogin={onLogin} />} />
-            <Route path='/recuperar-senha' element={<RecoveryPasswordScreen />} />
+          <Route path="/clientes" element={<ClientListScreen />} />
+          <Route path="/clientes/adicionar" element={<ClientFormScreen />} />
+          <Route path="/clientes/:userId" element={<ClientDetailsScreen />} />
+          <Route path="/clientes/:userId/editar" element={<ClientFormScreen />} />
 
-            {!!isLoggedIn && (
-                <>
-                    <Route path='/funcionarios' element={<EmployeeListScreen />} />
-                    <Route path='/funcionarios/adicionar' element={<EmployeeFormScreen />} />
-                    <Route path='/funcionarios/:userId' element={<EmployeeFormScreen />} />
+          <Route path="/clientes/:userId/propriedades" element={<RanchFormScreen />} />
+          <Route path="/clientes/:userId/propriedades/:ranchId" element={<RanchFormScreen />} />
 
-                    <Route path='/clientes' element={<ClientListScreen />} />
-                    <Route path='/clientes/adicionar' element={<ClientFormScreen />} />
-                    <Route path='/clientes/:userId' element={<ClientDetailsScreen />} />
-                    <Route path='/clientes/:userId/editar' element={<ClientFormScreen />} />
+          <Route path="/abatedouros" element={<SlaugtherhouseListScreen />} />
+          <Route path="/abatedouros/adicionar" element={<SlaugtherhouseFormScreen />} />
+          <Route path="/abatedouros/:slaughterhouseId" element={<SlaugtherhouseDetailsScreen />} />
+          <Route
+            path="/abatedouros/:slaughterhouseId/editar"
+            element={<SlaugtherhouseFormScreen />}
+          />
 
-                    <Route path='/clientes/:userId/propriedades' element={<RanchFormScreen />} />
-                    <Route path='/clientes/:userId/propriedades/:ranchId' element={<RanchFormScreen />} />
+          <Route
+            path="/abatedouros/:slaughterhouseId/unidades/adicionar"
+            element={<SlaughterhouseUnitFormScreen />}
+          />
+          <Route
+            path="/abatedouros/:slaughterhouseId/unidades/:slaughterhouseUnitId/editar"
+            element={<SlaughterhouseUnitFormScreen />}
+          />
 
-                    <Route path='/abatedouros' element={<SlaugtherhouseListScreen />} />
-                    <Route path='/abatedouros/adicionar' element={<SlaugtherhouseFormScreen />} />
-                    <Route path='/abatedouros/:slaughterhouseId' element={<SlaugtherhouseDetailsScreen />} />
-                    <Route path='/abatedouros/:slaughterhouseId/editar' element={<SlaugtherhouseFormScreen />} />
+          <Route path="/relatorios" element={<ReportListScreen />} />
+          <Route path="/relatorios/adicionar" element={<ReportFormScreen />} />
+          <Route path="/relatorios/:reportId" element={<ReportFormScreen />} />
 
-                    <Route path='/abatedouros/:slaughterhouseId/unidades/adicionar' element={<SlaughterhouseUnitFormScreen />} />
-                    <Route path='/abatedouros/:slaughterhouseId/unidades/:slaughterhouseUnitId/editar' element={<SlaughterhouseUnitFormScreen />} />
+          <Route path="/precoce" element={<PrematureListScreen />} />
+          <Route path="/precoce/adicionar" element={<PrematureFormScreen />} />
+          <Route path="/precoce/:prematureId" element={<PrematureFormScreen />} />
 
-                    <Route path='/relatorios' element={<ReportListScreen />} />
-                    <Route path='/relatorios/adicionar' element={<ReportFormScreen />} />
-                    <Route path='/relatorios/:reportId' element={<ReportFormScreen />} />
+          <Route path="/graficos" element={<AnalyticsScreen />} />
+          <Route path="/graficos/clientes" element={<AnalyticsClientScreen />} />
+          <Route path="/graficos/desempenho" element={<AnalyticsPerformanceScreen />} />
 
-                    <Route path='/precoce' element={<PrematureListScreen />} />
-                    <Route path='/precoce/adicionar' element={<PrematureFormScreen />} />
-                    <Route path='/precoce/:prematureId' element={<PrematureFormScreen />} />
+          <Route path="/relatorio/:reportId" element={<ReportViewScreen />} />
 
-                    <Route path='/graficos' element={<AnalyticsScreen />} />
-                    <Route path='/graficos/clientes' element={<AnalyticsClientScreen />} />
-                    <Route path='/graficos/desempenho' element={<AnalyticsPerformanceScreen />} />
+          <Route path="*" element={<Navigate to="/relatorios" />} />
+        </>
+      )}
 
-                    <Route path='/relatorio/:reportId' element={<ReportViewScreen />} />
-
-                    <Route path='*' element={<Navigate to='/relatorios' />} />
-                </>
-            )}
-
-            {!isLoggedIn && (
-                <>
-                    <Route path='/login' element={<LoginScreen onLogin={onLogin} />} />
-                    <Route path='*' element={<Navigate to='/login' />} />
-                </>
-            )}
-        </ReactRoutes>
-    )
+      {!isLoggedIn && (
+        <>
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </>
+      )}
+    </ReactRoutes>
+  )
 }
 
 export default Routes

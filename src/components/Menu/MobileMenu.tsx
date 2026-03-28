@@ -1,28 +1,15 @@
 import './MobileMenu.css'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { IoClose } from 'react-icons/io5'
 import { RiLogoutBoxRLine } from 'react-icons/ri'
 
 import MenuItems from './MenuItems'
 import { logoutWithConfirmation } from '../../services/auth'
-import { addListener, Notifications, removeListener } from '../../services/notifications'
+import { useNotifications } from '../../contexts/NotificationsContext'
 
 const MobileMenu = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
-  const [notifications, setNotifications] = useState<Notifications>({
-    prematures: 0,
-    total: 0,
-  })
-
-  useEffect(() => {
-    const listenerId = addListener((data) => {
-      setNotifications(data)
-    })
-
-    return () => {
-      removeListener(listenerId)
-    }
-  }, [])
+  const notifications = useNotifications()
 
   return (
     <div className={`mobile-menu ${!visible ? 'mobile-menu-close' : ''}`}>
