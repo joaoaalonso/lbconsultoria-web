@@ -58,7 +58,7 @@ const ReportListScreen = () => {
     downloadReportPDFById(reportId).finally(() => setGeneratingPdf(false))
   }
 
-  const observer: any = useRef()
+  const observer = useRef<IntersectionObserver | null>(null)
 
   const endPageElementRef = useCallback(
     (node: Element | null) => {

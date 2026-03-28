@@ -31,7 +31,7 @@ const Chart: React.FC<ChartProps> = ({ analytics, userName, ranchName }) => {
   useEffect(() => {
     const aspectRatio = window.innerWidth < 800 ? 0.5 : 2
 
-    const element: any = document.getElementById('chart')
+    const element = document.getElementById('chart') as HTMLCanvasElement | null
     if (!element) return
 
     const chart = generateChart(element, analytics, aspectRatio, !ranchName)

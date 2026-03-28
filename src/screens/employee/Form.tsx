@@ -12,6 +12,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 import { CPF_MASK } from '../../utils/mask'
 import { recoveryPassword } from '../../services/auth'
 import { createEmployee, deleteEmployee, editEmployee, getEmployee } from '../../services/users'
+import type { User } from '../../types/user'
 
 const EmployeeFormScreen = () => {
   const { userId } = useParams()
@@ -27,7 +28,7 @@ const EmployeeFormScreen = () => {
     reset,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<Omit<User, 'id'>>()
 
   useEffect(() => {
     if (userId) {
@@ -64,26 +65,20 @@ const EmployeeFormScreen = () => {
     })
   }
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Omit<User, 'id'>) => {
     setSaving(true)
 
-    let handler: any = createEmployee
-    let params = data
-    let message = 'Funcionário cadastrado com sucesso!'
-    let sendPasswordEmail = true
+    const sendPasswordEmail = !userId
+    const message = userId
+      ? 'Funcionário atualizado com sucesso!'
+      : 'Funcionário cadastrado com sucesso!'
+    const promise = userId ? editEmployee({ id: userId, ...data }) : createEmployee(data)
 
-    if (userId) {
-      handler = editEmployee
-      params = { id: userId, ...data }
-      message = 'Funcionário atualizado com sucesso!'
-      sendPasswordEmail = false
-    }
-
-    handler(params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => {
         if (sendPasswordEmail) {
-          return handlePasswordEmail(params.document)
+          return handlePasswordEmail(data.document)
         }
       })
       .then(() => navigate('/funcionarios'))
@@ -122,7 +117,7 @@ const EmployeeFormScreen = () => {
       backLink="/funcionarios"
       title={userId ? 'Editar funcionário' : 'Adicionar funcionário'}
       rightComponent={
-        !!userId ? (
+        userId ? (
           <BiTrash onClick={() => handleDeleteEmployee(userId)} size={25} className="svg-button" />
         ) : (
           <div></div>

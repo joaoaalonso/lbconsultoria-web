@@ -1,17 +1,16 @@
 import React from 'react'
 import ReactSelect, { StylesConfig } from 'react-select'
-import { Controller, Control, FieldErrors, FieldValues } from 'react-hook-form'
+import { Controller, Control, FieldErrors, FieldValues, Path } from 'react-hook-form'
 
 interface Options {
   label: string
   value: string
 }
 
-interface SelectProps {
-  errors?: FieldErrors<any>
-  name: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>
+interface SelectProps<T extends FieldValues> {
+  errors?: FieldErrors<T>
+  name: Path<T>
+  control: Control<T>
   label?: string
   options: Options[]
   required?: boolean
@@ -20,17 +19,16 @@ interface SelectProps {
   onChange?: (value: string) => void
 }
 
-const Select = ({
+function Select<T extends FieldValues>({
   name,
   label,
   errors,
   options,
   control,
-  onChange,
   isMulti = false,
   isClearable = false,
   required = false,
-}: SelectProps) => {
+}: SelectProps<T>) {
   const hasError = errors && name && !!errors[name]
 
   const getOptionBackgroundColor = (state: { isSelected: boolean; isFocused: boolean }) => {
@@ -67,9 +65,11 @@ const Select = ({
             isMulti={isMulti}
             isClearable={isClearable}
             onChange={(val) => {
-              isMulti
-                ? onChange((val as Options[]).map((v) => v.value))
-                : onChange((val as Options | null)?.value)
+              if (isMulti) {
+                onChange((val as Options[]).map((v) => v.value))
+              } else {
+                onChange((val as Options | null)?.value)
+              }
             }}
             options={options}
             placeholder={null}

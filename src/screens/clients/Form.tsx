@@ -10,6 +10,7 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { recoveryPassword } from '../../services/auth'
 import { createClient, editClient, getClient } from '../../services/users'
+import type { User } from '../../types/user'
 import { CELLPHONE_MASK, CNPJ_MASK, CPF_MASK, PHONE_MASK, POSTAL_CODE_MASK } from '../../utils/mask'
 import { usePostalCode } from '../../hooks/usePostalCode'
 
@@ -31,7 +32,7 @@ const ClientFormScreen = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm()
+  } = useForm<Omit<User, 'id'>>()
 
   useEffect(() => {
     if (userId) {
@@ -75,26 +76,18 @@ const ClientFormScreen = () => {
     })
   }
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Omit<User, 'id'>) => {
     setSaving(true)
 
-    let handler: any = createClient
-    let params = data
-    let message = 'Cliente cadastrado com sucesso!'
-    let sendPasswordEmail = !!data.email && !!data.document
+    const sendPasswordEmail = !userId && !!data.email && !!data.document
+    const message = userId ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!'
+    const promise = userId ? editClient({ id: userId, ...data }) : createClient(data)
 
-    if (userId) {
-      handler = editClient
-      params = { id: userId, ...data }
-      message = 'Cliente atualizado com sucesso!'
-      sendPasswordEmail = false
-    }
-
-    handler(params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => {
         if (sendPasswordEmail) {
-          return handlePasswordEmail(params.document)
+          return handlePasswordEmail(data.document)
         }
       })
       .then(() => {

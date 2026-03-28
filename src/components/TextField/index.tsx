@@ -2,27 +2,33 @@ import './index.css'
 
 import React from 'react'
 import InputMask from 'react-input-mask'
-import { Controller, Control, FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
+import {
+  Controller,
+  Control,
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from 'react-hook-form'
 
-interface TextFieldProps {
-  errors?: FieldErrors<any>
-  name?: string
+interface TextFieldProps<T extends FieldValues> {
+  errors?: FieldErrors<T>
+  name?: Path<T>
   type?: string
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
   value?: string
   label?: string
-  register?: UseFormRegister<any>
+  register?: UseFormRegister<T>
   mask?: string
   required?: boolean
   disabled?: boolean
   maxLength?: number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control?: Control<any>
+  control?: Control<T>
   placeholder?: string
   onChange?: (value: string) => void
 }
 
-function TextField({
+function TextField<T extends FieldValues>({
   value,
   name,
   label,
@@ -37,8 +43,8 @@ function TextField({
   inputMode,
   required = false,
   disabled = false,
-}: TextFieldProps) {
-  const registerConfigs = !!(register && name) ? register(name, { required }) : {}
+}: TextFieldProps<T>) {
+  const registerConfigs = register && name ? register(name, { required }) : {}
 
   const hasError = errors && name && !!errors[name]
 
@@ -65,7 +71,7 @@ function TextField({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = unmaskValue(event.target.value)
       internalOnChange(value, event)
-      onChange && onChange(value)
+      onChange?.(value)
     }
 
   function renderInput() {
@@ -102,7 +108,7 @@ function TextField({
         className={`text-field ${hasError ? 'text-field-error' : ''}`}
         placeholder={placeholder}
         onChange={(e) => {
-          onChange && onChange(e.target.value)
+          onChange?.(e.target.value)
         }}
         disabled={disabled}
         {...registerConfigs}

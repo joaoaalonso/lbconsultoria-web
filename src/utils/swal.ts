@@ -29,7 +29,7 @@ function swal(
       cancelButtonText: 'Não',
       confirmButtonText: 'Sim',
       confirmButtonColor: '#ff19d5',
-      cancelButtonColor: '#f1f2f5',
+      cancelButtonColor: '#c4c4c4',
     }).then(({ isConfirmed }) => isConfirmed)
   }
 

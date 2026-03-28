@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import './index.css'
 
 import React, { useState } from 'react'
@@ -16,6 +15,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
+import type { Transform } from '@dnd-kit/utilities'
 
 import Loading from '../Loading'
 
@@ -24,7 +24,7 @@ import { addImage, Photo } from '../../services/photos'
 
 interface PhotosProps {
   photos: Photo[]
-  setPhotos: any
+  setPhotos: React.Dispatch<React.SetStateAction<Photo[]>>
 }
 
 const SortablePhoto = ({
@@ -47,9 +47,12 @@ const SortablePhoto = ({
     index,
   } = useSortable({ id: photo.id })
 
-  const transformStyle: any = transform || {}
-  transformStyle.scaleX = isSorting && activeIndex === index ? 1.05 : 1
-  transformStyle.scaleY = isSorting && activeIndex === index ? 1.05 : 1
+  const transformStyle: Transform = {
+    x: transform?.x ?? 0,
+    y: transform?.y ?? 0,
+    scaleX: isSorting && activeIndex === index ? 1.05 : (transform?.scaleX ?? 1),
+    scaleY: isSorting && activeIndex === index ? 1.05 : (transform?.scaleY ?? 1),
+  }
 
   const style = {
     transform: CSS.Transform.toString(transformStyle),
@@ -96,9 +99,14 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
       const newPhotos: File[] = []
       const compressor = new Compress()
 
+      type CompressApi = {
+        compress: (
+          file: File,
+          opts: { quality: number; maxWidth: number; maxHeight: number },
+        ) => Promise<File>
+      }
       for (const file of e.target.files) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await (compressor as any).compress(file, {
+        const result = await (compressor as unknown as CompressApi).compress(file, {
           quality: 0.7,
           maxWidth: 1200,
           maxHeight: 1200,
@@ -110,7 +118,7 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
       uploadPhotos(newPhotos)
     }
 
-    const inputElem: any = document?.getElementById('add-photo')
+    const inputElem = document.getElementById('add-photo') as HTMLInputElement | null
     if (inputElem) {
       inputElem.value = ''
     }
@@ -180,8 +188,8 @@ const Photos = ({ photos, setPhotos }: PhotosProps) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (event.over && active.id !== event.over.id) {
-      const overId = String(event.over.id)
+    if (over && active.id !== over.id) {
+      const overId = String(over.id)
       setPhotos((photos: Photo[]) => {
         const oldIndex = photos.findIndex((photo) => photo.id === String(active.id))
         const newIndex = photos.findIndex((photo) => photo.id === overId)

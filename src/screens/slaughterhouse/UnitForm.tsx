@@ -13,6 +13,7 @@ import {
   editSlaughterhouseUnit,
   getSlaughterhouseUnit,
 } from '../../services/slaughterhouse'
+import type { SlaughterhouseUnit } from '../../types/slaughterhouse'
 
 const SlaughterhouseUnitFormScreen = () => {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ const SlaughterhouseUnitFormScreen = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm()
+  } = useForm<Omit<SlaughterhouseUnit, 'id' | 'slaughterhouseId'>>()
 
   useEffect(() => {
     if (slaughterhouseId && slaughterhouseUnitId) {
@@ -37,20 +38,18 @@ const SlaughterhouseUnitFormScreen = () => {
     }
   }, [slaughterhouseId, slaughterhouseUnitId, reset])
 
-  function onSubmit(data: any) {
+  function onSubmit(data: Omit<SlaughterhouseUnit, 'id' | 'slaughterhouseId'>) {
     setSaving(true)
 
-    let handler: any = createSlaughterhouseUnit
-    let params = { slaughterhouseId, ...data }
-    let message = 'Unidade abatedoura cadastrado com sucesso!'
+    const params: Omit<SlaughterhouseUnit, 'id'> = { slaughterhouseId: slaughterhouseId!, ...data }
+    const message = slaughterhouseUnitId
+      ? 'Unidade abatedoura atualizado com sucesso!'
+      : 'Unidade abatedoura cadastrado com sucesso!'
+    const promise = slaughterhouseUnitId
+      ? editSlaughterhouseUnit(slaughterhouseId!, { id: slaughterhouseUnitId, ...params })
+      : createSlaughterhouseUnit(slaughterhouseId!, params)
 
-    if (slaughterhouseUnitId) {
-      handler = editSlaughterhouseUnit
-      params = { id: slaughterhouseUnitId, slaughterhouseId, ...data }
-      message = 'Unidade abatedoura atualizado com sucesso!'
-    }
-
-    handler(slaughterhouseId, params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => navigate(`/abatedouros/${slaughterhouseId}`))
       .catch((e: Error) => swal('', e.message, 'error'))

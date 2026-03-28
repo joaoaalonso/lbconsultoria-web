@@ -12,7 +12,11 @@ import ScreenTemplate from '../../../components/ScreenTemplate'
 import { getClients, User } from '../../../services/users'
 import { getRanches, Ranch } from '../../../services/ranches'
 import { getAvailableSex } from '../../../services/reportHelpers'
-import { AnalyticsPerformanceResult, getAnalyticsPerformance } from '../../../services/analytics'
+import {
+  AnalyticsPerformanceResult,
+  AnalyticsPerformanceSettings,
+  getAnalyticsPerformance,
+} from '../../../services/analytics'
 import {
   getSlaughterhouses,
   getSlaughterhouseUnits,
@@ -36,7 +40,7 @@ const AnalyticsScreen = () => {
     resetField,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<AnalyticsPerformanceSettings>()
 
   useEffect(() => {
     getClients().then((u) => {
@@ -106,7 +110,7 @@ const AnalyticsScreen = () => {
     }, 100)
   }
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: AnalyticsPerformanceSettings) => {
     setAnalytics(undefined)
     setTotal(0)
     setLoading(true)
@@ -115,7 +119,7 @@ const AnalyticsScreen = () => {
         setAnalytics(data)
         scrollToChart()
       })
-      .catch((e) => swal('', e.message, 'error'))
+      .catch((e: unknown) => swal('', e instanceof Error ? e.message : 'Ocorreu um erro.', 'error'))
       .finally(() => setLoading(false))
   }
 

@@ -12,7 +12,11 @@ import ScreenTemplate from '../../../components/ScreenTemplate'
 
 import { getClients, User } from '../../../services/users'
 import { getRanches, Ranch } from '../../../services/ranches'
-import { AnalyticsClientResult, getAnalyticsClient } from '../../../services/analytics'
+import {
+  AnalyticsClientResult,
+  AnalyticsClientSettings,
+  getAnalyticsClient,
+} from '../../../services/analytics'
 import { getAvailableSex } from '../../../services/reportHelpers'
 
 const AnalyticsScreen = () => {
@@ -33,10 +37,13 @@ const AnalyticsScreen = () => {
     resetField,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<AnalyticsClientSettings>({
     defaultValues: {
       userId: searchParams.get('userId'),
       ranchId: searchParams.get('ranchId'),
+      sex: [],
+      fromDate: undefined,
+      toDate: undefined,
     },
   })
 
@@ -65,7 +72,7 @@ const AnalyticsScreen = () => {
     }
   }, [watchUser, resetField, setValue, setSearchParams])
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: AnalyticsClientSettings) => {
     if (!data.userId) {
       swal('', 'Selecione um cliente', 'error')
       return
@@ -88,7 +95,7 @@ const AnalyticsScreen = () => {
         setAnalytics(data)
         scrollToChart()
       })
-      .catch((e) => swal('', e.message, 'error'))
+      .catch((e: unknown) => swal('', e instanceof Error ? e.message : 'Ocorreu um erro.', 'error'))
       .finally(() => setLoading(false))
   }
 

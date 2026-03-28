@@ -13,6 +13,10 @@ import TextField from '../../components/TextField'
 import { recoveryPassword } from '../../services/auth'
 import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 
+type RecoveryFormValues = {
+  document: string
+}
+
 const RecoveryPasswordScreen = () => {
   const [loading, setLoading] = useState(false)
   const [useCnpjMask, setUseCnpjMask] = useState(false)
@@ -24,9 +28,9 @@ const RecoveryPasswordScreen = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<RecoveryFormValues>()
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: RecoveryFormValues) => {
     setLoading(true)
     const { document } = data
 
