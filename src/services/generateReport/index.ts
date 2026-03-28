@@ -14,73 +14,72 @@ import { renderCorralEvaluation } from './renderCorralEvaluation'
 import { getPhotosProperties, renderPhotos } from './renderPhotos'
 
 export const generateReportStructure = async (report: Report): Promise<any> => {
-    const sections = [
-        renderHeader,
-        renderInfo,
-        renderCorralEvaluation,
-        renderWeight,
-        renderEvaluation,
-        renderAwards,
-        renderPenalties,
-        renderFetus,
-        renderComments,
-        renderSignature,
-        renderPhotos
-    ]
+  const sections = [
+    renderHeader,
+    renderInfo,
+    renderCorralEvaluation,
+    renderWeight,
+    renderEvaluation,
+    renderAwards,
+    renderPenalties,
+    renderFetus,
+    renderComments,
+    renderSignature,
+    renderPhotos,
+  ]
 
-    async function renderSections() {
-        const processedSections: any = []
-        for(let i = 0; i < sections.length; i++) {
-            processedSections.push(await sections[i](report))
-        }
-        return processedSections
+  async function renderSections() {
+    const processedSections: any = []
+    for (let i = 0; i < sections.length; i++) {
+      processedSections.push(await sections[i](report))
     }
+    return processedSections
+  }
 
-    return {
-        info: {
-            title: `${report.ranch.name} ${formatDate(report.date).replaceAll('/', '-')} ${report.sex}`,
-        },
-        pageSize: 'A4',
-        defaultStyle: {
-            fontSize: 9
-        },
-        content: [
-            {
-                stack: await renderSections()
-            }
-        ],
-        images: getPhotosProperties(report)
-    }
+  return {
+    info: {
+      title: `${report.ranch.name} ${formatDate(report.date).replaceAll('/', '-')} ${report.sex}`,
+    },
+    pageSize: 'A4',
+    defaultStyle: {
+      fontSize: 9,
+    },
+    content: [
+      {
+        stack: await renderSections(),
+      },
+    ],
+    images: getPhotosProperties(report),
+  }
 }
 
 export const downloadReportPDFById = async (reportId: string): Promise<void> => {
-    return getReport(reportId)
-        .then(downloadReportPDF)
+  return getReport(reportId).then(downloadReportPDF)
 }
 
 export const downloadReportPDF = async (report: Report): Promise<void> => {
-    const docDefinitions = await generateReportStructure(report)
-    
-    const pdfMake = await import('pdfmake/build/pdfmake')
-    const { vfs } = await import('./vfs')
-    
-    const fileName = `${docDefinitions.info.title}.pdf`
-    const pdf = pdfMake.createPdf(docDefinitions, null, null, vfs)
+  const docDefinitions = await generateReportStructure(report)
 
-    if (window.innerWidth >= 800) {
-        return pdf.download(fileName)
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pdfMake: any = await import('pdfmake/build/pdfmake')
+  const { vfs } = await import('./vfs')
 
-    return new Promise((resolve) => {
-        pdf.getBlob(blob => {
-            const files = [new File([blob], fileName, { type: 'application/pdf' })]
-            if (navigator.canShare && navigator.canShare({ files })) {
-                navigator.share({ files })
-                    .catch(console.error)
-            } else {
-                pdf.download(fileName)
-            }
-            return resolve()
-        })
+  const fileName = `${docDefinitions.info.title}.pdf`
+  const pdf = pdfMake.createPdf(docDefinitions, null, null, vfs)
+
+  if (window.innerWidth >= 800) {
+    return pdf.download(fileName)
+  }
+
+  return new Promise((resolve) => {
+    pdf.getBlob((blob: Blob) => {
+      const files = [new File([blob], fileName, { type: 'application/pdf' })]
+      if (navigator.canShare && navigator.canShare({ files })) {
+        navigator.share({ files }).catch(console.error)
+      } else {
+        pdf.download(fileName)
+      }
+      return resolve()
     })
+  })
 }

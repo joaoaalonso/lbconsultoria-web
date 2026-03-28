@@ -1,59 +1,55 @@
-import { apiClient } from "./api"
-import { isAdmin } from "./auth"
+import apiClient from './api'
+import { isAdmin } from './auth'
+import { Notifications } from '../types'
 
-export interface Notifications {
-    prematures: number
-    total: number
-}
+export type { Notifications }
 
 let initialized = false
 
-const notifications = {
-    prematures: 0,
-    total: 0
+const notifications: Notifications = {
+  prematures: 0,
+  total: 0,
 }
 
 const listeners: { [key: number]: (notifications: Notifications) => void } = {}
 
 export const addListener = (listener: (notifications: Notifications) => void): number => {
-    const listenerId = Math.floor(Math.random() * 10000) + 1
-    listeners[listenerId] = listener
-    if (!initialized) {
-        initialized = true
-        getNotifications()
-    }
-    listener(notifications)
-    return listenerId
+  const listenerId = Math.floor(Math.random() * 10000) + 1
+  listeners[listenerId] = listener
+  if (!initialized) {
+    initialized = true
+    getNotifications()
+  }
+  listener(notifications)
+  return listenerId
 }
 
 export const removeListener = (listenerId: number) => {
-    delete listeners[listenerId]
+  delete listeners[listenerId]
 }
 
-const notifiyListeners = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [_, listener] of Object.entries(listeners)) {
-        listener(notifications)
-    }
+const notifyListeners = () => {
+  for (const listener of Object.values(listeners)) {
+    listener(notifications)
+  }
 }
 
 export const getNotifications = () => {
-    getPrematureReminders()
+  getPrematureReminders()
 }
 
 export const setPrematuresNotifications = (value: number): void => {
-    notifications.total = notifications.total - notifications.prematures + value
-    notifications.prematures = value
-    notifiyListeners()
+  notifications.total = notifications.total - notifications.prematures + value
+  notifications.prematures = value
+  notifyListeners()
 }
 
 export const getPrematureReminders = async (): Promise<void> => {
-    if (!isAdmin()) return
+  if (!isAdmin()) return
 
-    apiClient().get('/prematures/reminders')
-        .then(response => {
-            if (response?.data?.reminders >= 0) {
-                setPrematuresNotifications(response.data.reminders)
-            }
-        })
+  apiClient.get('/prematures/reminders').then((response) => {
+    if (response?.data?.reminders >= 0) {
+      setPrematuresNotifications(response.data.reminders)
+    }
+  })
 }
