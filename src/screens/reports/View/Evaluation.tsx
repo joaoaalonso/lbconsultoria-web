@@ -16,9 +16,9 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
     return percentage.toFixed(0)
   }
 
-  report.maturity && sortByType(report.maturity)
-  report.finishing && sortByType(report.finishing)
-  report.rumenScore && sortByType(report.rumenScore)
+  report.maturity && (report.maturity = sortByType(report.maturity))
+  report.finishing && (report.finishing = sortByType(report.finishing))
+  report.rumenScore && (report.rumenScore = sortByType(report.rumenScore))
 
   const vaccineWeight = report.vaccineWeight / 100
   const vaccinePrice = ((report.arroba || 0) / (100 * getArroba())) * vaccineWeight
