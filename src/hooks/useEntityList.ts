@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import swal from 'sweetalert'
+import swal from '../utils/swal'
 
 export function useEntityList<T>(fetchFn: () => Promise<T[]>) {
   const [loading, setLoading] = useState(true)

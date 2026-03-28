@@ -1,3 +1,8 @@
+:root {
+  --color-primary: #ff19d5;
+  --color-primary-dark: #d415b1;
+}
+
 body {
   margin: 0;
   width: 100vw;

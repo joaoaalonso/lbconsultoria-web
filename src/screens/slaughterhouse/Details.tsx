@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
 

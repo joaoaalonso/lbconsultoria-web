@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import { BiTrash } from 'react-icons/bi'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'

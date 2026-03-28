@@ -2,7 +2,7 @@
 import './index.css'
 
 import React, { useState } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import Compress from 'compress.js'
 import { CSS } from '@dnd-kit/utilities'
 import { TfiHandDrag } from 'react-icons/tfi'

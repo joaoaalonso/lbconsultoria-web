@@ -1,7 +1,7 @@
 import './Login.css'
 
 import React, { useState } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 

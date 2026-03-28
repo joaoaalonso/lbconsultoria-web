@@ -31,7 +31,7 @@
 }
 
 .main-content > .top-bar a:hover {
-    color: #ff19d5;
+    color: var(--color-primary);
 }
 
 .main-content > .content-wrapper {

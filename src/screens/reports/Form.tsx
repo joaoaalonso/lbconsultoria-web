@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import { useForm } from 'react-hook-form'
 import { BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -382,7 +382,7 @@ const ReportFormScreen = () => {
             swal('', 'Relatório deletado com sucesso!', 'success')
           })
           .then(() => navigate('/relatorios'))
-          .catch(swal)
+          .catch((e: Error) => swal('', e.message, 'error'))
       }
     })
   }

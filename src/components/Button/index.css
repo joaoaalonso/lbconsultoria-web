@@ -6,26 +6,26 @@
     transition: 0.3s;
     border-radius: 4px;
     height: fit-content;
-    border: 1px solid #ff19d5;
+    border: 1px solid var(--color-primary);
 }
 
 .button-primary {
-    color: #ff19d5;
+    color: var(--color-primary);
     background-color: white;
 }
 
 .button-secondary {
     color: white;
     font-weight: bold;
-    background-color: #ff19d5;
+    background-color: var(--color-primary);
 }
 
 .button:hover {
-    color: #d415b1;
-    border-color: #d415b1;
+    color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
 .button-secondary:hover {
     color: white;
-    background-color: #d415b1;
+    background-color: var(--color-primary-dark);
 }

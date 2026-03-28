@@ -1,5 +1,5 @@
 import axios from 'axios'
-import swal from 'sweetalert'
+import swal from '../utils/swal'
 
 import { USER_TYPES } from '../types'
 

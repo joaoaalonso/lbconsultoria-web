@@ -28,20 +28,20 @@
       border-radius: 50%;
       align-items: center;
       justify-content: center;
-      background-color: #ff19d5;
+      background-color: var(--color-primary);
     }
   }
   
   a:hover {
-    color: #ff19d5;
+    color: var(--color-primary);
   }
 
   .active {
     color: white;
-    background: #ff19d5;
+    background: var(--color-primary);
 
     .badge {
-      color: #ff19d5;
+      color: var(--color-primary);
       background-color: white;
     }
   }
