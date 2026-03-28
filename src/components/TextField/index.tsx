@@ -2,21 +2,22 @@ import './index.css'
 
 import React from 'react'
 import InputMask from 'react-input-mask'
-import { Controller } from 'react-hook-form'
+import { Controller, Control, FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
 interface TextFieldProps {
-  errors?: any
+  errors?: FieldErrors<any>
   name?: string
   type?: string
-  inputMode?: string
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
   value?: string
   label?: string
-  register?: any
+  register?: UseFormRegister<any>
   mask?: string
   required?: boolean
   disabled?: boolean
   maxLength?: number
-  control?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control?: Control<any>
   placeholder?: string
   onChange?: (value: string) => void
 }
@@ -59,13 +60,13 @@ function TextField({
     return unmaskedValue
   }
 
-  const handleChange = (internalOnChange: any) => {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange =
+    (internalOnChange: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = unmaskValue(event.target.value)
       internalOnChange(value, event)
       onChange && onChange(value)
     }
-  }
 
   function renderInput() {
     if (name && control) {

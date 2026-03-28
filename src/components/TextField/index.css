@@ -14,7 +14,7 @@
 
 .text-field-container > .text-field:focus {
     outline: none;
-    border-color: #ff19d5;
+    border-color: var(--color-primary);
 }
 
 .text-field-container > .text-field-error {

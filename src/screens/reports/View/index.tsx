@@ -1,7 +1,7 @@
 import './index.css'
 
 import React, { useState, useEffect } from 'react'
-import swal from 'sweetalert'
+import swal from '../../../utils/swal'
 import { useParams } from 'react-router-dom'
 
 import ReportFetus from './Fetus'

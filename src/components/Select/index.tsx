@@ -1,6 +1,6 @@
 import React from 'react'
-import ReactSelect from 'react-select'
-import { Controller } from 'react-hook-form'
+import ReactSelect, { StylesConfig } from 'react-select'
+import { Controller, Control, FieldErrors, FieldValues } from 'react-hook-form'
 
 interface Options {
   label: string
@@ -8,9 +8,10 @@ interface Options {
 }
 
 interface SelectProps {
-  errors?: any
+  errors?: FieldErrors<any>
   name: string
-  control: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>
   label?: string
   options: Options[]
   required?: boolean
@@ -32,19 +33,17 @@ const Select = ({
 }: SelectProps) => {
   const hasError = errors && name && !!errors[name]
 
-  const getOptionBackgroundColor = (state: any) => {
-    if (state.isSelected) {
-      return '#ff19d5'
-    }
+  const getOptionBackgroundColor = (state: { isSelected: boolean; isFocused: boolean }) => {
+    if (state.isSelected) return 'var(--color-primary)'
     return state.isFocused ? '#ffd3f7' : 'white'
   }
 
-  const customStyles = {
-    option: (provided: any, state: any) => ({
+  const customStyles: StylesConfig<Options> = {
+    option: (provided, state) => ({
       ...provided,
       backgroundColor: getOptionBackgroundColor(state),
     }),
-    control: (provided: any) => ({
+    control: (provided) => ({
       ...provided,
       border: `1px solid ${hasError ? 'red' : 'hsl(0, 0%, 80%)'}`,
     }),
@@ -67,8 +66,10 @@ const Select = ({
             ref={ref}
             isMulti={isMulti}
             isClearable={isClearable}
-            onChange={(val: any) => {
-              isMulti ? onChange(val.map((v: { value: string }) => v.value)) : onChange(val?.value)
+            onChange={(val) => {
+              isMulti
+                ? onChange((val as Options[]).map((v) => v.value))
+                : onChange((val as Options | null)?.value)
             }}
             options={options}
             placeholder={null}

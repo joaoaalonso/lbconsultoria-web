@@ -28,7 +28,7 @@
 
 .side-menu > .active {
   color: white;
-  background: #ff19d5;
+  background: var(--color-primary);
 }
 
 .side-menu > .active:hover {
@@ -75,7 +75,7 @@
   background-color: transparent;
   
   &:hover {
-    color: #ff19d5;
+    color: var(--color-primary);
   }
 }
 

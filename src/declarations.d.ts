@@ -1,10 +1,3 @@
-// sweetalert v2 types are broken — override to callable function
-declare module 'sweetalert' {
-  function swal(title: string, text?: string, icon?: string): Promise<boolean>
-  function swal(options: object): Promise<boolean>
-  export = swal
-}
-
 declare module 'compress.js' {
   interface CompressOptions {
     size?: number

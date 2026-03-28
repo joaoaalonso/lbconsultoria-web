@@ -17,11 +17,11 @@
 
 .react-datepicker__input-container > input:focus {
     outline: none;
-    border-color: #ff19d5;
+    border-color: var(--color-primary);
 }
 
 .react-datepicker__day--selected {
-    background-color: #ff19d5 !important;
+    background-color: var(--color-primary) !important;
 }
 
 .react-datepicker__input-container > .error {

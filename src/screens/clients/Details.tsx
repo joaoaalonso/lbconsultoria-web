@@ -1,7 +1,7 @@
 import './Details.css'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import swal from 'sweetalert'
+import swal from '../../utils/swal'
 import { IoSearch } from 'react-icons/io5'
 import { BiEdit, BiPlus, BiTrash } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router-dom'

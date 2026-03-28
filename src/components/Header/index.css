@@ -23,7 +23,7 @@
             height: 8px;
             border-radius: 50%;
             position: absolute;
-            background-color: #ff19d5;
+            background-color: var(--color-primary);
         }
     }
 
