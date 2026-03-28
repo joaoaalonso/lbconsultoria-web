@@ -1,29 +1,41 @@
 ---
 name: Build and Deploy React App to S3 Bucket
-on: #Qual ação irá fazer o workflow funcionar, no caso, um push na branch main.
+on:
   push:
     branches: [main]
+
+permissions:
+  contents: read
+
 jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
     env:
-      DIST: dist #Qual pasta você irá enviar pra AWS
+      DIST: dist
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Install Dependencies
-        run: |
-          npm install
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
 
       - name: Build Static Website
         run: npm run build
