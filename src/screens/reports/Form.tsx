@@ -26,6 +26,7 @@ import { Report, getReport, createReport, editReport, deleteReport } from '../..
 import { sortByType } from '../../utils/sort'
 import { parseNumber } from '../../utils/parser'
 import { getAvailableSex, sexIsFemale } from '../../services/reportHelpers'
+import { useTableRows } from '../../hooks/useTableRows'
 
 const ReportFormScreen = () => {
   const [loading, setLoading] = useState(false)
@@ -38,35 +39,74 @@ const ReportFormScreen = () => {
   const [slaughterhouses, setSlaughterhouses] = useState<Slaughterhouse[]>([])
   const [slaughterhouseUnits, setSlaughterhouseUnits] = useState<SlaughterhouseUnit[]>([])
 
-  const [maturity, setMaturity] = useState([
-    { type: '0', value: '0' },
-    { type: '2', value: '0' },
-    { type: '4', value: '0' },
-    { type: '6', value: '0' },
-    { type: '8', value: '0' },
-  ])
-  const [finishing, setFinishing] = useState([
-    { type: '1', value: '0' },
-    { type: '2', value: '0' },
-    { type: '3', value: '0' },
-    { type: '4', value: '0' },
-    { type: '5', value: '0' },
-  ])
-  const [rumenScore, setRumenScore] = useState([
-    { type: '1', value: '0' },
-    { type: '2', value: '0' },
-    { type: '3', value: '0' },
-    { type: '4', value: '0' },
-    { type: '5', value: '0' },
-  ])
-  const [fetus, setFetus] = useState([
-    { type: 'P', value: '0' },
-    { type: 'M', value: '0' },
-    { type: 'G', value: '0' },
-  ])
-
-  const [dif, setDif] = useState([{ seq: '', type: '', value: '' }])
-  const [bruises, setBruises] = useState([{ seq: '', type: '', value: '' }])
+  const {
+    rows: maturity,
+    setRows: setMaturity,
+    updateRow: updateMaturityRow,
+  } = useTableRows(
+    [
+      { type: '0', value: '0' },
+      { type: '2', value: '0' },
+      { type: '4', value: '0' },
+      { type: '6', value: '0' },
+      { type: '8', value: '0' },
+    ],
+    { type: '', value: '' },
+  )
+  const {
+    rows: finishing,
+    setRows: setFinishing,
+    updateRow: updateFinishingRow,
+  } = useTableRows(
+    [
+      { type: '1', value: '0' },
+      { type: '2', value: '0' },
+      { type: '3', value: '0' },
+      { type: '4', value: '0' },
+      { type: '5', value: '0' },
+    ],
+    { type: '', value: '' },
+  )
+  const {
+    rows: rumenScore,
+    setRows: setRumenScore,
+    updateRow: updateRumenScoreRow,
+  } = useTableRows(
+    [
+      { type: '1', value: '0' },
+      { type: '2', value: '0' },
+      { type: '3', value: '0' },
+      { type: '4', value: '0' },
+      { type: '5', value: '0' },
+    ],
+    { type: '', value: '' },
+  )
+  const {
+    rows: fetus,
+    setRows: setFetus,
+    updateRow: updateFetusRow,
+  } = useTableRows(
+    [
+      { type: 'P', value: '0' },
+      { type: 'M', value: '0' },
+      { type: 'G', value: '0' },
+    ],
+    { type: '', value: '' },
+  )
+  const {
+    rows: dif,
+    setRows: setDif,
+    addRow: addDifRow,
+    removeRow: removeDifRow,
+    updateRow: updateDifRow,
+  } = useTableRows([{ seq: '', type: '', value: '' }], { seq: '', type: '', value: '' })
+  const {
+    rows: bruises,
+    setRows: setBruises,
+    addRow: addBruisesRow,
+    removeRow: removeBruisesRow,
+    updateRow: updateBruisesRow,
+  } = useTableRows([{ seq: '', type: '', value: '' }], { seq: '', type: '', value: '' })
 
   const [photos, setPhotos] = useState<Photo[]>([])
 
@@ -153,16 +193,16 @@ const ReportFormScreen = () => {
     getReport(reportId).then((report) => {
       reset(getFormattedReport(report))
       if (report.maturity) {
-        sortByType(report.maturity)
-        setMaturity(report.maturity)
+        const sortedMaturity = sortByType(report.maturity)
+        setMaturity(sortedMaturity)
       }
       if (report.finishing) {
-        sortByType(report.finishing)
-        setFinishing(report.finishing)
+        const sortedFinishing = sortByType(report.finishing)
+        setFinishing(sortedFinishing)
       }
       if (report.rumenScore) {
-        sortByType(report.rumenScore)
-        setRumenScore(report.rumenScore)
+        const sortedRumenScore = sortByType(report.rumenScore)
+        setRumenScore(sortedRumenScore)
       }
       if (report.fetus) setFetus(report.fetus)
       if (report.dif) setDif(report.dif)
@@ -356,38 +396,6 @@ const ReportFormScreen = () => {
     setDif([{ seq: '', type: '', value: '' }])
     setBruises([{ seq: '', type: '', value: '' }])
     setPhotos([])
-  }
-
-  const addTableRow = (table: any[], setTable: any, threeColumns = false) => {
-    if (threeColumns) {
-      setTable([...table, { seq: '', type: '', value: '' }])
-    } else {
-      setTable([...table, { type: '', value: '' }])
-    }
-  }
-
-  const removeTableRow = (table: any[], setTable: any, index: number, threeColumns = false) => {
-    let newTable = table.filter((_, i) => i !== index)
-    if (!newTable.length) {
-      if (threeColumns) {
-        newTable = [{ seq: '', type: '', value: '' }]
-      } else {
-        newTable = [{ type: '', value: '' }]
-      }
-    }
-    setTable(newTable)
-  }
-
-  const updateTableRow = (
-    table: any[],
-    setTable: any,
-    index: number,
-    field: string,
-    value: string,
-  ) => {
-    const newTable = JSON.parse(JSON.stringify(table))
-    newTable[index][field] = value
-    setTable(newTable)
   }
 
   const renderTopBarButtons = () => {
@@ -607,9 +615,7 @@ const ReportFormScreen = () => {
                         <td>
                           <TextField
                             type="tel"
-                            onChange={(value) =>
-                              updateTableRow(maturity, setMaturity, index, 'value', value)
-                            }
+                            onChange={(value) => updateMaturityRow(index, 'value', value)}
                             value={elem.value}
                           />
                         </td>
@@ -636,9 +642,7 @@ const ReportFormScreen = () => {
                         <td>
                           <TextField
                             type="tel"
-                            onChange={(value) =>
-                              updateTableRow(finishing, setFinishing, index, 'value', value)
-                            }
+                            onChange={(value) => updateFinishingRow(index, 'value', value)}
                             value={elem.value}
                           />
                         </td>
@@ -665,9 +669,7 @@ const ReportFormScreen = () => {
                         <td>
                           <TextField
                             type="tel"
-                            onChange={(value) =>
-                              updateTableRow(rumenScore, setRumenScore, index, 'value', value)
-                            }
+                            onChange={(value) => updateRumenScoreRow(index, 'value', value)}
                             value={elem.value}
                           />
                         </td>
@@ -695,9 +697,7 @@ const ReportFormScreen = () => {
                           <td>
                             <TextField
                               type="tel"
-                              onChange={(value) =>
-                                updateTableRow(fetus, setFetus, index, 'value', value)
-                              }
+                              onChange={(value) => updateFetusRow(index, 'value', value)}
                               value={elem.value}
                             />
                           </td>
@@ -719,7 +719,7 @@ const ReportFormScreen = () => {
                     <th>Motivo</th>
                     <th>Destino</th>
                     <th>
-                      <BiPlus size={15} onClick={() => addTableRow(dif, setDif, true)} />
+                      <BiPlus size={15} onClick={addDifRow} />
                     </th>
                   </tr>
                 </thead>
@@ -729,24 +729,24 @@ const ReportFormScreen = () => {
                       <tr key={`dif-${index}`}>
                         <td>
                           <TextField
-                            onChange={(value) => updateTableRow(dif, setDif, index, 'seq', value)}
+                            onChange={(value) => updateDifRow(index, 'seq', value)}
                             value={elem.seq}
                           />
                         </td>
                         <td>
                           <TextField
-                            onChange={(value) => updateTableRow(dif, setDif, index, 'type', value)}
+                            onChange={(value) => updateDifRow(index, 'type', value)}
                             value={elem.type}
                           />
                         </td>
                         <td>
                           <TextField
-                            onChange={(value) => updateTableRow(dif, setDif, index, 'value', value)}
+                            onChange={(value) => updateDifRow(index, 'value', value)}
                             value={elem.value}
                           />
                         </td>
                         <td>
-                          <BiTrash onClick={() => removeTableRow(dif, setDif, index, true)} />
+                          <BiTrash onClick={() => removeDifRow(index)} />
                         </td>
                       </tr>
                     )
@@ -763,7 +763,7 @@ const ReportFormScreen = () => {
                     <th>Local</th>
                     <th>Origem</th>
                     <th>
-                      <BiPlus size={15} onClick={() => addTableRow(bruises, setBruises, true)} />
+                      <BiPlus size={15} onClick={addBruisesRow} />
                     </th>
                   </tr>
                 </thead>
@@ -773,32 +773,24 @@ const ReportFormScreen = () => {
                       <tr key={`bruises-${index}`}>
                         <td>
                           <TextField
-                            onChange={(value) =>
-                              updateTableRow(bruises, setBruises, index, 'seq', value)
-                            }
+                            onChange={(value) => updateBruisesRow(index, 'seq', value)}
                             value={elem.seq}
                           />
                         </td>
                         <td>
                           <TextField
-                            onChange={(value) =>
-                              updateTableRow(bruises, setBruises, index, 'type', value)
-                            }
+                            onChange={(value) => updateBruisesRow(index, 'type', value)}
                             value={elem.type}
                           />
                         </td>
                         <td>
                           <TextField
-                            onChange={(value) =>
-                              updateTableRow(bruises, setBruises, index, 'value', value)
-                            }
+                            onChange={(value) => updateBruisesRow(index, 'value', value)}
                             value={elem.value}
                           />
                         </td>
                         <td>
-                          <BiTrash
-                            onClick={() => removeTableRow(bruises, setBruises, index, true)}
-                          />
+                          <BiTrash onClick={() => removeBruisesRow(index)} />
                         </td>
                       </tr>
                     )

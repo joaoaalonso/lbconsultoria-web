@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import swal from 'sweetalert'
+import React, { useState } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -9,26 +8,16 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getEmployees, User } from '../../services/users'
 import SkeletonCard from '../../components/Card/skeleton'
+import { useEntityList } from '../../hooks/useEntityList'
 
 const EmployeeListScreen = () => {
-  const [loading, setLoading] = useState(true)
+  const { loading, data: employees } = useEntityList<User>(getEmployees)
   const [searchTerm, setSearchTerm] = useState('')
-  const [employees, setEmployees] = useState<User[]>([])
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    getEmployees()
-      .then(setEmployees)
-      .catch((e: Error) => swal('', e.message, 'error'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  const getFilteredEmployees = () => {
-    return employees.filter((employee) => {
-      return employee.name.toLowerCase().includes(searchTerm.toLowerCase())
-    })
-  }
+  const getFilteredEmployees = () =>
+    employees.filter((employee) => employee.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
     <ScreenTemplate
