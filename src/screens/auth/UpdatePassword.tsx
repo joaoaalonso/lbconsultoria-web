@@ -12,13 +12,15 @@ import TextField from '../../components/TextField'
 
 import { updatePassword } from '../../services/auth'
 import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
+import { useAuth } from '../../contexts/AuthContext'
 
-const UpdatePasswordScreen = ({ onLogin }: { onLogin: () => void }) => {
+const UpdatePasswordScreen = () => {
+  const { onLogin } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [useCnpjMask, setUseCnpjMask] = useState(false)
 
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
 
   const token = searchParams.get('token')
   const document = searchParams.get('document')
@@ -43,6 +45,7 @@ const UpdatePasswordScreen = ({ onLogin }: { onLogin: () => void }) => {
     updatePassword(token, document, password, confirmPassword)
       .then(() => swal('', 'Senha atualizada com sucesso.', 'success'))
       .then(onLogin)
+      .then(() => navigate('/'))
       .catch((err) => {
         setLoading(false)
         swal('', err?.response?.data ?? 'Link inválido ou expirado.', 'error')
