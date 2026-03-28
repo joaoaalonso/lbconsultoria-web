@@ -193,16 +193,16 @@ const ReportFormScreen = () => {
     getReport(reportId).then((report) => {
       reset(getFormattedReport(report))
       if (report.maturity) {
-        sortByType(report.maturity)
-        setMaturity(report.maturity)
+        const sortedMaturity = sortByType(report.maturity)
+        setMaturity(sortedMaturity)
       }
       if (report.finishing) {
-        sortByType(report.finishing)
-        setFinishing(report.finishing)
+        const sortedFinishing = sortByType(report.finishing)
+        setFinishing(sortedFinishing)
       }
       if (report.rumenScore) {
-        sortByType(report.rumenScore)
-        setRumenScore(report.rumenScore)
+        const sortedRumenScore = sortByType(report.rumenScore)
+        setRumenScore(sortedRumenScore)
       }
       if (report.fetus) setFetus(report.fetus)
       if (report.dif) setDif(report.dif)

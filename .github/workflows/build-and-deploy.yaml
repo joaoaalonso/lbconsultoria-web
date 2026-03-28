@@ -24,15 +24,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.REGION }}
 
-        # Para caso necessite de alguma versão específica do Node.
-        #- uses: actions/setup-node@v2
-        # with:
-        #    node-version: '14'
-
       - name: Install Dependencies
         run: |
-          node --version
-          npm ci --production
+          npm install
 
       - name: Build Static Website
         run: npm run build
