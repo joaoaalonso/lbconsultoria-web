@@ -19,6 +19,5 @@ export function usePostalCode(
       getAddressFromPostalCode(sanitized).then(onAddress)
     }
     // onAddress is intentionally excluded — callers should pass a stable reference or inline
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postalCode])
 }

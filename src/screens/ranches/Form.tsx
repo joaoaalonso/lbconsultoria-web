@@ -9,6 +9,7 @@ import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getRanch, createRanch, editRanch } from '../../services/ranches'
+import type { Ranch } from '../../types/ranch'
 import { POSTAL_CODE_MASK } from '../../utils/mask'
 import { usePostalCode } from '../../hooks/usePostalCode'
 
@@ -26,7 +27,7 @@ const RanchFormScreen = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm()
+  } = useForm<Omit<Ranch, 'id' | 'userId'>>()
 
   const watchPostalCode = watch('postalCode')
 
@@ -44,20 +45,16 @@ const RanchFormScreen = () => {
     }
   }, [ranchId, reset])
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Omit<Ranch, 'id' | 'userId'>) => {
     setSaving(true)
 
-    let handler: any = createRanch
-    let params = { userId, ...data }
-    let message = 'Propriedade cadastrado com sucesso!'
+    const base: Omit<Ranch, 'id'> = { userId: userId!, ...data }
+    const message = ranchId
+      ? 'Propriedade atualizada com sucesso!'
+      : 'Propriedade cadastrado com sucesso!'
+    const promise = ranchId ? editRanch({ id: ranchId, ...base }) : createRanch(base)
 
-    if (ranchId) {
-      handler = editRanch
-      params = { id: ranchId, userId, ...data }
-      message = 'Propriedade atualizada com sucesso!'
-    }
-
-    handler(params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => navigate(`/clientes/${userId}`))
       .catch((e: Error) => swal('', e.message, 'error'))

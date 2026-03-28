@@ -11,7 +11,7 @@ const saveToken = (token: string) => {
 
 export const login = async (document: string, password: string): Promise<void> => {
   return axios
-    .post(`${process.env.REACT_APP_API_URL}/auth/login`, {
+    .post(`${import.meta.env.VITE_API_URL}/auth/login`, {
       document,
       password,
     })
@@ -35,7 +35,7 @@ export const updatePassword = async (
   confirmPassword: string,
 ): Promise<void> => {
   return axios
-    .post(`${process.env.REACT_APP_API_URL}/auth/update-password`, {
+    .post(`${import.meta.env.VITE_API_URL}/auth/update-password`, {
       token,
       document,
       password,
@@ -50,7 +50,7 @@ export const updatePassword = async (
 }
 
 export const recoveryPassword = async (document: string): Promise<void> => {
-  return axios.post(`${process.env.REACT_APP_API_URL}/auth/recovery-password`, {
+  return axios.post(`${import.meta.env.VITE_API_URL}/auth/recovery-password`, {
     document,
   })
 }

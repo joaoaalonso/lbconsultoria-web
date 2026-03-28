@@ -1,9 +1,9 @@
 export interface AnalyticsClientSettings {
-  userID?: string
-  ranchID?: string
-  slaughterhouseID?: string
-  slaughterhouseUnitID?: string
-  sex?: string
+  userId?: string | null
+  ranchId?: string | null
+  slaughterhouseId?: string
+  slaughterhouseUnitId?: string
+  sex?: string | string[]
   fromDate?: Date
   toDate?: Date
 }
@@ -23,6 +23,11 @@ export interface AnalyticsClientResult {
 }
 
 export interface AnalyticsPerformanceSettings {
+  userId?: string | null
+  ranchId?: string | null
+  sex?: string | string[]
+  slaughterhouseId?: string | null
+  slaughterhouseUnitId?: string | null
   fromDate?: Date
   toDate?: Date
 }

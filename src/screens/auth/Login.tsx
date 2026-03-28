@@ -15,6 +15,11 @@ import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 import { login } from '../../services/auth'
 import { useAuth } from '../../contexts/AuthContext'
 
+type LoginFormValues = {
+  document: string
+  password: string
+}
+
 const LoginScreen = () => {
   const { onLogin } = useAuth()
   const navigate = useNavigate()
@@ -26,9 +31,9 @@ const LoginScreen = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<LoginFormValues>()
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginFormValues) => {
     setLoading(true)
     const { document, password } = data
     login(document, password)

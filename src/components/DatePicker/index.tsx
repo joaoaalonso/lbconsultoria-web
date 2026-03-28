@@ -1,21 +1,33 @@
 import './index.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import React from 'react'
-import { Controller, Control, FieldErrors, FieldValues } from 'react-hook-form'
-import ReactDatePicker from 'react-datepicker'
+import React, { type ComponentType } from 'react'
+import { Controller, Control, FieldErrors, FieldValues, Path } from 'react-hook-form'
+import ReactDatePickerImport from 'react-datepicker'
 
-interface DatePickerProps {
-  errors?: FieldErrors<any>
-  name: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>
+/** Vite prebundle pode expor o namespace CJS; `.default` é o DatePicker real. */
+const ReactDatePicker = (
+  typeof ReactDatePickerImport === 'function'
+    ? ReactDatePickerImport
+    : (ReactDatePickerImport as { default: ComponentType<unknown> }).default
+) as ComponentType<Record<string, unknown>>
+
+interface DatePickerProps<T extends FieldValues> {
+  errors?: FieldErrors<T>
+  name: Path<T>
+  control: Control<T>
   label?: string
   required?: boolean
   onChange?: (val: string) => void
 }
 
-function DatePicker({ label, name, errors, control, required = false }: DatePickerProps) {
+function DatePicker<T extends FieldValues>({
+  label,
+  name,
+  errors,
+  control,
+  required = false,
+}: DatePickerProps<T>) {
   const hasError = errors && name && !!errors[name]
 
   return (

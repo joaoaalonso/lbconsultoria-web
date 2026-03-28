@@ -23,6 +23,30 @@ import {
   getSlaughterhouseUnits,
 } from '../../services/slaughterhouse'
 import { Report, getReport, createReport, editReport, deleteReport } from '../../services/report'
+
+type ReportFormValues = {
+  date: Date
+  slaughterhouseId: string
+  slaughterhouseUnitId: string
+  userId: string
+  ranchId: string
+  ranchCity: string
+  numberOfAnimals: string
+  sex: Report['sex']
+  batch: string
+  breed: string
+  cattleShed: string
+  sequential: string
+  arroba: string
+  vaccineWeight: string
+  pv: string
+  pc: string
+  totalWeight: string
+  corralEvaluation: string
+  awards: string
+  penalties: string
+  comments: string
+}
 import { sortByType } from '../../utils/sort'
 import { parseNumber } from '../../utils/parser'
 import { getAvailableSex, sexIsFemale } from '../../services/reportHelpers'
@@ -155,7 +179,7 @@ const ReportFormScreen = () => {
     reset,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<ReportFormValues>({
     defaultValues: {
       date: new Date(),
       slaughterhouseId: '',
@@ -173,7 +197,10 @@ const ReportFormScreen = () => {
       vaccineWeight: '',
       pv: '',
       pc: '',
+      totalWeight: '',
       corralEvaluation: '',
+      awards: '',
+      penalties: '',
       comments: '',
     },
   })
@@ -227,13 +254,13 @@ const ReportFormScreen = () => {
     getClients().then((u) => {
       if (u.length) {
         setUsers(u)
-        !reportId && setValue('userId', `${u[0].id}`)
+        if (!reportId) setValue('userId', `${u[0].id}`)
       }
     })
     getSlaughterhouses().then((s) => {
       if (s.length) {
         setSlaughterhouses(s)
-        !reportId && setValue('slaughterhouseId', `${s[0].id}`)
+        if (!reportId) setValue('slaughterhouseId', `${s[0].id}`)
       }
     })
   }, [reportId, setValue])
@@ -285,7 +312,7 @@ const ReportFormScreen = () => {
     }
   }, [watchSlaughterhouse, setValue])
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: ReportFormValues) => {
     const input: Omit<Report, 'user' | 'ranch' | 'slaughterhouse' | 'slaughterhouseUnit'> = {
       date: data.date,
       slaughterhouseId: data.slaughterhouseId,

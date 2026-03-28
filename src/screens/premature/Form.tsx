@@ -17,6 +17,12 @@ import {
   editPremature,
   getPremature,
 } from '../../services/prematures'
+import type { Premature } from '../../types/premature'
+
+type PrematureFormValues = Omit<Omit<Premature, 'id' | 'value'>, 'comments'> & {
+  value?: string | null
+  comments?: string
+}
 
 const PrematureFormScreen = () => {
   const { prematureId } = useParams()
@@ -31,7 +37,7 @@ const PrematureFormScreen = () => {
     reset,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<PrematureFormValues>()
 
   useEffect(() => {
     if (prematureId) {
@@ -45,24 +51,22 @@ const PrematureFormScreen = () => {
     }
   }, [prematureId, reset])
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: PrematureFormValues) => {
     setSaving(true)
 
-    let handler: any = createPremature
-    let params = {
+    const payload: Omit<Premature, 'id'> = {
       ...data,
-      value: data.value ? parseNumber(data.value) : null,
-      comments: data.comments !== '' ? data.comments : null,
+      value: data.value ? parseNumber(data.value) : undefined,
+      comments: data.comments !== '' ? data.comments : undefined,
     }
-    let message = 'Cadastro realizado com sucesso!'
+    const message = prematureId
+      ? 'Cadastro atualizado com sucesso!'
+      : 'Cadastro realizado com sucesso!'
+    const promise = prematureId
+      ? editPremature({ id: prematureId, ...payload })
+      : createPremature(payload)
 
-    if (prematureId) {
-      handler = editPremature
-      params = { id: prematureId, ...params }
-      message = 'Cadastro atualizado com sucesso!'
-    }
-
-    handler(params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => navigate('/precoce'))
       .catch((e: Error) => swal('', e.message, 'error'))
@@ -100,7 +104,7 @@ const PrematureFormScreen = () => {
       backLink="/precoce"
       title={prematureId ? 'Editar cadastro' : 'Adicionar cadastro'}
       rightComponent={
-        !!prematureId ? (
+        prematureId ? (
           <BiTrash onClick={() => handleDelete(prematureId)} size={25} className="svg-button" />
         ) : (
           <div></div>

@@ -16,9 +16,9 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
     return percentage.toFixed(0)
   }
 
-  report.maturity && (report.maturity = sortByType(report.maturity))
-  report.finishing && (report.finishing = sortByType(report.finishing))
-  report.rumenScore && (report.rumenScore = sortByType(report.rumenScore))
+  const maturity = report.maturity ? sortByType(report.maturity) : undefined
+  const finishing = report.finishing ? sortByType(report.finishing) : undefined
+  const rumenScores = report.rumenScore ? sortByType(report.rumenScore) : undefined
 
   const vaccineWeight = report.vaccineWeight / 100
   const vaccinePrice = ((report.arroba || 0) / (100 * getArroba())) * vaccineWeight
@@ -39,11 +39,11 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
           <p>
             <b>MATURIDADE</b>
           </p>
-          {report.maturity
-            ?.filter((maturity) => maturity.value !== '0')
-            .map((maturity) => (
-              <p>
-                {maturity.type} DENTES - {calculatePercentage(maturity.value)}% ({maturity.value})
+          {maturity
+            ?.filter((m) => m.value !== '0')
+            .map((m) => (
+              <p key={`m-${m.type}-${m.value}`}>
+                {m.type} DENTES - {calculatePercentage(m.value)}% ({m.value})
               </p>
             ))}
         </div>
@@ -51,12 +51,11 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
           <p>
             <b>ACABAMENTO</b>
           </p>
-          {report.finishing
-            ?.filter((finishing) => finishing.value !== '0')
-            .map((finishing) => (
-              <p>
-                {getFinishingName(finishing.type)} - {calculatePercentage(finishing.value)}% (
-                {finishing.value})
+          {finishing
+            ?.filter((f) => f.value !== '0')
+            .map((f) => (
+              <p key={`f-${f.type}-${f.value}`}>
+                {getFinishingName(f.type)} - {calculatePercentage(f.value)}% ({f.value})
               </p>
             ))}
         </div>
@@ -64,11 +63,11 @@ const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
           <p>
             <b>ESCORE RUMINAL</b>
           </p>
-          {report.rumenScore
-            ?.filter((rumenScore) => rumenScore.value !== '0')
-            .map((rumenScore) => (
-              <p>
-                {rumenScore.type} - {calculatePercentage(rumenScore.value)}% ({rumenScore.value})
+          {rumenScores
+            ?.filter((r) => r.value !== '0')
+            .map((r) => (
+              <p key={`r-${r.type}-${r.value}`}>
+                {r.type} - {calculatePercentage(r.value)}% ({r.value})
               </p>
             ))}
         </div>

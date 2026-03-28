@@ -13,6 +13,7 @@ import {
   editSlaughterhouse,
   getSlaughterhouse,
 } from '../../services/slaughterhouse'
+import type { Slaughterhouse } from '../../types/slaughterhouse'
 
 const SlaughterhouseFormScreen = () => {
   const { slaughterhouseId } = useParams()
@@ -26,7 +27,7 @@ const SlaughterhouseFormScreen = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm()
+  } = useForm<Omit<Slaughterhouse, 'id'>>()
 
   useEffect(() => {
     if (slaughterhouseId) {
@@ -37,20 +38,17 @@ const SlaughterhouseFormScreen = () => {
     }
   }, [slaughterhouseId, reset])
 
-  function onSubmit(data: any) {
+  function onSubmit(data: Omit<Slaughterhouse, 'id'>) {
     setSaving(true)
 
-    let handler: any = createSlaughterhouse
-    let params = data
-    let message = 'Abatedouro cadastrado com sucesso!'
+    const message = slaughterhouseId
+      ? 'Abatedouro atualizado com sucesso!'
+      : 'Abatedouro cadastrado com sucesso!'
+    const promise = slaughterhouseId
+      ? editSlaughterhouse({ id: slaughterhouseId, ...data })
+      : createSlaughterhouse(data)
 
-    if (slaughterhouseId) {
-      handler = editSlaughterhouse
-      params = { id: slaughterhouseId, ...data }
-      message = 'Abatedouro atualizado com sucesso!'
-    }
-
-    handler(params)
+    promise
       .then(() => swal('', message, 'success'))
       .then(() => navigate(`/abatedouros`))
       .catch((e: Error) => swal('', e.message, 'error'))

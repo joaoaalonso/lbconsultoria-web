@@ -3,7 +3,7 @@ import axios from 'axios'
 import { getToken, logout } from './auth'
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
 })
 
 apiClient.interceptors.request.use((config) => {

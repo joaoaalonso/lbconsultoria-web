@@ -1,101 +1,107 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { Routes as ReactRoutes, Route, Navigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthContext'
+import Loading from './components/Loading'
 
-import LoginScreen from './screens/auth/Login'
-import UpdatePasswordScreen from './screens/auth/UpdatePassword'
-import RecoveryPasswordScreen from './screens/auth/RecoveryPassword'
+const LoginScreen = lazy(() => import('./screens/auth/Login'))
+const UpdatePasswordScreen = lazy(() => import('./screens/auth/UpdatePassword'))
+const RecoveryPasswordScreen = lazy(() => import('./screens/auth/RecoveryPassword'))
 
-import EmployeeListScreen from './screens/employee/List'
-import EmployeeFormScreen from './screens/employee/Form'
+const EmployeeListScreen = lazy(() => import('./screens/employee/List'))
+const EmployeeFormScreen = lazy(() => import('./screens/employee/Form'))
 
-import ClientListScreen from './screens/clients/List'
-import ClientFormScreen from './screens/clients/Form'
-import ClientDetailsScreen from './screens/clients/Details'
+const ClientListScreen = lazy(() => import('./screens/clients/List'))
+const ClientFormScreen = lazy(() => import('./screens/clients/Form'))
+const ClientDetailsScreen = lazy(() => import('./screens/clients/Details'))
 
-import RanchFormScreen from './screens/ranches/Form'
+const RanchFormScreen = lazy(() => import('./screens/ranches/Form'))
 
-import SlaugtherhouseListScreen from './screens/slaughterhouse/List'
-import SlaugtherhouseFormScreen from './screens/slaughterhouse/Form'
-import SlaugtherhouseDetailsScreen from './screens/slaughterhouse/Details'
-import SlaughterhouseUnitFormScreen from './screens/slaughterhouse/UnitForm'
+const SlaugtherhouseListScreen = lazy(() => import('./screens/slaughterhouse/List'))
+const SlaugtherhouseFormScreen = lazy(() => import('./screens/slaughterhouse/Form'))
+const SlaugtherhouseDetailsScreen = lazy(() => import('./screens/slaughterhouse/Details'))
+const SlaughterhouseUnitFormScreen = lazy(() => import('./screens/slaughterhouse/UnitForm'))
 
-import ReportListScreen from './screens/reports/List'
-import ReportFormScreen from './screens/reports/Form'
-import ReportViewScreen from './screens/reports/View'
+const ReportListScreen = lazy(() => import('./screens/reports/List'))
+const ReportFormScreen = lazy(() => import('./screens/reports/Form'))
+const ReportViewScreen = lazy(() => import('./screens/reports/View'))
 
-import PrematureListScreen from './screens/premature/List'
-import PrematureFormScreen from './screens/premature/Form'
+const PrematureListScreen = lazy(() => import('./screens/premature/List'))
+const PrematureFormScreen = lazy(() => import('./screens/premature/Form'))
 
-import AnalyticsScreen from './screens/analytics'
-import AnalyticsClientScreen from './screens/analytics/client'
-import AnalyticsPerformanceScreen from './screens/analytics/performance'
+const AnalyticsScreen = lazy(() => import('./screens/analytics'))
+const AnalyticsClientScreen = lazy(() => import('./screens/analytics/client'))
+const AnalyticsPerformanceScreen = lazy(() => import('./screens/analytics/performance'))
 
 const Routes = () => {
   const { isLoggedIn } = useAuth()
 
   return (
-    <ReactRoutes>
-      <Route path="/alterar-senha" element={<UpdatePasswordScreen />} />
-      <Route path="/recuperar-senha" element={<RecoveryPasswordScreen />} />
+    <Suspense fallback={<Loading loading />}>
+      <ReactRoutes>
+        <Route path="/alterar-senha" element={<UpdatePasswordScreen />} />
+        <Route path="/recuperar-senha" element={<RecoveryPasswordScreen />} />
 
-      {!!isLoggedIn && (
-        <>
-          <Route path="/funcionarios" element={<EmployeeListScreen />} />
-          <Route path="/funcionarios/adicionar" element={<EmployeeFormScreen />} />
-          <Route path="/funcionarios/:userId" element={<EmployeeFormScreen />} />
+        {!!isLoggedIn && (
+          <>
+            <Route path="/funcionarios" element={<EmployeeListScreen />} />
+            <Route path="/funcionarios/adicionar" element={<EmployeeFormScreen />} />
+            <Route path="/funcionarios/:userId" element={<EmployeeFormScreen />} />
 
-          <Route path="/clientes" element={<ClientListScreen />} />
-          <Route path="/clientes/adicionar" element={<ClientFormScreen />} />
-          <Route path="/clientes/:userId" element={<ClientDetailsScreen />} />
-          <Route path="/clientes/:userId/editar" element={<ClientFormScreen />} />
+            <Route path="/clientes" element={<ClientListScreen />} />
+            <Route path="/clientes/adicionar" element={<ClientFormScreen />} />
+            <Route path="/clientes/:userId" element={<ClientDetailsScreen />} />
+            <Route path="/clientes/:userId/editar" element={<ClientFormScreen />} />
 
-          <Route path="/clientes/:userId/propriedades" element={<RanchFormScreen />} />
-          <Route path="/clientes/:userId/propriedades/:ranchId" element={<RanchFormScreen />} />
+            <Route path="/clientes/:userId/propriedades" element={<RanchFormScreen />} />
+            <Route path="/clientes/:userId/propriedades/:ranchId" element={<RanchFormScreen />} />
 
-          <Route path="/abatedouros" element={<SlaugtherhouseListScreen />} />
-          <Route path="/abatedouros/adicionar" element={<SlaugtherhouseFormScreen />} />
-          <Route path="/abatedouros/:slaughterhouseId" element={<SlaugtherhouseDetailsScreen />} />
-          <Route
-            path="/abatedouros/:slaughterhouseId/editar"
-            element={<SlaugtherhouseFormScreen />}
-          />
+            <Route path="/abatedouros" element={<SlaugtherhouseListScreen />} />
+            <Route path="/abatedouros/adicionar" element={<SlaugtherhouseFormScreen />} />
+            <Route
+              path="/abatedouros/:slaughterhouseId"
+              element={<SlaugtherhouseDetailsScreen />}
+            />
+            <Route
+              path="/abatedouros/:slaughterhouseId/editar"
+              element={<SlaugtherhouseFormScreen />}
+            />
 
-          <Route
-            path="/abatedouros/:slaughterhouseId/unidades/adicionar"
-            element={<SlaughterhouseUnitFormScreen />}
-          />
-          <Route
-            path="/abatedouros/:slaughterhouseId/unidades/:slaughterhouseUnitId/editar"
-            element={<SlaughterhouseUnitFormScreen />}
-          />
+            <Route
+              path="/abatedouros/:slaughterhouseId/unidades/adicionar"
+              element={<SlaughterhouseUnitFormScreen />}
+            />
+            <Route
+              path="/abatedouros/:slaughterhouseId/unidades/:slaughterhouseUnitId/editar"
+              element={<SlaughterhouseUnitFormScreen />}
+            />
 
-          <Route path="/relatorios" element={<ReportListScreen />} />
-          <Route path="/relatorios/adicionar" element={<ReportFormScreen />} />
-          <Route path="/relatorios/:reportId" element={<ReportFormScreen />} />
+            <Route path="/relatorios" element={<ReportListScreen />} />
+            <Route path="/relatorios/adicionar" element={<ReportFormScreen />} />
+            <Route path="/relatorios/:reportId" element={<ReportFormScreen />} />
 
-          <Route path="/precoce" element={<PrematureListScreen />} />
-          <Route path="/precoce/adicionar" element={<PrematureFormScreen />} />
-          <Route path="/precoce/:prematureId" element={<PrematureFormScreen />} />
+            <Route path="/precoce" element={<PrematureListScreen />} />
+            <Route path="/precoce/adicionar" element={<PrematureFormScreen />} />
+            <Route path="/precoce/:prematureId" element={<PrematureFormScreen />} />
 
-          <Route path="/graficos" element={<AnalyticsScreen />} />
-          <Route path="/graficos/clientes" element={<AnalyticsClientScreen />} />
-          <Route path="/graficos/desempenho" element={<AnalyticsPerformanceScreen />} />
+            <Route path="/graficos" element={<AnalyticsScreen />} />
+            <Route path="/graficos/clientes" element={<AnalyticsClientScreen />} />
+            <Route path="/graficos/desempenho" element={<AnalyticsPerformanceScreen />} />
 
-          <Route path="/relatorio/:reportId" element={<ReportViewScreen />} />
+            <Route path="/relatorio/:reportId" element={<ReportViewScreen />} />
 
-          <Route path="*" element={<Navigate to="/relatorios" />} />
-        </>
-      )}
+            <Route path="*" element={<Navigate to="/relatorios" />} />
+          </>
+        )}
 
-      {!isLoggedIn && (
-        <>
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </>
-      )}
-    </ReactRoutes>
+        {!isLoggedIn && (
+          <>
+            <Route path="/login" element={<LoginScreen />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        )}
+      </ReactRoutes>
+    </Suspense>
   )
 }
 

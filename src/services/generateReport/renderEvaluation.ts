@@ -15,7 +15,7 @@ const formatRow = (
     .map((d) => {
       if (d.value === '0') return null
       const percentil = formatPercentage((+d.value / report.numberOfAnimals) * 100)
-      const typeName = !!getTypeName ? getTypeName(d.type) : d.type
+      const typeName = getTypeName ? getTypeName(d.type) : d.type
       return `${typeName}${sufix} - ${percentil} (${d.value})`
     })
     .filter(Boolean)
@@ -72,9 +72,9 @@ export const renderEvaluation = (report: Report) => {
   const finishing = formatRow(report.finishing || [], report, '', getFinishingName)
   const rumenScore = formatRow(report.rumenScore || [], report)
 
-  const rows: any = []
+  const rows: string[][] = []
   for (let i = 0; i < 5; i++) {
-    const row: any = []
+    const row: string[] = []
     if (!maturity[i] && !finishing[i] && !rumenScore[i]) continue
     row.push(maturity[i] || '')
     row.push(finishing[i] || '')

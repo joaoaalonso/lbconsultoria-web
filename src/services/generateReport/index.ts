@@ -1,3 +1,5 @@
+import type { Content, TDocumentDefinitions } from 'pdfmake/interfaces'
+
 import { formatDate } from '../../utils/formatter'
 import { getReport, Report } from '../report'
 
@@ -13,7 +15,7 @@ import { renderEvaluation } from './renderEvaluation'
 import { renderCorralEvaluation } from './renderCorralEvaluation'
 import { getPhotosProperties, renderPhotos } from './renderPhotos'
 
-export const generateReportStructure = async (report: Report): Promise<any> => {
+export const generateReportStructure = async (report: Report): Promise<TDocumentDefinitions> => {
   const sections = [
     renderHeader,
     renderInfo,
@@ -29,9 +31,9 @@ export const generateReportStructure = async (report: Report): Promise<any> => {
   ]
 
   async function renderSections() {
-    const processedSections: any = []
+    const processedSections: Content[] = []
     for (let i = 0; i < sections.length; i++) {
-      processedSections.push(await sections[i](report))
+      processedSections.push((await sections[i](report)) as Content)
     }
     return processedSections
   }
@@ -64,7 +66,7 @@ export const downloadReportPDF = async (report: Report): Promise<void> => {
   const pdfMake: any = await import('pdfmake/build/pdfmake')
   const { vfs } = await import('./vfs')
 
-  const fileName = `${docDefinitions.info.title}.pdf`
+  const fileName = `${docDefinitions.info?.title ?? 'relatorio'}.pdf`
   const pdf = pdfMake.createPdf(docDefinitions, null, null, vfs)
 
   if (window.innerWidth >= 800) {

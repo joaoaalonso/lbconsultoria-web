@@ -1,7 +1,7 @@
 import './Chart.css'
 
-import React from 'react'
-import { Chart as ChartComponent, AxisOptions, UserSerie } from 'react-charts'
+import React, { useEffect, useRef } from 'react'
+import { Chart as ChartJS } from 'chart.js/auto'
 
 import { getSexLabel } from '../../../services/reportHelpers'
 import { AnalyticsPerformanceResult } from '../../../services/analytics'
@@ -10,77 +10,55 @@ interface ChartProps {
   analytics: AnalyticsPerformanceResult[]
 }
 
-type SerieData = {
-  date: string
-  count: number
+const COLOR_PALETTE: Record<string, string> = {
+  N: '#ff19d5',
+  V: '#ff2b9f',
+  MI: '#ff6a70',
+  MC: '#ffa151',
+  'MI/MC': '#ffd04e',
 }
 
 const Chart: React.FC<ChartProps> = ({ analytics }) => {
-  let data: UserSerie<SerieData>[] = []
-  const rawData: any = {}
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const chartRef = useRef<ChartJS | null>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const [_, analytic] of Object.entries(analytics)) {
-    for (const key in analytic) {
-      const label = getSexLabel(key)
-      if (!label) continue
-      if (!rawData[key]) {
-        rawData[key] = {
-          label,
-          data: [],
-        }
-      }
-      rawData[key].data.push({ date: analytic.date, count: analytic[key] })
-    }
-  }
-  data = Object.entries(rawData).map<UserSerie<SerieData>>((arr: any) => arr[1])
+  useEffect(() => {
+    if (!canvasRef.current) return
 
-  const primaryAxis = React.useMemo(
-    (): AxisOptions<SerieData> => ({
-      getValue: (datum) => datum.date,
-    }),
-    [],
-  )
+    const labels = analytics.map((a) => a.date)
 
-  const secondaryAxes = React.useMemo(
-    (): AxisOptions<SerieData>[] => [
-      {
-        getValue: (datum) => datum.count,
-        min: 0,
-        stacked: true,
+    const sexKeys = Object.keys(analytics[0] || {}).filter((k) => k !== 'date')
+
+    const datasets = sexKeys.map((key) => ({
+      label: getSexLabel(key) || key,
+      data: analytics.map((a) => parseInt(a[key]) || 0),
+      backgroundColor: COLOR_PALETTE[key] || '#cccccc',
+      stack: 'combined',
+    }))
+
+    chartRef.current = new ChartJS(canvasRef.current, {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, min: 0 },
+        },
       },
-    ],
-    [],
-  )
+    })
 
-  const getSeriesStyle = React.useCallback((series: { label: string }) => {
-    const colorPalette = {
-      Novilha: '#ff19d5',
-      Vaca: '#ff2b9f',
-      'Macho inteiro': '#ff6a70',
-      'Macho castrado': '#ffa151',
-      'Macho inteiro/castrado': '#ffd04e',
+    return () => {
+      chartRef.current?.destroy()
+      chartRef.current = null
     }
-
-    return {
-      fill: (colorPalette as Record<string, string>)[series.label],
-    }
-  }, [])
+  }, [analytics])
 
   return (
-    <>
-      <div id="chart-wrapper" className="chart-wrapper">
-        <ChartComponent
-          options={{
-            data,
-            primaryAxis,
-            secondaryAxes,
-            getSeriesStyle,
-            defaultColors: ['#ff19d5'],
-          }}
-        />
-      </div>
-    </>
+    <div id="chart-wrapper" className="chart-wrapper">
+      <canvas ref={canvasRef} />
+    </div>
   )
 }
 
