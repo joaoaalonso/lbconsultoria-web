@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import swal from 'sweetalert'
+import React, { useState } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -9,26 +8,16 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getClients, User } from '../../services/users'
 import SkeletonCard from '../../components/Card/skeleton'
+import { useEntityList } from '../../hooks/useEntityList'
 
 const ClientListScreen = () => {
-  const [loading, setLoading] = useState(true)
+  const { loading, data: clients } = useEntityList<User>(getClients)
   const [searchTerm, setSearchTerm] = useState('')
-  const [clients, setClients] = useState<User[]>([])
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    getClients()
-      .then(setClients)
-      .catch((e: Error) => swal('', e.message, 'error'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  const getFilteredClients = () => {
-    return clients.filter((client) => {
-      return client.name.toLowerCase().includes(searchTerm.toLowerCase())
-    })
-  }
+  const getFilteredClients = () =>
+    clients.filter((client) => client.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
     <ScreenTemplate

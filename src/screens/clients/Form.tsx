@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,9 +9,9 @@ import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { recoveryPassword } from '../../services/auth'
-import { getAddressFromPostalCode } from '../../services/postalCode'
 import { createClient, editClient, getClient } from '../../services/users'
 import { CELLPHONE_MASK, CNPJ_MASK, CPF_MASK, PHONE_MASK, POSTAL_CODE_MASK } from '../../utils/mask'
+import { usePostalCode } from '../../hooks/usePostalCode'
 
 const ClientFormScreen = () => {
   const { userId } = useParams()
@@ -44,26 +44,12 @@ const ClientFormScreen = () => {
 
   const watchPostalCode = watch('postalCode')
 
-  const handlePostalCodeChange = useCallback(
-    (postalCode: string) => {
-      const sanitizedPostalCode = postalCode.replace('_', '').replace('-', '')
-      if (sanitizedPostalCode.length === 8) {
-        getAddressFromPostalCode(sanitizedPostalCode).then((address) => {
-          setValue('city', address.city)
-          setValue('state', address.state)
-          setValue('streetName', address.streetName)
-          setValue('neighborhood', address.neighborhood)
-        })
-      }
-    },
-    [setValue],
-  )
-
-  useEffect(() => {
-    if (watchPostalCode) {
-      handlePostalCodeChange(watchPostalCode)
-    }
-  }, [watchPostalCode, handlePostalCodeChange])
+  usePostalCode(watchPostalCode, (address) => {
+    setValue('city', address.city)
+    setValue('state', address.state)
+    setValue('streetName', address.streetName)
+    setValue('neighborhood', address.neighborhood)
+  })
 
   const handlePasswordEmail = async (document: string) => {
     return swal({

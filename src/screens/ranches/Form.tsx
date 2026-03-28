@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,9 +8,9 @@ import Loading from '../../components/Loading'
 import TextField from '../../components/TextField'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { getAddressFromPostalCode } from '../../services/postalCode'
 import { getRanch, createRanch, editRanch } from '../../services/ranches'
 import { POSTAL_CODE_MASK } from '../../utils/mask'
+import { usePostalCode } from '../../hooks/usePostalCode'
 
 const RanchFormScreen = () => {
   const navigate = useNavigate()
@@ -30,18 +30,10 @@ const RanchFormScreen = () => {
 
   const watchPostalCode = watch('postalCode')
 
-  const handlePostalCodeChange = useCallback(
-    (postalCode: string) => {
-      const sanitizedPostalCode = postalCode.replace('_', '').replace('-', '')
-      if (sanitizedPostalCode.length === 8) {
-        getAddressFromPostalCode(sanitizedPostalCode).then((address) => {
-          setValue('city', address.city)
-          setValue('state', address.state)
-        })
-      }
-    },
-    [setValue],
-  )
+  usePostalCode(watchPostalCode, (address) => {
+    setValue('city', address.city)
+    setValue('state', address.state)
+  })
 
   useEffect(() => {
     if (ranchId) {
@@ -51,12 +43,6 @@ const RanchFormScreen = () => {
         .finally(() => setLoading(false))
     }
   }, [ranchId, reset])
-
-  useEffect(() => {
-    if (watchPostalCode) {
-      handlePostalCodeChange(watchPostalCode)
-    }
-  }, [watchPostalCode, handlePostalCodeChange])
 
   const onSubmit = (data: any) => {
     setSaving(true)

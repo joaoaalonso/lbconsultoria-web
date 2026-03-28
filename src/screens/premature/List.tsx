@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -7,42 +7,33 @@ import ScreenTemplate from '../../components/ScreenTemplate'
 
 import { getPrematures, Premature } from '../../services/prematures'
 import SkeletonPrematureCard from '../../components/PrematureCard/skeleton'
+import { useEntityList } from '../../hooks/useEntityList'
 
 const PrematureListScreen = () => {
-    const [loading, setLoading] = useState(true)
-    const [prematures, setPrematures] = useState<Premature[]>([])
-    
-    const navigate = useNavigate()
+  const { loading, data: prematures } = useEntityList<Premature>(getPrematures)
 
-    useEffect(() => {
-        getPrematures()
-            .then(setPrematures)
-            .finally(() => setLoading(false))
-    }, [])
-    
-    return (
-        <ScreenTemplate
-            title='Precoce'
-            noBackground
-            rightComponent={
-                <BiPlus
-                    size={25}
-                    className='svg-button'
-                    onClick={() => navigate('/precoce/adicionar')}
-                />
-            }
-        >
-            <>
-                {!loading && !prematures.length && <p>Nenhum cadastro</p>}
-                {loading && [...Array(15)].map((item, i) => <SkeletonPrematureCard key={`skeleton-${i}`} />)}
-                {prematures.map(premature => (
-                    <Link key={`premature-${premature.id}`} to={`/precoce/${premature.id}`}>
-                        <PrematureCard premature={premature} />
-                    </Link>
-                ))}
-            </>
-        </ScreenTemplate>
-    )
+  const navigate = useNavigate()
+
+  return (
+    <ScreenTemplate
+      title="Precoce"
+      noBackground
+      rightComponent={
+        <BiPlus size={25} className="svg-button" onClick={() => navigate('/precoce/adicionar')} />
+      }
+    >
+      <>
+        {!loading && !prematures.length && <p>Nenhum cadastro</p>}
+        {loading &&
+          [...Array(15)].map((item, i) => <SkeletonPrematureCard key={`skeleton-${i}`} />)}
+        {prematures.map((premature) => (
+          <Link key={`premature-${premature.id}`} to={`/precoce/${premature.id}`}>
+            <PrematureCard premature={premature} />
+          </Link>
+        ))}
+      </>
+    </ScreenTemplate>
+  )
 }
 
 export default PrematureListScreen
