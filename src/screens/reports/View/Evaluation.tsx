@@ -7,113 +7,133 @@ import { getArroba } from '../../../services/settings'
 import { getFinishingName } from '../../../services/reportHelpers'
 
 type ReportEvaluationProps = {
-    report: Report
+  report: Report
 }
 
 const ReportEvaluation: React.FC<ReportEvaluationProps> = ({ report }) => {
-    const calculatePercentage = (value: string): string => {
-        const percentage = (+value / report.numberOfAnimals) * 100
-        return percentage.toFixed(0)
-    }
+  const calculatePercentage = (value: string): string => {
+    const percentage = (+value / report.numberOfAnimals) * 100
+    return percentage.toFixed(0)
+  }
 
+  report.maturity && sortByType(report.maturity)
+  report.finishing && sortByType(report.finishing)
+  report.rumenScore && sortByType(report.rumenScore)
 
-    report.maturity && sortByType(report.maturity)
-    report.finishing && sortByType(report.finishing)
-    report.rumenScore && sortByType(report.rumenScore)
+  const vaccineWeight = report.vaccineWeight / 100
+  const vaccinePrice = ((report.arroba || 0) / (100 * getArroba())) * vaccineWeight
 
-    const vaccineWeight = report.vaccineWeight / 100
-    const vaccinePrice = (report.arroba || 0) / (100 * getArroba()) * vaccineWeight
+  const filterData = (data: { seq: string; type: string; value: string }) => {
+    return data.seq && data.type && data.value
+  }
 
-    const filterData = (data) => {
-        return data.seq && data.type && data.value
-    }
+  const dif = report.dif?.filter(filterData)
+  const bruises = report.bruises?.filter(filterData)
 
-    const dif = report.dif?.filter(filterData)
-    const bruises = report.bruises?.filter(filterData)
+  return (
+    <div className="section">
+      <div className="section-title">AVALIAÇÃO DE ABATE</div>
 
-    return (
-        <div className="section">
-            <div className="section-title">
-                AVALIAÇÃO DE ABATE
-            </div>
-
-            <div className='section-content'>
-                <div className='column'>
-                    <p><b>MATURIDADE</b></p>
-                    {report.maturity?.filter(maturity => maturity.value !== '0').map(maturity => (
-                        <p>{maturity.type} DENTES - {calculatePercentage(maturity.value)}% ({maturity.value})</p>
-                    ))}
-                </div>
-                <div className='column'>
-                    <p><b>ACABAMENTO</b></p>
-                    {report.finishing?.filter(finishing => finishing.value !== '0').map(finishing => (
-                        <p>{getFinishingName(finishing.type)} - {calculatePercentage(finishing.value)}% ({finishing.value})</p>
-                    ))}
-                </div>
-                <div className='column'>
-                    <p><b>ESCORE RUMINAL</b></p>
-                    {report.rumenScore?.filter(rumenScore => rumenScore.value !== '0').map(rumenScore => (
-                        <p>{rumenScore.type} - {calculatePercentage(rumenScore.value)}% ({rumenScore.value})</p>
-                    ))}
-                </div>
-            </div>
-            
-            {!!report.vaccineWeight && (
-                <div className='section-content'>
-                    <div className='column'>
-                        <p>PESO DE VACINA: {formatNumber(vaccineWeight)}KG/CBÇ</p>
-                    </div>
-                    <div className='column' style={{flex: 2}}>
-                        <p>R$ {formatNumber(vaccinePrice)}/CBÇ</p>
-                    </div>
-                </div>
-            )}
-
-            {!!dif?.length && (
-                <div className='section-content'>
-                    <table className='section-table'>
-                        <tr>
-                            <th colSpan={3}><b>DIF</b></th>
-                        </tr>
-                        <tr>
-                            <th>SEQUENCIAL</th>
-                            <th>MOTIVO</th>
-                            <th>DESTINO</th>
-                        </tr>
-                        {dif.map(dif => (
-                            <tr>
-                                <td>{dif.seq}</td>
-                                <td>{dif.type.toLocaleUpperCase()}</td>
-                                <td>{dif.value.toLocaleUpperCase()}</td>
-                            </tr>                            
-                        ))}
-                    </table>
-                </div>
-            )}
-
-            {!!bruises?.length && (
-                <div className='section-content'>
-                    <table className='section-table'>
-                        <tr>
-                            <th colSpan={3}><b>HEMATOMAS</b></th>
-                        </tr>
-                        <tr>
-                            <th>SEQUENCIAL</th>
-                            <th>LOCAL</th>
-                            <th>ORIGEM</th>
-                        </tr>
-                        {bruises.map(bruise => (
-                            <tr>
-                                <td>{bruise.seq}</td>
-                                <td>{bruise.type.toLocaleUpperCase()}</td>
-                                <td>{bruise.value.toLocaleUpperCase()}</td>
-                            </tr>                            
-                        ))}
-                    </table>
-                </div>
-            )}
+      <div className="section-content">
+        <div className="column">
+          <p>
+            <b>MATURIDADE</b>
+          </p>
+          {report.maturity
+            ?.filter((maturity) => maturity.value !== '0')
+            .map((maturity) => (
+              <p>
+                {maturity.type} DENTES - {calculatePercentage(maturity.value)}% ({maturity.value})
+              </p>
+            ))}
         </div>
-    )   
+        <div className="column">
+          <p>
+            <b>ACABAMENTO</b>
+          </p>
+          {report.finishing
+            ?.filter((finishing) => finishing.value !== '0')
+            .map((finishing) => (
+              <p>
+                {getFinishingName(finishing.type)} - {calculatePercentage(finishing.value)}% (
+                {finishing.value})
+              </p>
+            ))}
+        </div>
+        <div className="column">
+          <p>
+            <b>ESCORE RUMINAL</b>
+          </p>
+          {report.rumenScore
+            ?.filter((rumenScore) => rumenScore.value !== '0')
+            .map((rumenScore) => (
+              <p>
+                {rumenScore.type} - {calculatePercentage(rumenScore.value)}% ({rumenScore.value})
+              </p>
+            ))}
+        </div>
+      </div>
+
+      {!!report.vaccineWeight && (
+        <div className="section-content">
+          <div className="column">
+            <p>PESO DE VACINA: {formatNumber(vaccineWeight)}KG/CBÇ</p>
+          </div>
+          <div className="column" style={{ flex: 2 }}>
+            <p>R$ {formatNumber(vaccinePrice)}/CBÇ</p>
+          </div>
+        </div>
+      )}
+
+      {!!dif?.length && (
+        <div className="section-content">
+          <table className="section-table">
+            <tr>
+              <th colSpan={3}>
+                <b>DIF</b>
+              </th>
+            </tr>
+            <tr>
+              <th>SEQUENCIAL</th>
+              <th>MOTIVO</th>
+              <th>DESTINO</th>
+            </tr>
+            {dif.map((dif) => (
+              <tr>
+                <td>{dif.seq}</td>
+                <td>{dif.type.toLocaleUpperCase()}</td>
+                <td>{dif.value.toLocaleUpperCase()}</td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      )}
+
+      {!!bruises?.length && (
+        <div className="section-content">
+          <table className="section-table">
+            <tr>
+              <th colSpan={3}>
+                <b>HEMATOMAS</b>
+              </th>
+            </tr>
+            <tr>
+              <th>SEQUENCIAL</th>
+              <th>LOCAL</th>
+              <th>ORIGEM</th>
+            </tr>
+            {bruises.map((bruise) => (
+              <tr>
+                <td>{bruise.seq}</td>
+                <td>{bruise.type.toLocaleUpperCase()}</td>
+                <td>{bruise.value.toLocaleUpperCase()}</td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default ReportEvaluation

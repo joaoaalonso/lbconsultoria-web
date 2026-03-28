@@ -1,6 +1,7 @@
 import './index.css'
 
 import React, { useState, useEffect } from 'react'
+import swal from 'sweetalert'
 import { useParams } from 'react-router-dom'
 
 import ReportFetus from './Fetus'
@@ -19,41 +20,39 @@ import Loading from '../../../components/Loading'
 import { getReport, Report } from '../../../services/report'
 
 const ReportViewScreen = () => {
-    const [report, setReport] = useState<Report>()
+  const [report, setReport] = useState<Report>()
 
-    const { reportId } = useParams()
+  const { reportId } = useParams()
 
-    useEffect(() => {
-        if (reportId) {
-            getReport(reportId)
-                .then(setReport)
-                .catch(e => swal('', e.message, 'error'))
-        }
-    }, [reportId])
-
-    if (!report) {
-        return (
-            <Loading loading={true} text='Carregando relatório...' />
-        )
+  useEffect(() => {
+    if (reportId) {
+      getReport(reportId)
+        .then(setReport)
+        .catch((e: Error) => swal('', e.message, 'error'))
     }
-    
-    return (
-        <div className="report-view">
-            <div>
-                <ReportHeader report={report} />
-                <ReportInformation report={report} />
-                <ReportCorralEvaluation report={report} />
-                <ReportWeights report={report} />
-                <ReportEvaluation report={report} />
-                <ReportAwards report={report} />
-                <ReportPenalties report={report} />
-                <ReportFetus report={report} />
-                <ReportComments report={report} />
-                <Signature />
-                <ReportPhotos report={report} />
-            </div>
-        </div>
-    )
+  }, [reportId])
+
+  if (!report) {
+    return <Loading loading={true} text="Carregando relatório..." />
+  }
+
+  return (
+    <div className="report-view">
+      <div>
+        <ReportHeader report={report} />
+        <ReportInformation report={report} />
+        <ReportCorralEvaluation report={report} />
+        <ReportWeights report={report} />
+        <ReportEvaluation report={report} />
+        <ReportAwards report={report} />
+        <ReportPenalties report={report} />
+        <ReportFetus report={report} />
+        <ReportComments report={report} />
+        <Signature />
+        <ReportPhotos report={report} />
+      </div>
+    </div>
+  )
 }
 
 export default ReportViewScreen

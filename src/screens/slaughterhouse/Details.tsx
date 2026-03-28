@@ -8,181 +8,188 @@ import Loading from '../../components/Loading'
 import ReportCard from '../../components/ReportCard'
 import ScreenTemplate from '../../components/ScreenTemplate'
 
-import { 
-    deleteSlaughterhouse, 
-    getSlaughterhouse, 
-    getSlaughterhouseUnits, 
-    deleteSlaughterhouseUnit,
-    Slaughterhouse, 
-    SlaughterhouseUnit
+import {
+  deleteSlaughterhouse,
+  getSlaughterhouse,
+  getSlaughterhouseUnits,
+  deleteSlaughterhouseUnit,
+  Slaughterhouse,
+  SlaughterhouseUnit,
 } from '../../services/slaughterhouse'
 import { downloadReportPDFById } from '../../services/generateReport'
 import { getReportsBySlaughterhouse, Report } from '../../services/report'
 
 const SlaughterhouseDetailsScreen = () => {
-    const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
-    const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>()
-    const [reports, setReports] = useState<Report[]>([])
-    const [loading, setLoading] = useState(true)
-    const [loadingReports, setLoadingReports] = useState(true)
-    const [generatingPdf, setGeneratingPdf] = useState(false)
+  const [units, setUnits] = useState<SlaughterhouseUnit[]>([])
+  const [slaughterhouse, setSlaughterhouse] = useState<Slaughterhouse>()
+  const [reports, setReports] = useState<Report[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadingReports, setLoadingReports] = useState(true)
+  const [generatingPdf, setGeneratingPdf] = useState(false)
 
-    const { slaughterhouseId } = useParams()
-    
-    const navigate = useNavigate();
+  const { slaughterhouseId } = useParams()
 
-    const fetch = useCallback(() => {
-        if (slaughterhouseId) {
-            getSlaughterhouse(slaughterhouseId)
-                .then(setSlaughterhouse)
-                .catch(e => swal('', e.message, 'error'))
-                .finally(() => setLoading(false))
-            getSlaughterhouseUnits(slaughterhouseId)
-                .then(setUnits)
-        }
-    }, [slaughterhouseId])
+  const navigate = useNavigate()
 
-    useEffect(() => {
-        fetch()
-        if(slaughterhouseId) {
-            getReportsBySlaughterhouse(slaughterhouseId)
-                .then(setReports)
-                .catch(e => swal('', e.message, 'error'))
-                .finally(() => setLoadingReports(false))
-        }
-    }, [slaughterhouseId, fetch])
-
-    function removeSlaughterhouse() {
-        if (!slaughterhouseId) return
-        swal({
-            title: 'Deseja realmente remover esse abatedouro?',
-            text: 'Todos os relatórios relacionados a esse abatedouro também serão removidos.',
-            icon: 'warning',
-            buttons: {
-                cancel: {
-                    visible: true,
-                    text: 'Não'
-                },
-                confirm: {
-                    text: 'Sim',
-                },
-            },
-            dangerMode: true,
-        })
-        .then(confirm => {
-            if (confirm) {
-                deleteSlaughterhouse(slaughterhouseId)
-                    .then(() => { swal('', 'Abatedouro removido com sucesso!', 'success') })
-                    .then(() => navigate('/abatedouros'))
-                    .catch(swal)
-            }
-        })
+  const fetch = useCallback(() => {
+    if (slaughterhouseId) {
+      getSlaughterhouse(slaughterhouseId)
+        .then(setSlaughterhouse)
+        .catch((e: Error) => swal('', e.message, 'error'))
+        .finally(() => setLoading(false))
+      getSlaughterhouseUnits(slaughterhouseId).then(setUnits)
     }
+  }, [slaughterhouseId])
 
-    function renderTopBarButtons() {
-        return (
-            <div className="column">
-                <BiEdit
-                    size={25}
-                    className='svg-button'
-                    onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`)}
-                />
-                <BiTrash onClick={removeSlaughterhouse} size={25} className='svg-button' />
-            </div>
-        )
+  useEffect(() => {
+    fetch()
+    if (slaughterhouseId) {
+      getReportsBySlaughterhouse(slaughterhouseId)
+        .then(setReports)
+        .catch((e: Error) => swal('', e.message, 'error'))
+        .finally(() => setLoadingReports(false))
     }
+  }, [slaughterhouseId, fetch])
 
-    function deleteUnit(unit: SlaughterhouseUnit) {
-        swal({
-            title: 'Deseja realmente remover essa unidade abatedoura?',
-            text: 'Todos os relatórios relacionados a essa unidade também serão removidos.',
-            icon: 'warning',
-            buttons: {
-                cancel: {
-                    visible: true,
-                    text: 'Não'
-                },
-                confirm: {
-                    text: 'Sim',
-                },
-            },
-            dangerMode: true,
-        })
-        .then(confirm => {
-            if (confirm) {
-                deleteSlaughterhouseUnit(unit.slaughterhouseId, unit.id)
-                    .then(() => { swal('', 'Unidade abatedoura removida com sucesso!', 'success') })
-                    .then(fetch)
-                    .catch(swal)
-            }
-        })
-    }
+  function removeSlaughterhouse() {
+    if (!slaughterhouseId) return
+    swal({
+      title: 'Deseja realmente remover esse abatedouro?',
+      text: 'Todos os relatórios relacionados a esse abatedouro também serão removidos.',
+      icon: 'warning',
+      buttons: {
+        cancel: {
+          visible: true,
+          text: 'Não',
+        },
+        confirm: {
+          text: 'Sim',
+        },
+      },
+      dangerMode: true,
+    }).then((confirm) => {
+      if (confirm) {
+        deleteSlaughterhouse(slaughterhouseId)
+          .then(() => {
+            swal('', 'Abatedouro removido com sucesso!', 'success')
+          })
+          .then(() => navigate('/abatedouros'))
+          .catch(swal)
+      }
+    })
+  }
 
-    const downloadPdf = async (reportId: string) => {
-        setGeneratingPdf(true)
-        downloadReportPDFById(reportId)
-            .finally(() => setGeneratingPdf(false))
-    }
-
+  function renderTopBarButtons() {
     return (
-        <ScreenTemplate
-            backLink='/abatedouros'
-            title='Detalhes do abatedouro'
-            rightComponent={renderTopBarButtons()}
-        >
-            <>
-
-                <Loading loading={loading} />
-                <Loading loading={generatingPdf} text='Gerando PDF...' />
-
-                <p>Nome: {slaughterhouse?.name}</p>
-                <Table
-                    title='Unidades abatedoura'
-                    righComponent={
-                        <BiPlus
-                            size={25}
-                            className='svg-button'
-                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/adicionar`)}
-                        />
-                    }
-                >
-                    <>
-                        <thead>
-                            <tr>
-                                <th>Cidade</th>
-                                <th>Estado</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {units.map(unit => (
-                                <tr key={unit.id}>
-                                    <td>{unit.city}</td>
-                                    <td>{unit.state}</td>
-                                    <td>
-                                        <BiEdit
-                                            size={15}
-                                            onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`)}
-                                        />
-                                    </td>
-                                    <td><BiTrash size={15} onClick={() => deleteUnit(unit)} /></td>
-                                </tr>
-                            ))}
-                            {!units.length && <tr><td colSpan={3}>Nenhuma unidade abatedoura cadastrada</td></tr>}
-                        </tbody>
-                    </>
-                </Table>
-                
-                <p>Relatórios</p>
-                {reports.map(report => (
-                    <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
-                ))}
-                {!!loadingReports && <p>Carregando relatórios...</p>}
-                {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}
-            </>
-        </ScreenTemplate>
+      <div className="column">
+        <BiEdit
+          size={25}
+          className="svg-button"
+          onClick={() => navigate(`/abatedouros/${slaughterhouseId}/editar`)}
+        />
+        <BiTrash onClick={removeSlaughterhouse} size={25} className="svg-button" />
+      </div>
     )
+  }
+
+  function deleteUnit(unit: SlaughterhouseUnit) {
+    swal({
+      title: 'Deseja realmente remover essa unidade abatedoura?',
+      text: 'Todos os relatórios relacionados a essa unidade também serão removidos.',
+      icon: 'warning',
+      buttons: {
+        cancel: {
+          visible: true,
+          text: 'Não',
+        },
+        confirm: {
+          text: 'Sim',
+        },
+      },
+      dangerMode: true,
+    }).then((confirm) => {
+      if (confirm) {
+        deleteSlaughterhouseUnit(unit.slaughterhouseId, unit.id)
+          .then(() => {
+            swal('', 'Unidade abatedoura removida com sucesso!', 'success')
+          })
+          .then(fetch)
+          .catch(swal)
+      }
+    })
+  }
+
+  const downloadPdf = async (reportId: string) => {
+    setGeneratingPdf(true)
+    downloadReportPDFById(reportId).finally(() => setGeneratingPdf(false))
+  }
+
+  return (
+    <ScreenTemplate
+      backLink="/abatedouros"
+      title="Detalhes do abatedouro"
+      rightComponent={renderTopBarButtons()}
+    >
+      <>
+        <Loading loading={loading} />
+        <Loading loading={generatingPdf} text="Gerando PDF..." />
+
+        <p>Nome: {slaughterhouse?.name}</p>
+        <Table
+          title="Unidades abatedoura"
+          rightComponent={
+            <BiPlus
+              size={25}
+              className="svg-button"
+              onClick={() => navigate(`/abatedouros/${slaughterhouseId}/unidades/adicionar`)}
+            />
+          }
+        >
+          <>
+            <thead>
+              <tr>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {units.map((unit) => (
+                <tr key={unit.id}>
+                  <td>{unit.city}</td>
+                  <td>{unit.state}</td>
+                  <td>
+                    <BiEdit
+                      size={15}
+                      onClick={() =>
+                        navigate(`/abatedouros/${slaughterhouseId}/unidades/${unit.id}/editar`)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <BiTrash size={15} onClick={() => deleteUnit(unit)} />
+                  </td>
+                </tr>
+              ))}
+              {!units.length && (
+                <tr>
+                  <td colSpan={3}>Nenhuma unidade abatedoura cadastrada</td>
+                </tr>
+              )}
+            </tbody>
+          </>
+        </Table>
+
+        <p>Relatórios</p>
+        {reports.map((report) => (
+          <ReportCard key={report.id} report={report} downloadPdf={downloadPdf} />
+        ))}
+        {!!loadingReports && <p>Carregando relatórios...</p>}
+        {!loadingReports && !reports.length && <p>Nenhum relatório cadastrado</p>}
+      </>
+    </ScreenTemplate>
+  )
 }
 
 export default SlaughterhouseDetailsScreen
