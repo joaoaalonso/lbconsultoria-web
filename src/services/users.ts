@@ -1,5 +1,6 @@
 import apiClient from './api'
 import { User, USER_TYPES } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type { User }
 export { USER_TYPES }
@@ -16,7 +17,7 @@ export const getUsers = async (userType: USER_TYPES): Promise<User[]> => {
     .get<User[]>(`/${endpoint}`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -27,7 +28,7 @@ export const getUser = async (id: string, userType: USER_TYPES): Promise<User> =
     .get<User>(`/${endpoint}/${id}`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -38,7 +39,7 @@ const createUser = async (user: Omit<User, 'id'>, userType: USER_TYPES): Promise
     .post<User>(`/${endpoint}`, user)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -49,7 +50,7 @@ const editUser = async (user: User, userType: USER_TYPES): Promise<User> => {
     .put<User>(`/${endpoint}/${user.id}`, user)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -60,7 +61,7 @@ const deleteUser = async (id: string, userType: USER_TYPES): Promise<void> => {
     .delete(`/${endpoint}/${id}`)
     .then(() => undefined)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 

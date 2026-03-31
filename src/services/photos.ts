@@ -1,5 +1,6 @@
 import apiClient from './api'
 import { Photo } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type { Photo }
 
@@ -11,6 +12,6 @@ export const addImage = async (file: File): Promise<Photo> => {
     .post<Photo>('/images', form)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }

@@ -1,5 +1,6 @@
 import apiClient from './api'
 import { Ranch } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type { Ranch }
 
@@ -8,7 +9,7 @@ export const getRanches = async (userId: string): Promise<Ranch[]> => {
     .get<Ranch[]>(`/users/clients/${userId}/ranches`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -17,7 +18,7 @@ export const getRanch = async (ranchId: string): Promise<Ranch> => {
     .get<Ranch>(`/ranches/${ranchId}`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -26,7 +27,7 @@ export const createRanch = async (ranch: Omit<Ranch, 'id'>): Promise<Ranch> => {
     .post<Ranch>(`/ranches`, ranch)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -35,7 +36,7 @@ export const editRanch = async (ranch: Ranch): Promise<Ranch> => {
     .put<Ranch>(`/ranches/${ranch.id}`, ranch)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -44,6 +45,6 @@ export const deleteRanch = async (ranchId: string): Promise<void> => {
     .delete(`/ranches/${ranchId}`)
     .then(() => undefined)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }

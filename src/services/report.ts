@@ -1,5 +1,6 @@
 import apiClient from './api'
 import { ObjectSeqTypeValue, ObjectTypeValue, Report, SimpleReport } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type { ObjectSeqTypeValue, ObjectTypeValue, Report, SimpleReport }
 
@@ -16,7 +17,7 @@ export const getReports = async (page: number): Promise<SimpleReport[]> => {
     .get<SimpleReport[]>(`/reports`, { params: { page } })
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -25,7 +26,7 @@ export const getReport = async (reportId: string): Promise<Report> => {
     .get<Report>(`/reports/${reportId}`)
     .then((response) => sortPhotos(response.data))
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -34,7 +35,7 @@ export const getReportsByUser = async (userId: string): Promise<Report[]> => {
     .get<Report[]>(`/users/clients/${userId}/reports`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -43,7 +44,7 @@ export const getReportsBySlaughterhouse = async (slaughterhouseId: string): Prom
     .get<Report[]>(`/slaughterhouses/${slaughterhouseId}/reports`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -54,7 +55,7 @@ export const createReport = async (
     .post<Report>(`/reports`, report)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -65,7 +66,7 @@ export const editReport = async (
     .put<Report>(`/reports/${report.id}`, report)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -74,6 +75,6 @@ export const deleteReport = async (reportId: string): Promise<void> => {
     .delete(`/reports/${reportId}`)
     .then(() => undefined)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
