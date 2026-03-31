@@ -36,3 +36,18 @@ export interface AnalyticsPerformanceResult {
   date: string
   [key: string]: string
 }
+
+export interface AnalyticsSlaughterhouseYieldSettings {
+  sex?: string | string[]
+  slaughterhouseId?: string | null
+  slaughterhouseUnitId?: string | null
+  fromDate?: Date
+  toDate?: Date
+}
+
+export interface AnalyticsSlaughterhouseYieldResult {
+  rc: number
+  date: Date
+  sex: string
+  slaughterhouseName: string
+}

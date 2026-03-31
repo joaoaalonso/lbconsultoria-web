@@ -4,6 +4,8 @@ import {
   AnalyticsClientSettings,
   AnalyticsPerformanceResult,
   AnalyticsPerformanceSettings,
+  AnalyticsSlaughterhouseYieldResult,
+  AnalyticsSlaughterhouseYieldSettings,
 } from '../types'
 import { getErrorMessage } from '../utils/apiErrorMessage'
 
@@ -12,6 +14,8 @@ export type {
   AnalyticsClientSettings,
   AnalyticsPerformanceResult,
   AnalyticsPerformanceSettings,
+  AnalyticsSlaughterhouseYieldResult,
+  AnalyticsSlaughterhouseYieldSettings,
 }
 
 export const getAnalyticsClient = async (
@@ -30,6 +34,17 @@ export const getAnalyticsPerformance = async (
 ): Promise<AnalyticsPerformanceResult[]> => {
   return apiClient
     .post(`/analytics/performance`, { ...settings })
+    .then((response) => response.data)
+    .catch((err) => {
+      throw Error(getErrorMessage(err))
+    })
+}
+
+export const getAnalyticsSlaughterhouseYield = async (
+  settings: AnalyticsSlaughterhouseYieldSettings,
+): Promise<AnalyticsSlaughterhouseYieldResult[]> => {
+  return apiClient
+    .post(`/analytics/slaughterhouse-yield`, { ...settings })
     .then((response) => response.data)
     .catch((err) => {
       throw Error(getErrorMessage(err))

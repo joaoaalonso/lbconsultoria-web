@@ -32,6 +32,9 @@ const PrematureFormScreen = lazy(() => import('./screens/premature/Form'))
 const AnalyticsScreen = lazy(() => import('./screens/analytics'))
 const AnalyticsClientScreen = lazy(() => import('./screens/analytics/client'))
 const AnalyticsPerformanceScreen = lazy(() => import('./screens/analytics/performance'))
+const AnalyticsSlaughterhouseYieldScreen = lazy(
+  () => import('./screens/analytics/slaughterhouseYield'),
+)
 
 const Routes = () => {
   const { isLoggedIn } = useAuth()
@@ -87,6 +90,7 @@ const Routes = () => {
             <Route path="/graficos" element={<AnalyticsScreen />} />
             <Route path="/graficos/clientes" element={<AnalyticsClientScreen />} />
             <Route path="/graficos/desempenho" element={<AnalyticsPerformanceScreen />} />
+            <Route path="/graficos/rendimento" element={<AnalyticsSlaughterhouseYieldScreen />} />
 
             <Route path="/relatorio/:reportId" element={<ReportViewScreen />} />
 
