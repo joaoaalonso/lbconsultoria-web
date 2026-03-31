@@ -4,6 +4,8 @@ import {
   AnalyticsClientSettings,
   AnalyticsPerformanceResult,
   AnalyticsPerformanceSettings,
+  AnalyticsSlaughterhouseYieldResult,
+  AnalyticsSlaughterhouseYieldSettings,
 } from '../types'
 
 export type {
@@ -11,6 +13,8 @@ export type {
   AnalyticsClientSettings,
   AnalyticsPerformanceResult,
   AnalyticsPerformanceSettings,
+  AnalyticsSlaughterhouseYieldResult,
+  AnalyticsSlaughterhouseYieldSettings,
 }
 
 export const getAnalyticsClient = async (
@@ -20,7 +24,7 @@ export const getAnalyticsClient = async (
     .post(`/analytics/clients`, { ...settings })
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(err?.response?.data?.message || 'Ocorreu um erro inesperado.')
     })
 }
 
@@ -31,6 +35,17 @@ export const getAnalyticsPerformance = async (
     .post(`/analytics/performance`, { ...settings })
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(err?.response?.data?.message || 'Ocorreu um erro inesperado.')
+    })
+}
+
+export const getAnalyticsSlaughterhouseYield = async (
+  settings: AnalyticsSlaughterhouseYieldSettings,
+): Promise<AnalyticsSlaughterhouseYieldResult[]> => {
+  return apiClient
+    .post(`/analytics/slaughterhouse-yield`, { ...settings })
+    .then((response) => response.data)
+    .catch((err) => {
+      throw Error(err?.response?.data?.message || 'Ocorreu um erro inesperado.')
     })
 }
