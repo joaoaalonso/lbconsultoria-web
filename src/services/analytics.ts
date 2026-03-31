@@ -5,6 +5,7 @@ import {
   AnalyticsPerformanceResult,
   AnalyticsPerformanceSettings,
 } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type {
   AnalyticsClientResult,
@@ -20,7 +21,7 @@ export const getAnalyticsClient = async (
     .post(`/analytics/clients`, { ...settings })
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -31,6 +32,6 @@ export const getAnalyticsPerformance = async (
     .post(`/analytics/performance`, { ...settings })
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }

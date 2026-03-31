@@ -13,6 +13,7 @@ import TextField from '../../components/TextField'
 import { updatePassword } from '../../services/auth'
 import { CNPJ_MASK, CPF_MASK } from '../../utils/mask'
 import { useAuth } from '../../contexts/AuthContext'
+import { getErrorMessage } from '../../utils/apiErrorMessage'
 
 type UpdatePasswordFormValues = {
   document?: string | null
@@ -56,7 +57,7 @@ const UpdatePasswordScreen = () => {
       .then(() => navigate('/'))
       .catch((err) => {
         setLoading(false)
-        swal('', err?.response?.data ?? 'Link inválido ou expirado.', 'error')
+        swal('', getErrorMessage(err, 'Link inválido ou expirado.'), 'error')
       })
   }
 

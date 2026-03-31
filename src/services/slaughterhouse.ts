@@ -1,5 +1,6 @@
 import apiClient from './api'
 import { Slaughterhouse, SlaughterhouseUnit } from '../types'
+import { getErrorMessage } from '../utils/apiErrorMessage'
 
 export type { Slaughterhouse, SlaughterhouseUnit }
 
@@ -8,7 +9,7 @@ export const getSlaughterhouses = async (): Promise<Slaughterhouse[]> => {
     .get<Slaughterhouse[]>('/slaughterhouses')
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -17,7 +18,7 @@ export const getSlaughterhouse = async (slaughterhouseId: string): Promise<Slaug
     .get<Slaughterhouse>(`/slaughterhouses/${slaughterhouseId}`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -28,7 +29,7 @@ export const createSlaughterhouse = async (
     .post<Slaughterhouse>(`/slaughterhouses`, slaughterhouse)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -39,7 +40,7 @@ export const editSlaughterhouse = async (
     .put<Slaughterhouse>(`/slaughterhouses/${slaughterhouse.id}`, slaughterhouse)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -48,7 +49,7 @@ export const deleteSlaughterhouse = async (slaughterhouseId: string): Promise<vo
     .delete(`/slaughterhouses/${slaughterhouseId}`)
     .then(() => undefined)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -59,7 +60,7 @@ export const getSlaughterhouseUnits = async (
     .get<SlaughterhouseUnit[]>(`/slaughterhouses/${slaughterhouseId}/units`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -71,7 +72,7 @@ export const getSlaughterhouseUnit = async (
     .get<SlaughterhouseUnit>(`/slaughterhouses/${slaughterhouseId}/units/${slaughterhouseUnitId}`)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -83,7 +84,7 @@ export const createSlaughterhouseUnit = async (
     .post<SlaughterhouseUnit>(`/slaughterhouses/${slaughterhouseId}/units`, slaughterhouseUnit)
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -98,7 +99,7 @@ export const editSlaughterhouseUnit = async (
     )
     .then((response) => response.data)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
 
@@ -110,6 +111,6 @@ export const deleteSlaughterhouseUnit = async (
     .delete(`/slaughterhouses/${slaughterhouseId}/units/${slaughterhouseUnitId}`)
     .then(() => undefined)
     .catch((err) => {
-      throw Error(err?.response?.data || 'Ocorreu um erro inesperado.')
+      throw Error(getErrorMessage(err))
     })
 }
