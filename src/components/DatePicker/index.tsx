@@ -18,6 +18,7 @@ interface DatePickerProps<T extends FieldValues> {
   control: Control<T>
   label?: string
   required?: boolean
+  onlyMonthYear?: boolean
   onChange?: (val: string) => void
 }
 
@@ -27,6 +28,7 @@ function DatePicker<T extends FieldValues>({
   errors,
   control,
   required = false,
+  onlyMonthYear = false,
 }: DatePickerProps<T>) {
   const hasError = errors && name && !!errors[name]
 
@@ -49,7 +51,8 @@ function DatePicker<T extends FieldValues>({
             className={hasError ? 'error' : ''}
             onChange={onChange}
             selected={value ? new Date(value) : null}
-            dateFormat="dd/MM/yyyy"
+            showMonthYearPicker={onlyMonthYear}
+            dateFormat={onlyMonthYear ? 'MM/yyyy' : 'dd/MM/yyyy'}
           />
         )}
       />
