@@ -31,6 +31,13 @@ export const renderSection = (title: string, body: SectionBody) => {
   }
 }
 
+export const rowDividerLayout = {
+  hLineWidth: (i: number, node: { table: { body: unknown[] } }) =>
+    i === 0 || i === node.table.body.length ? 0 : 0.5,
+  vLineWidth: () => 0,
+  hLineColor: () => '#e0e0e0',
+}
+
 export const renderProperty = (name: string, value: string) => {
   return {
     columns: [

@@ -1,5 +1,5 @@
 import { Report } from '../report'
-import { renderSection } from './helpers'
+import { renderSection, rowDividerLayout } from './helpers'
 
 export const renderAwards = (report: Report) => {
   const awardItems = report.awardItems?.filter(
@@ -23,7 +23,7 @@ export const renderAwards = (report: Report) => {
           ]),
         ],
       },
-      layout: 'noBorders',
+      layout: rowDividerLayout,
     })
   }
 
