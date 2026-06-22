@@ -1,8 +1,15 @@
 import apiClient from './api'
-import { ObjectSeqTypeValue, ObjectTypeValue, Report, SimpleReport } from '../types'
+import {
+  AwardItem,
+  ObjectSeqTypeValue,
+  ObjectTypeValue,
+  PenaltyItem,
+  Report,
+  SimpleReport,
+} from '../types'
 import { getErrorMessage } from '../utils/apiErrorMessage'
 
-export type { ObjectSeqTypeValue, ObjectTypeValue, Report, SimpleReport }
+export type { AwardItem, ObjectSeqTypeValue, ObjectTypeValue, PenaltyItem, Report, SimpleReport }
 
 const sortPhotos = (report: Report): Report => {
   if (!report.photos) return report

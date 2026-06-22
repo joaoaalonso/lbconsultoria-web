@@ -43,8 +43,6 @@ type ReportFormValues = {
   pc: string
   totalWeight: string
   corralEvaluation: string
-  awards: string
-  penalties: string
   comments: string
 }
 import { sortByType } from '../../utils/sort'
@@ -131,6 +129,27 @@ const ReportFormScreen = () => {
     removeRow: removeBruisesRow,
     updateRow: updateBruisesRow,
   } = useTableRows([{ seq: '', type: '', value: '' }], { seq: '', type: '', value: '' })
+  const {
+    rows: awardItems,
+    setRows: setAwardItems,
+    addRow: addAwardItemRow,
+    removeRow: removeAwardItemRow,
+    updateRow: updateAwardItemRow,
+  } = useTableRows([{ program: '', percentage: '', disqualification: '' }], {
+    program: '',
+    percentage: '',
+    disqualification: '',
+  })
+  const {
+    rows: penaltyItems,
+    setRows: setPenaltyItems,
+    addRow: addPenaltyItemRow,
+    removeRow: removePenaltyItemRow,
+    updateRow: updatePenaltyItemRow,
+  } = useTableRows([{ quantity: '', reason: '' }], { quantity: '', reason: '' })
+
+  const [legacyAwards, setLegacyAwards] = useState<string>('')
+  const [legacyPenalties, setLegacyPenalties] = useState<string>('')
 
   const [photos, setPhotos] = useState<Photo[]>([])
 
@@ -163,8 +182,6 @@ const ReportFormScreen = () => {
         totalWeight: (report.totalWeight / 1000).toFixed(3).replace('.', ','),
         corralEvaluation: report.corralEvaluation,
         comments: report.comments || '',
-        awards: report.awards || '',
-        penalties: report.penalties || '',
       }
     },
     [ranches],
@@ -199,8 +216,6 @@ const ReportFormScreen = () => {
       pc: '',
       totalWeight: '',
       corralEvaluation: '',
-      awards: '',
-      penalties: '',
       comments: '',
     },
   })
@@ -234,6 +249,10 @@ const ReportFormScreen = () => {
       if (report.fetus) setFetus(report.fetus)
       if (report.dif) setDif(report.dif)
       if (report.bruises) setBruises(report.bruises)
+      if (report.awardItems?.length) setAwardItems(report.awardItems)
+      if (report.penaltyItems?.length) setPenaltyItems(report.penaltyItems)
+      if (report.awards) setLegacyAwards(report.awards)
+      if (report.penalties) setLegacyPenalties(report.penalties)
       if (report.photos) setPhotos(report.photos)
       if (report.createdByUser) setCreatedBy(report.createdByUser)
       if (report.updatedByUser) setUpdatedBy(report.updatedByUser)
@@ -331,8 +350,6 @@ const ReportFormScreen = () => {
       totalWeight: parseNumber(data.totalWeight, 1000),
       corralEvaluation: data.corralEvaluation,
       comments: data.comments,
-      penalties: data.penalties,
-      awards: data.awards,
       photos,
       maturity,
       finishing,
@@ -340,6 +357,12 @@ const ReportFormScreen = () => {
       fetus,
       dif,
       bruises,
+      awardItems,
+      penaltyItems,
+      awards: awardItems.some((item) => item.program || item.percentage || item.disqualification)
+        ? ''
+        : legacyAwards,
+      penalties: penaltyItems.some((item) => item.quantity || item.reason) ? '' : legacyPenalties,
     }
 
     swal({
@@ -422,6 +445,10 @@ const ReportFormScreen = () => {
     setFetus([{ type: '', value: '' }])
     setDif([{ seq: '', type: '', value: '' }])
     setBruises([{ seq: '', type: '', value: '' }])
+    setAwardItems([{ program: '', percentage: '', disqualification: '' }])
+    setPenaltyItems([{ quantity: '', reason: '' }])
+    setLegacyAwards('')
+    setLegacyPenalties('')
     setPhotos([])
   }
 
@@ -602,26 +629,125 @@ const ReportFormScreen = () => {
                 required
               />
               <TextField
-                label="Bonificações"
-                name="awards"
-                type="textarea"
-                register={register}
-                errors={errors}
-              />
-              <TextField
-                label="Desclassificações"
-                name="penalties"
-                type="textarea"
-                register={register}
-                errors={errors}
-              />
-              <TextField
                 label="Observações"
                 name="comments"
                 type="textarea"
                 register={register}
                 errors={errors}
               />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="column">
+              {!!legacyAwards && (
+                <p style={{ fontStyle: 'italic', fontSize: 12, color: '#666', margin: '0 0 4px' }}>
+                  Dado antigo: {legacyAwards}
+                </p>
+              )}
+              <Table title="Bonificações">
+                <>
+                  <colgroup>
+                    <col style={{ width: '25%' }} />
+                    <col style={{ width: '20%' }} />
+                    <col />
+                    <col style={{ width: '30px' }} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>Programa</th>
+                      <th>Porcentagem</th>
+                      <th>Desclassificação</th>
+                      <th>
+                        <BiPlus size={15} onClick={addAwardItemRow} />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {awardItems.map((elem, index) => {
+                      return (
+                        <tr key={`award-item-${index}`}>
+                          <td>
+                            <TextField
+                              onChange={(value) => updateAwardItemRow(index, 'program', value)}
+                              value={elem.program}
+                            />
+                          </td>
+                          <td>
+                            <TextField
+                              onChange={(value) => updateAwardItemRow(index, 'percentage', value)}
+                              value={elem.percentage}
+                            />
+                          </td>
+                          <td>
+                            <TextField
+                              type="textarea"
+                              onChange={(value) =>
+                                updateAwardItemRow(index, 'disqualification', value)
+                              }
+                              value={elem.disqualification}
+                            />
+                          </td>
+                          <td>
+                            <BiTrash onClick={() => removeAwardItemRow(index)} />
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </>
+              </Table>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="column">
+              {!!legacyPenalties && (
+                <p style={{ fontStyle: 'italic', fontSize: 12, color: '#666', margin: '0 0 4px' }}>
+                  Dado antigo: {legacyPenalties}
+                </p>
+              )}
+              <Table title="Desclassificações">
+                <>
+                  <colgroup>
+                    <col style={{ width: '30%' }} />
+                    <col />
+                    <col style={{ width: '30px' }} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>Quantidade</th>
+                      <th>Motivo</th>
+                      <th>
+                        <BiPlus size={15} onClick={addPenaltyItemRow} />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {penaltyItems.map((elem, index) => {
+                      return (
+                        <tr key={`penalty-item-${index}`}>
+                          <td>
+                            <TextField
+                              onChange={(value) => updatePenaltyItemRow(index, 'quantity', value)}
+                              value={elem.quantity}
+                            />
+                          </td>
+                          <td>
+                            <TextField
+                              onChange={(value) => updatePenaltyItemRow(index, 'reason', value)}
+                              value={elem.reason}
+                            />
+                          </td>
+                          <td>
+                            <BiTrash onClick={() => removePenaltyItemRow(index)} />
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </>
+              </Table>
             </div>
           </div>
 

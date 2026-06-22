@@ -37,6 +37,7 @@
 
         td {
             padding: 5px;
+            vertical-align: top;
         }
 
         svg {
@@ -48,6 +49,10 @@
         }
 
         div {
+            padding: 0;
+        }
+
+        .text-field-container {
             padding: 0;
         }
     }

@@ -16,6 +16,19 @@ export interface ObjectSeqTypeValue {
   value: string
 }
 
+export interface AwardItem {
+  id?: string
+  program: string
+  percentage: string
+  disqualification: string
+}
+
+export interface PenaltyItem {
+  id?: string
+  quantity: string
+  reason: string
+}
+
 export interface Report {
   id?: string
   date: Date
@@ -48,6 +61,8 @@ export interface Report {
   fetus?: ObjectTypeValue[]
   dif?: ObjectSeqTypeValue[]
   bruises?: ObjectSeqTypeValue[]
+  awardItems?: AwardItem[]
+  penaltyItems?: PenaltyItem[]
   createdByUser?: User
   updatedByUser?: User
 }
